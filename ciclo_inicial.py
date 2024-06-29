@@ -1,6 +1,8 @@
 import pretools
 import configuracion
 
+#CICLO INICIAL: OBTENCIÓN DE IMAGENES 
+
 #Nombra la sesión para tener un nuevo directorio por cada sesión.
 sesion = configuracion.sesion
 filename = configuracion.filename

@@ -105,7 +105,7 @@ def fullProcess(sesion, dataframe):
 
 
             #STABLE DIFFUSION
-            print("Iniciando stabledifussion...")
+            print("Iniciando Stable Difussion...")
             resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
 
             print("El resultado es ¿ver que imprime como resultado?: ", resultado)
@@ -192,8 +192,20 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
     """
     #Los dos iguales.
     #Revisar si se puede subir el hf_token.
-    client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+
+    #Hacer primer contacto con API, ésto ayudará a saber si está apagada y prenderla automáticamente.
+    try: 
+
+        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+
+    except Exception as e:
+        print("API apagada o pausada...", e)
+        print("Reiniciandola, vuelve a correr el proceso en 10 minutos.")
+        print("ZZZZZZZ")
+        print("ZZZZZZZ")
+        return e
     
+    #Ahora correr el proceso central de Stable Diffusion.
     try:
 
         result = client.predict(

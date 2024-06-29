@@ -1,5 +1,7 @@
 import pretools, postools, time, configuracion
 
+#CICLO FINAL: ALTA EN SERVER
+
 filename = configuracion.filename
 base_url = configuracion.base_url
 sesion = configuracion.sesion
