@@ -187,7 +187,10 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("Hubo un error, recuerda éste prompt...", e)
         print("Aquí llega cuando la imagen no existe, no cuando no se pudo procesar, revisar si eso llega al excel, la e sería: ", e)
         print(f"La imagen era: {imagenSource}, la posición era {shot}")
-        time.sleep(4)
+        print("XXXXX")
+        print("XXXXX")
+        print("XXXXX")
+        print("XXXXX")
         return e
     
 def guardarResultado(dataframe, result, foto_dir, shot, estilo, ruta_final):
@@ -221,7 +224,7 @@ def guardarResultado(dataframe, result, foto_dir, shot, estilo, ruta_final):
         print(f"Imagen guardada correctamente en: {ruta_total}")
         print("Estamos por actualizar excel...")
         #actualizaExcel(dataframe, 'C4D03AQEi0TQ389Qscw.png')
-        actualizaRow(dataframe, 'Name', foto_dir, 'Diffusion Status', 'Imagen actualizada')
+        actualizaRow(dataframe, 'Name', foto_dir, 'Diffusion Status', 'Image processed')
 
 def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido): 
     """

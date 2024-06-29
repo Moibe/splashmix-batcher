@@ -59,15 +59,14 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url):
   try:       
         #Crea directorio
         print("Creando directorio, cuyo nombre será: ", directorio_receptor)
-        #Si el directorio no existe, si lo está creando bien, checar después que problemas causa q ya exista.
-        
+        #Si el directorio no existe, si lo está creando bien, checar después que problemas causa q ya exista.        
         sftp.mkdir(directorio_receptor)
-        print("Directorio creado...")        
+        print("Directorio creado...")
 
   except Exception as e:
         # Mensaje de error
         print(f"Error al crear el directorio, probablemente ya existe: {e}")
-        
+                
   finally:
       pass
   
@@ -75,12 +74,21 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url):
   print("Vamos a repasar los archivos de la carpeta local que se encuentra en: ", carpeta_local)
   resultados = os.listdir(carpeta_local)
 
+  #Para el conteo de avance en subida.
+  contador = 0 
+  cuantos = len(resultados)
+  print("La cantidad de resultados son: ", cuantos)
+
   try:
         
         for imagen in resultados:
+            
+            print(f"Ahora estámos en la imagen número {contador} de {cuantos}.")
+            time.sleep(1)
            
             print("La imagen de ésta vuelta es: ", imagen)
-            print("Y el tipo de dicha imagen es: ", type(imagen))
+            print("Y el tipo de dicha imagen es string??: ", type(imagen)) #string?
+            time.sleep(5)
 
             #Ahora extraeremos su ID: 
             segmentos = imagen.split(',')
@@ -128,8 +136,14 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url):
         # Revisar y corregir en caso de ser necesario.
         mensaje = f"OJO: Error al subir un archivo: {e}"
         print(mensaje)
-        time.sleep(8)
+        print("XXXXXXXX")
+        print("XXXXXXXX")
+        print("XXXXXXXX")
+        print("XXXXXXXX")
+        time.sleep(3)
         return f"OJO: Error al subir un archivo: {e}"
+  finally: 
+      contador += 1
   
 def cierraConexion(ssh, sftp ):
 
