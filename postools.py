@@ -110,7 +110,10 @@ def fullProcess(sesion, dataframe):
 
             print("El resultado es (ver que imprime cuando error...): ", resultado)
             #Imprime la tupla si se proceso correctamente o imprime el error si no.
-            time.sleep(8)
+  
+            if resultado == "cannot access local variable 'client' where it is not associated with a value":
+                print("El resultado fue por: cannot access local variable 'client' where it is not associated with a value.")
+                time.sleep(8)
 
             #PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.        
             print("#PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.")
@@ -204,6 +207,11 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("ZZZZZZZ")
         print("ZZZZZZZ")
         print("ZZZZZZZ")
+        #No podemos hacer break porque no es un loop.
+        #Por eso hago un return para que se salga de stablediffuse.
+        return e
+
+
 
     
     #Ahora correr el proceso central de Stable Diffusion.
