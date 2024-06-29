@@ -109,11 +109,19 @@ def fullProcess(sesion, dataframe):
             resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
 
             print("El resultado es (ver que imprime cuando error...): ", resultado)
+            print("Y su type es: ", type(resultado))
             #Imprime la tupla si se proceso correctamente o imprime el error si no.
   
-            if resultado == "cannot access local variable 'client' where it is not associated with a value":
-                print("El resultado fue por: cannot access local variable 'client' where it is not associated with a value.")
-                time.sleep(8)
+            if resultado == "error":
+                print("El resultado fue error")
+                time.sleep(7)
+                print("Y por eso me iré a break ahora!: ")
+                break
+                
+            else: 
+                print("Se fue al else porque type(resultado) es: ", type(resultado))
+
+            time.sleep(6)
 
             #PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.        
             print("#PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.")
@@ -203,13 +211,14 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
 
     except Exception as e:
         print("API apagada o pausada...", e)
+        time.sleep(5)
         print("Reiniciandola, vuelve a correr el proceso en 10 minutos.")
         print("ZZZZZZZ")
         print("ZZZZZZZ")
         print("ZZZZZZZ")
         #No podemos hacer break porque no es un loop.
         #Por eso hago un return para que se salga de stablediffuse.
-        return e
+        return "error"
 
 
 
