@@ -108,13 +108,13 @@ def fullProcess(sesion, dataframe):
             print("Iniciando Stable Difussion...")
             resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
 
-            print("El resultado es ¿ver que imprime como resultado?: ", resultado)
-            time.sleep(3)
+            print("El resultado es (ver que imprime cuando error...): ", resultado)
+            #Imprime la tupla si se proceso correctamente o imprime el error si no.
+            time.sleep(8)
 
             #PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.        
             print("#PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.")
-            time.sleep(2)
-
+           
             #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
             if isinstance(resultado, tuple):
                 print("Es una tupla: ", resultado)
@@ -203,7 +203,8 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("Reiniciandola, vuelve a correr el proceso en 10 minutos.")
         print("ZZZZZZZ")
         print("ZZZZZZZ")
-        return e
+        print("ZZZZZZZ")
+
     
     #Ahora correr el proceso central de Stable Diffusion.
     try:
@@ -260,7 +261,7 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, estilo, ruta_final
     
     profile_split = foto_dir.split('.')
     nombre_sin_extension = profile_split[0]
-    nombre_archivo = nombre_sin_extension + ",Take=" + take + ",Shot=" + shot + ",Style=" + estilo + ".png"
+    nombre_archivo = nombre_sin_extension + ",Take=" + str(take) + ",Shot=" + shot + ",Style=" + estilo + ".png"
     ruta_total = os.path.join(ruta_final, nombre_archivo)
     print("Ésta es la ruta_total: ", ruta_total)	
 
