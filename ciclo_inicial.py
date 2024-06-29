@@ -1,8 +1,9 @@
 import pretools
+import configuracion
 
 #Nombra la sesión para tener un nuevo directorio por cada sesión.
-sesion = 'minitest1'
-filename = 'minitest.xlsx'
+sesion = configuracion.sesion
+filename = configuracion.filename
 
 pretools.creaDirectorioInicial(sesion)
 

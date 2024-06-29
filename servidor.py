@@ -151,7 +151,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
         print("XXXXXXXX")
         print("XXXXXXXX")
         print("XXXXXXXX")
-        time.sleep(3)
+        
         return f"OJO: Error al subir un archivo: {e}"
   finally: 
       contador += 1

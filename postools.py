@@ -109,7 +109,7 @@ def fullProcess(sesion, dataframe):
             resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
 
             print("El resultado es ¿ver que imprime como resultado?: ", resultado)
-            time.sleep(6)
+            time.sleep(3)
 
             #PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.        
             print("#PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.")
@@ -129,7 +129,7 @@ def fullProcess(sesion, dataframe):
                 texto = str(resultado)
                 segmentado = texto.split('exception:')
                 print("Segmentado[1] es: ", segmentado[1])
-                print("Ésto es segmentado: ", segmentado)
+                
                 print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
                 actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
                 #Aquí haremos un break porque no tiene caso intentarlo 4 veces. 
