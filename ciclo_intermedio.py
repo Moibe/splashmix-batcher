@@ -16,7 +16,7 @@ dataframe = postools.preparaDataframe(filename)
 #Hacer el Stable Diffusion.
 postools.fullProcess(sesion, dataframe)
 print("Terminé full process...")
-time.sleep(2)
+time.sleep(1)
 
 #Finaliza Excel después de preproducción.
 pretools.df2Excel(dataframe, filename)

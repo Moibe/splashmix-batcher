@@ -6,6 +6,7 @@ import pandas as pd
 import gradio_client
 import servidor
 import nycklar.nodes as nodes
+import configuracion
 
 def creaDirectorioResults(sesion):
     """
@@ -108,15 +109,25 @@ def fullProcess(sesion, dataframe):
             print("Iniciando Stable Difussion...")
             resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
 
-            print("El resultado es (ver que imprime cuando error...): ", resultado)
-            print("Y su type es: ", type(resultado))
-            #Imprime la tupla si se proceso correctamente o imprime el error si no.
-  
-            if resultado == "error":
-                print("El resultado fue error")
-                time.sleep(7)
-                print("Y por eso me iré a break ahora!: ")
-                break
+            #-->Aquí es donde llegan los breaks cuando la API estaba apagada.
+            
+            #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
+            if resultado == "api apagada":
+                print("La api está apagada, esperando a que reinicie.")
+                configuracion.api_apagada = True
+                #Se definirá si esperar a que reinicie o no.
+                if configuracion.wait_awake == True: 
+                    wait_time = 480
+                    print("Esperando 480 segundos a que reinicie...")
+                    time.sleep(wait_time)
+                    configuracion.waited = True
+                    break
+                else: 
+                    wait_time = 1                
+                    time.sleep(wait_time)
+                    configuracion.waited = False
+                    print("Y por eso me iré a break ahora!: ")
+                    break
                 
             else: 
                 print("Se fue al else porque type(resultado) es: ", type(resultado))
@@ -152,8 +163,20 @@ def fullProcess(sesion, dataframe):
 
         #Revisa si éste for debería tener un try-except.
         print("Salí del for de 4....")
-        time.sleep(2) 
-        contador =+ 1
+        #Aquí llega el break si la API estaba apagada, habiendo esperado o no."
+        
+        
+        if configuracion.api_apagada == True:
+            if configuracion.waited == True: 
+            #Si estaba apagada, pero esperó, ya no hagas el segundo break.
+                configuracion.waited = False #Solo regresa a waited al estado normal. (quizá no es necesario pq no llega aquí.)
+            else: 
+                #Si estaba apagada y no esperaste, salte totalmente con el segundo break...
+                print("Como el problema fue que la API estaba apagada, volveré a saltar hacia un break.")
+                break
+        else:
+            #Si la API no estaba apagada, éste es el camino normal.
+            contador =+ 1
         
 def getPosition():
 
@@ -211,6 +234,8 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
 
     except Exception as e:
         print("API apagada o pausada...", e)
+        #Analiza e para definir si está apagada o pausada, cuando está pausada, no debes esperar pq nada cambiará.
+        #Si e tiene la palabra PAUSED.
         time.sleep(5)
         print("Reiniciandola, vuelve a correr el proceso en 10 minutos.")
         print("ZZZZZZZ")
@@ -218,7 +243,7 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("ZZZZZZZ")
         #No podemos hacer break porque no es un loop.
         #Por eso hago un return para que se salga de stablediffuse.
-        return "error"
+        return "api apagada" # o regresa api pausada.
 
 
 
