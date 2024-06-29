@@ -45,9 +45,19 @@ def creaDataframe(archivo):
     df['Name'] = ''
     df['Download Status'] = ''
     df['Diffusion Status']=''
-    df['URL']=''
+    #Revisar si la cantidad de campos URL la podrías crear dinámicamente.
+    # df['URL1']=''
+    # df['URL2']=''
+    # df['URL3']=''
+    # df['URL4']=''
 
-    #Ojo, aquí las columnas son parte del dataframe pero no aún del excel.
+    #Aquí dinámicamente indico cuantos samples haré.
+    max_url_columns = 4
+
+    for i in range(1, max_url_columns + 1):
+
+        column_name = f"URL{i}"  # Create column name dynamically
+        df[column_name] = ''  # Create the new column with an empty string
 
     return df
     

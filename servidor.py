@@ -42,19 +42,23 @@ def escribe(sftp, archivo, contenido):
 
   return "Contenido escrito"
 
-def sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url):
+def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url):
 
   """
   Sube una carpeta local completa a una carpeta remota.
 
   Parameters:
-    archivo (str): Contenido que será agregado a esa celda.
+    sftp
+    dataframe
+    carpeta_local
+    directorio_receptor
+    foto_complete_url
 
   Returns:
   dataframe:Regresa dataframe.
   """ 
 
-  print("Llegamos a servidor.sube y complete_url es:", complete_url)
+  print("Llegamos a servidor.sube y foto_complete_url es:", foto_complete_url)
 
   try:       
         #Crea directorio
@@ -76,7 +80,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url):
 
   #Para el conteo de avance en subida.
   contador = 0 
-  cuantos = len(resultados)
+  cuantos = len(resultados) #Cantidad de imagenes que hay en ésa carpeta.
   print("La cantidad de resultados son: ", cuantos)
 
   try:
@@ -88,21 +92,28 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url):
            
             print("La imagen de ésta vuelta es: ", imagen)
             print("Y el tipo de dicha imagen es string??: ", type(imagen)) #string?
-            time.sleep(5)
-
-            #Ahora extraeremos su ID: 
-            segmentos = imagen.split(',')
-            id = segmentos[0] + '.png'
-            print("El id con el que estamos trabajando es: ", id)
+            time.sleep(4)
             
+            #Origen
             ruta_origen = os.path.join(os.getcwd(), carpeta_local, imagen)
             print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen} y su tipo es: {type(ruta_origen)}.")
-            
+            time.sleep(3)
+
+            #Destino
             nuevo_directorio_receptor = directorio_receptor.replace("/", "\\")
             print("Así quedó el nuevo directorio receptor: ", nuevo_directorio_receptor)
+
+            #Ahora extraeremos su ID y su Take: 
+            segmentos = imagen.split(',')
+            id = segmentos[0] + '.png'  #El segmento 0 es el ID.
+            take_textual = segmentos[1] #Take=1
+            segmentos_take = take_textual.split('=')
+            take = segmentos_take[1] #segmento[1] es el número.
+
+            print("El id con el que estamos trabajando es: ", id)
+            print("La take es: ")
                                    
             #Crear la ruta completa del archivo remoto
-            #ruta_destino = os.path.join(directorio_receptor, imagen) #Así se van a holocards.
             ruta_destino = directorio_receptor + "\\" + imagen
             #ruta_destino = os.path.join(nuevo_directorio_receptor, imagen) #Así se va a moibe pq no encuentra nada.
             #ruta_destino = nuevo_directorio_receptor
@@ -115,17 +126,17 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url):
             print(f"La ruta origen es: {ruta_origen}, y su tipo es: {type(ruta_origen)}.")
             print(f"La ruta destino es: {ruta_destino}, y su tipo es: {type(ruta_destino)}.")
             
-            conjunto = imagen
-            print(f"Ésto es conjunto: {conjunto} y éste es su tipo: {type(conjunto)}...")
             sftp.put(ruta_origen, ruta_destino)
             print("La imagen ha sido subida al servidor...")
             print("---")
             print("---")
             print("---")
             print("---")
-            ruta_completa = complete_url + '/' + imagen
+            ruta_completa = foto_complete_url + '/' + imagen
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
-            postools.actualizaRow(dataframe, 'Name', id, 'URL', ruta_completa) 
+            campo_receptor = 'URL'+ take
+            print("El campo receptor quedó como: ", campo_receptor)
+            postools.actualizaRow(dataframe, 'Name', id, campo_receptor, ruta_completa) 
 
         # Mensaje de confirmación
         return f"Archivo {ruta_origen} subido correctamente a {ruta_destino}."  

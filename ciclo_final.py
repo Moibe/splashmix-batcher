@@ -1,9 +1,8 @@
 import pretools, postools, time
 
-#Nombra la sesión para tener un nuevo directorio por cada sesión.
-sesion = 'minitest1'
 base_url = "https://euroglitter.com/results/"
-complete_url = base_url + sesion
+sesion = 'minitest1' #Nombra la sesión para tener un nuevo directorio por cada sesión.
+foto_complete_url = base_url + sesion
 filename = 'minitest.xlsx'
 
 # #Crea los directorios necesarios.
@@ -21,7 +20,7 @@ dataframe = postools.preparaDataframe(filename)
 # pretools.df2Excel(dataframe, filename)
 
 #Sube todo
-dataframe = postools.subirTodo(dataframe, sesion, complete_url)
+dataframe = postools.subirTodo(dataframe, sesion, foto_complete_url)
 
 #Finaliza excel después de postproducción.
 pretools.df2Excel(dataframe, filename)

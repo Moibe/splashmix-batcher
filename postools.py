@@ -35,16 +35,17 @@ def fullProcess(sesion, dataframe):
     Ciclo completo de toma de imagen, llevado a HF, guardado en disco y actualización de archivo de Excel.
 
     Parameters:
+    sesion
     dataframe (dataframe): El dataframe en el que estuvimos trabajando.
 
     Returns:
     bool: True si se guardó el archivo correctamente.
     """
-
+    #Origen
     ruta_origen = os.path.join('imagenes', 'fuentes', sesion)
     ruta_destino = sesion + "-results"
 
-    # Define the desired directory path
+    #Destino
     target_dir = os.path.join('imagenes', 'resultados', ruta_destino)
     print("This is the target: ", target_dir)
 
@@ -58,58 +59,90 @@ def fullProcess(sesion, dataframe):
     # Crea una nueva columna 'columna_imagenes' a partir de la columna 'Nombre'
     columna_imagenes = df_images_ok['Name']
 
+    contador = 0
+    cuantos = len(columna_imagenes)
+    print("La cantidad de resultados son: ", cuantos)
+
     # Recorre cada URL de foto en la columna
     for i, foto_path in enumerate(columna_imagenes):
 
-        # Define the desired directory path
-        #foto = ruta_origen + "\\" + foto_path
+        print(f"Ahora estámos en la imagen cuya i es: {i} y el número {contador} de {cuantos}.")
+        time.sleep(2)
+
+        #FOTO
         foto = os.path.join(ruta_origen, foto_path)
-        print("Foto quedó en: ", foto)
-        
-        #ruta_imagen = os.path.join(ruta_origen, foto_dir)
         print("Ruta imagen: ", foto)
         print("Y éste es el tipo de ruta_imagen: ", type(foto))
-
-        ruta_posicion, shot = getPosition()
-        print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
-        
         #Prepara la imagen para gradio.
         imagenSource = gradio_client.handle_file(foto)
         #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
        
-        #Prepara la posición para gradio.
-        imagenPosition = gradio_client.handle_file(ruta_posicion)        
+        #ESTO SERÁ LO QUE AHORA QUEREMOS EJECUTAR 4 VECES:
 
-        #Creación de prompt.
-        lista_estilos = data.lista_estilos
-        lista_subjects = data.lista_subjects
-        estilo = random.choice(lista_estilos)
-        subject = random.choice(lista_subjects)
-        prompt = f"A {estilo} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
-        print("Building prompt: ", prompt)
+        #Cuantos samples por foto querremos.
+        cantidad_resultados = 4
 
-        print("Iniciando stabledifussion...")
-        resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
+        for j in range(cantidad_resultados):
 
-        print("El resultado es: ", resultado)
+            print(f"Estamos en la vuelta j número: {j} de tantos: {cantidad_resultados}")
+
+            take = j
+
+            #POSICIÓN
+            ruta_posicion, shot = getPosition()
+            print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
+            #Prepara la posición para gradio.
+            imagenPosition = gradio_client.handle_file(ruta_posicion)
+            #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.        
+
+            #PROMPT
+            lista_estilos = data.lista_estilos
+            lista_subjects = data.lista_subjects
+            estilo = random.choice(lista_estilos)
+            subject = random.choice(lista_subjects)
+            prompt = f"A {estilo} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
+            print("Building prompt: ", prompt)
+
+
+            #STABLE DIFFUSION
+            print("Iniciando stabledifussion...")
+            resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
+
+            print("El resultado es ¿ver que imprime como resultado?: ", resultado)
+            time.sleep(6)
+
+            #PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.        
+            print("#PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.")
+            time.sleep(2)
+
+            #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
+            if isinstance(resultado, tuple):
+                print("Es una tupla: ", resultado)
+                print("Vamos a guardar el resultado, y la ruta_final o destino es: ", target_dir)
+                guardarResultado(dataframe, resultado, foto_path, take, shot, estilo, target_dir)
+
+            #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
+            else:
+                print("No es una tupla: ", resultado)
+                print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
+                time.sleep(3)
+                texto = str(resultado)
+                segmentado = texto.split('exception:')
+                print("Segmentado[1] es: ", segmentado[1])
+                print("Ésto es segmentado: ", segmentado)
+                print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
+                actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
+                #Aquí haremos un break porque no tiene caso intentarlo 4 veces. 
+                break
                 
-        print("Entrando al if instance...")
-        
-        if isinstance(resultado, tuple):
-            print("Es una tupla: ", resultado)
-            print("Vamos a guardar el resultado, y la ruta_final o destino es: ", target_dir)
-            guardarResultado(dataframe, resultado, foto_path, shot, estilo, target_dir)
-        else:
-            print("No es una tupla: ", resultado)
-            print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
-            texto = str(resultado)
-            segmentado = texto.split('exception:')
-            print("Segmentado[1] es: ", segmentado[1])
-            print("Ésto es segmentado: ", segmentado)
-            print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
-            actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
-            
-        print("Salí del if instance...")
+            print("Salí del if instance...")
+
+            #AQUÍ TERMINA EL PROCESO QUE BIEN PODRÍAMOS REPETIR 4 VECES.
+
+        #Revisa si éste for debería tener un try-except.
+        print("Salí del for de 4....")
+        time.sleep(2) 
+        contador =+ 1
         
 def getPosition():
 
@@ -149,7 +182,10 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
     Stable Diffusion directo en HF.
 
     Parameters:
-    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+    imagenSource
+    imagenPosition
+    prompt
+    shot
 
     Returns:
     bool: True si se guardó el archivo correctamente.
@@ -180,7 +216,6 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
                 enhance_face_region=True,
                 api_name="/generate_image"
         )
-
         return result
 
     except Exception as e:
@@ -193,14 +228,19 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("XXXXX")
         return e
     
-def guardarResultado(dataframe, result, foto_dir, shot, estilo, ruta_final):
-
+def guardarResultado(dataframe, result, foto_dir, take, shot, estilo, ruta_final):
 
     """
     Guarda el resultado con una nomenclatura específica. Y lo guarda en disco.
 
     Parameters:
     dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+    result
+    foto_dir
+    take
+    shot
+    estilo
+    ruta_final
 
     Returns:
     bool: True si se guardó el archivo correctamente.
@@ -208,7 +248,7 @@ def guardarResultado(dataframe, result, foto_dir, shot, estilo, ruta_final):
     
     profile_split = foto_dir.split('.')
     nombre_sin_extension = profile_split[0]
-    nombre_archivo = nombre_sin_extension + ",Shot=" + shot  + ",Style=" + estilo + ".png"
+    nombre_archivo = nombre_sin_extension + ",Take=" + take + ",Shot=" + shot + ",Style=" + estilo + ".png"
     ruta_total = os.path.join(ruta_final, nombre_archivo)
     print("Ésta es la ruta_total: ", ruta_total)	
 
@@ -263,22 +303,24 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
     else:
         print("No se encontró la celda coincidente.")        
 
-def subirTodo(dataframe, sesion, complete_url):
+def subirTodo(dataframe, sesion, foto_complete_url):
 
     print("Entramos a subir todo, la sesión es: ", sesion) #minitest1
 
     #Conexión al servidor.
     ssh, sftp = servidor.conecta()
         
-    #Ruta de la carpeta remota
+    #Define ruta de la carpeta remota
     carpeta_remota = nodes.avaimentekijä
     print(f"La carpeta remota es: {carpeta_remota} y su tipo es: {type(carpeta_remota)}.")
     directorio_receptor = carpeta_remota + sesion
     print(f"El directorio receptor será entonces: {directorio_receptor} y su tipo es: {type(directorio_receptor)}")
     
-    carpeta_local = 'imagenes\\resultados\\' + sesion + '-results' 
+    #Define ruta de la carpeta local.
+    carpeta_local = 'imagenes\\resultados\\' + sesion + '-results'
 
-    resultado = servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, complete_url)
+
+    resultado = servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
     #Checar si aquí tendría que regresar el dataframe para tener sus modificaciones.
     print(resultado)
 
