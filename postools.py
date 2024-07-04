@@ -85,9 +85,10 @@ def fullProcess(sesion, dataframe):
 
         for j in range(cantidad_resultados):
 
-            print(f"Estamos en la vuelta j número: {j} de tantos: {cantidad_resultados}")
+            take = j + 1
 
-            take = j
+            print(f"Estamos en la take número: {j} de tantos: {cantidad_resultados}")
+            
 
             #POSICIÓN
             ruta_posicion, shot = getPosition()
@@ -99,9 +100,9 @@ def fullProcess(sesion, dataframe):
             #PROMPT
             lista_estilos = data.lista_estilos
             lista_subjects = data.lista_subjects
-            estilo = random.choice(lista_estilos)
+            style = random.choice(lista_estilos)
             subject = random.choice(lista_subjects)
-            prompt = f"A {estilo} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
+            prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
             print("Building prompt: ", prompt)
 
 
@@ -117,31 +118,24 @@ def fullProcess(sesion, dataframe):
                 configuracion.api_apagada = True
                 #Se definirá si esperar a que reinicie o no.
                 if configuracion.wait_awake == True: 
-                    wait_time = 480
-                    print("Esperando 480 segundos a que reinicie...")
-                    time.sleep(wait_time)
+                    print("Esperando 500 segundos a que reinicie...")
+                    time.sleep(configuracion.wait_time)
                     configuracion.waited = True
-                    break
+                    break #Se va a donde acaba el for de 4.
                 else: 
-                    wait_time = 1                
-                    time.sleep(wait_time)
+                    time.sleep(1)
                     configuracion.waited = False
-                    print("Y por eso me iré a break ahora!: ")
-                    break
-                
+                    break                
             else: 
                 print("Se fue al else porque type(resultado) es: ", type(resultado))
 
-            time.sleep(6)
-
-            #PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.        
-            print("#PROCESO PARA REVISAR SI PUDO OBTENER UN RESULTADO O UN ERROR.")
+            time.sleep(2)
            
             #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
             if isinstance(resultado, tuple):
                 print("Es una tupla: ", resultado)
                 print("Vamos a guardar el resultado, y la ruta_final o destino es: ", target_dir)
-                guardarResultado(dataframe, resultado, foto_path, take, shot, estilo, target_dir)
+                guardarResultado(dataframe, resultado, foto_path, take, shot, style, subject, target_dir)
 
             #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
             else:
@@ -163,8 +157,7 @@ def fullProcess(sesion, dataframe):
 
         #Revisa si éste for debería tener un try-except.
         print("Salí del for de 4....")
-        #Aquí llega el break si la API estaba apagada, habiendo esperado o no."
-        
+        #Aquí llega el break si la API estaba apagada, habiendo esperado o no."        
         
         if configuracion.api_apagada == True:
             if configuracion.waited == True: 
@@ -236,7 +229,6 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("API apagada o pausada...", e)
         #Analiza e para definir si está apagada o pausada, cuando está pausada, no debes esperar pq nada cambiará.
         #Si e tiene la palabra PAUSED.
-        time.sleep(5)
         print("Reiniciandola, vuelve a correr el proceso en 10 minutos.")
         print("ZZZZZZZ")
         print("ZZZZZZZ")
@@ -283,7 +275,7 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("XXXXX")
         return e
     
-def guardarResultado(dataframe, result, foto_dir, take, shot, estilo, ruta_final):
+def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ruta_final):
 
     """
     Guarda el resultado con una nomenclatura específica. Y lo guarda en disco.
@@ -303,7 +295,7 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, estilo, ruta_final
     
     profile_split = foto_dir.split('.')
     nombre_sin_extension = profile_split[0]
-    nombre_archivo = nombre_sin_extension + ",Take=" + str(take) + ",Shot=" + shot + ",Style=" + estilo + ".png"
+    nombre_archivo = nombre_sin_extension + "-Take=" + str(take) + "-Shot=" + shot + "-Style=" + style + "-Subject=" + subject + ".png"
     ruta_total = os.path.join(ruta_final, nombre_archivo)
     print("Ésta es la ruta_total: ", ruta_total)	
 
@@ -319,7 +311,18 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, estilo, ruta_final
         print(f"Imagen guardada correctamente en: {ruta_total}")
         print("Estamos por actualizar excel...")
         #actualizaExcel(dataframe, 'C4D03AQEi0TQ389Qscw.png')
+        #Diffusion Status (Se agrega + 'take' al nombre de cada columna para distinguirlas y ordenarlas.)
+
         actualizaRow(dataframe, 'Name', foto_dir, 'Diffusion Status', 'Image processed')
+        #Take
+        actualizaRow(dataframe, 'Name', foto_dir, 'Take' + take, take)
+        #Shot
+        actualizaRow(dataframe, 'Name', foto_dir, 'Shot' + take, shot)
+        #Style
+        actualizaRow(dataframe, 'Name', foto_dir, 'Style' + take, style)
+        #Hero
+        actualizaRow(dataframe, 'Name', foto_dir, 'Hero' + take, style)
+
 
 def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido): 
     """
@@ -352,7 +355,6 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
         print("-------")
         print("-------")
         print("-------")
-        print("-------")
         dataframe.loc[index, receiving_col] = contenido
        
     else:
@@ -360,7 +362,7 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
 
 def subirTodo(dataframe, sesion, foto_complete_url):
 
-    print("Entramos a subir todo, la sesión es: ", sesion) #minitest1
+    print("Entramos a subir todo, la sesión es: ", sesion) 
 
     #Conexión al servidor.
     ssh, sftp = servidor.conecta()

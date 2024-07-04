@@ -46,10 +46,29 @@ def creaDataframe(archivo):
     df['Download Status'] = ''
     df['Diffusion Status']=''
     #Revisar si la cantidad de campos URL la podrías crear dinámicamente.
-    # df['URL1']=''
-    # df['URL2']=''
-    # df['URL3']=''
-    # df['URL4']=''
+    df['Take1'] = ''
+    df['Shot1'] = ''
+    df['Style1'] = ''
+    df['Hero1'] = ''
+    df['URL1']=''
+
+    df['Take2'] = ''
+    df['Shot2'] = ''
+    df['Style2'] = ''
+    df['Hero2'] = ''
+    df['URL2']=''
+
+    df['Take3'] = ''
+    df['Shot3'] = ''
+    df['Style3'] = ''
+    df['Hero3'] = ''
+    df['URL3']=''
+
+    df['Take4'] = ''
+    df['Shot4'] = ''
+    df['Style4'] = ''
+    df['Hero4'] = ''
+    df['URL4']=''
 
     #Aquí dinámicamente indico cuantos samples haré.
     max_url_columns = 4

@@ -91,9 +91,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
             time.sleep(1)
            
             print("La imagen de ésta vuelta es: ", imagen)
-            print("Y el tipo de dicha imagen es string??: ", type(imagen)) #string?
-            time.sleep(4)
-            
+                        
             #Origen
             ruta_origen = os.path.join(os.getcwd(), carpeta_local, imagen)
             print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen} y su tipo es: {type(ruta_origen)}.")
@@ -136,7 +134,9 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             campo_receptor = 'URL'+ take
             print("El campo receptor quedó como: ", campo_receptor)
-            postools.actualizaRow(dataframe, 'Name', id, campo_receptor, ruta_completa) 
+            postools.actualizaRow(dataframe, 'Name', id, campo_receptor, ruta_completa)
+
+            contador =+ 1 
 
         # Mensaje de confirmación
         return f"Archivo {ruta_origen} subido correctamente a {ruta_destino}."  
