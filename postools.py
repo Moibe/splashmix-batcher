@@ -67,13 +67,9 @@ def fullProcess(sesion, dataframe):
     # Recorre cada URL de foto en la columna
     for i, foto_path in enumerate(columna_imagenes):
 
-        print(f"Ahora estámos en la imagen cuya i es: {i} y el número {contador} de {cuantos}.")
-        time.sleep(2)
-
         #FOTO
         foto = os.path.join(ruta_origen, foto_path)
-        print("Ruta imagen: ", foto)
-        print("Y éste es el tipo de ruta_imagen: ", type(foto))
+        
         #Prepara la imagen para gradio.
         imagenSource = gradio_client.handle_file(foto)
         #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
@@ -87,8 +83,7 @@ def fullProcess(sesion, dataframe):
 
             take = j + 1
 
-            print(f"Estamos en la take número: {j} de tantos: {cantidad_resultados}")
-            
+            print(f"Estamos en la take número: {j} de tantos: {cantidad_resultados}")            
 
             #POSICIÓN
             ruta_posicion, shot = getPosition()
@@ -297,10 +292,7 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ru
     nombre_sin_extension = profile_split[0]
     nombre_archivo = nombre_sin_extension + "-Take=" + str(take) + "-Shot=" + shot + "-Style=" + style + "-Subject=" + subject + ".png"
     ruta_total = os.path.join(ruta_final, nombre_archivo)
-    print("Ésta es la ruta_total: ", ruta_total)	
-
-    print("Result[0] es: ", result[0])
-        
+           
     ruta_imagen_local = result[0]  
 
     with open(ruta_imagen_local, "rb") as archivo_lectura:
@@ -315,13 +307,13 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ru
 
         actualizaRow(dataframe, 'Name', foto_dir, 'Diffusion Status', 'Image processed')
         #Take
-        actualizaRow(dataframe, 'Name', foto_dir, 'Take' + take, take)
+        actualizaRow(dataframe, 'Name', foto_dir, 'Take' + str(take), take)
         #Shot
-        actualizaRow(dataframe, 'Name', foto_dir, 'Shot' + take, shot)
+        actualizaRow(dataframe, 'Name', foto_dir, 'Shot' + str(take), shot)
         #Style
-        actualizaRow(dataframe, 'Name', foto_dir, 'Style' + take, style)
+        actualizaRow(dataframe, 'Name', foto_dir, 'Style' + str(take), style)
         #Hero
-        actualizaRow(dataframe, 'Name', foto_dir, 'Hero' + take, style)
+        actualizaRow(dataframe, 'Name', foto_dir, 'Hero' + str(take), style)
 
 
 def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido): 

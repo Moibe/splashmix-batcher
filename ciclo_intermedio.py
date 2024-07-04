@@ -1,7 +1,6 @@
 import pretools, postools, time, configuracion
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
-
 base_url = configuracion.base_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
@@ -15,8 +14,6 @@ dataframe = postools.preparaDataframe(filename)
 
 #Hacer el Stable Diffusion.
 postools.fullProcess(sesion, dataframe)
-print("Terminé full process...")
-time.sleep(1)
 
 #Finaliza Excel después de preproducción.
 pretools.df2Excel(dataframe, filename)
