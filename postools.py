@@ -2,6 +2,7 @@ import os
 import data
 import time
 import random
+import pretools
 import pandas as pd
 import gradio_client
 import servidor
@@ -53,118 +54,131 @@ def fullProcess(sesion, dataframe):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
 
-    # Filtra las filas donde 'Download Status' es igual a 'Success'
-    # Son las imagenes con las que trabajaremos.
-    df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
+    #Va todo en un try para que podamos guardar el dataframe en un excel en caso de interrupción del ciclo:
 
-    # Crea una nueva columna 'columna_imagenes' a partir de la columna 'Nombre'
-    columna_imagenes = df_images_ok['Name']
+    try: 
 
-    contador = 0
-    cuantos = len(columna_imagenes)
-    print("La cantidad de resultados son: ", cuantos)
+        # Filtra las filas donde 'Download Status' es igual a 'Success'
+        # Son las imagenes con las que trabajaremos.
+        df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
 
-    # Recorre cada URL de foto en la columna
-    for i, foto_path in enumerate(columna_imagenes):
+        # Crea una nueva columna 'columna_imagenes' a partir de la columna 'Nombre'
+        columna_imagenes = df_images_ok['Name']
 
-        #FOTO
-        foto = os.path.join(ruta_origen, foto_path)
-        
-        #Prepara la imagen para gradio.
-        imagenSource = gradio_client.handle_file(foto)
-        #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
-       
-        #ESTO SERÁ LO QUE AHORA QUEREMOS EJECUTAR 4 VECES:
+        contador = 0
+        cuantos = len(columna_imagenes)
+        print("La cantidad de resultados son: ", cuantos)
 
-        #Cuantos samples por foto querremos.
-        cantidad_resultados = 4
+        # Recorre cada URL de foto en la columna
+        for i, foto_path in enumerate(columna_imagenes):
 
-        for j in range(cantidad_resultados):
-
-            take = j + 1
-
-            print(f"Estamos en la take número: {j} de tantos: {cantidad_resultados}")            
-
-            #POSICIÓN
-            ruta_posicion, shot = getPosition()
-            print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
-            #Prepara la posición para gradio.
-            imagenPosition = gradio_client.handle_file(ruta_posicion)
-            #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.        
-
-            #PROMPT
-            lista_estilos = data.lista_estilos
-            lista_subjects = data.lista_subjects
-            style = random.choice(lista_estilos)
-            subject = random.choice(lista_subjects)
-            prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
-            print("Building prompt: ", prompt)
-
-
-            #STABLE DIFFUSION
-            print("Iniciando Stable Difussion...")
-            resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
-
-            #-->Aquí es donde llegan los breaks cuando la API estaba apagada.
+            #FOTO
+            foto = os.path.join(ruta_origen, foto_path)
             
-            #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
-            if resultado == "api apagada":
-                print("La api está apagada, esperando a que reinicie.")
-                configuracion.api_apagada = True
-                #Se definirá si esperar a que reinicie o no.
-                if configuracion.wait_awake == True: 
-                    print("Esperando 500 segundos a que reinicie...")
-                    time.sleep(configuracion.wait_time)
-                    configuracion.waited = True
-                    break #Se va a donde acaba el for de 4.
-                else: 
-                    time.sleep(1)
-                    configuracion.waited = False
-                    break                
-            else: 
-                print("Se fue al else porque type(resultado) es: ", type(resultado))
-
-            time.sleep(2)
-           
-            #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
-            if isinstance(resultado, tuple):
-                print("Es una tupla: ", resultado)
-                print("Vamos a guardar el resultado, y la ruta_final o destino es: ", target_dir)
-                guardarResultado(dataframe, resultado, foto_path, take, shot, style, subject, target_dir)
-
-            #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
-            else:
-                print("No es una tupla: ", resultado)
-                print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
-                time.sleep(3)
-                texto = str(resultado)
-                segmentado = texto.split('exception:')
-                print("Segmentado[1] es: ", segmentado[1])
-                
-                print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
-                actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
-                #Aquí haremos un break porque no tiene caso intentarlo 4 veces. 
-                break
-                
-            print("Salí del if instance...")
-
-            #AQUÍ TERMINA EL PROCESO QUE BIEN PODRÍAMOS REPETIR 4 VECES.
-
-        #Revisa si éste for debería tener un try-except.
-        print("Salí del for de 4....")
-        #Aquí llega el break si la API estaba apagada, habiendo esperado o no."        
+            #Prepara la imagen para gradio.
+            imagenSource = gradio_client.handle_file(foto)
+            #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
         
-        if configuracion.api_apagada == True:
-            if configuracion.waited == True: 
-            #Si estaba apagada, pero esperó, ya no hagas el segundo break.
-                configuracion.waited = False #Solo regresa a waited al estado normal. (quizá no es necesario pq no llega aquí.)
-            else: 
-                #Si estaba apagada y no esperaste, salte totalmente con el segundo break...
-                print("Como el problema fue que la API estaba apagada, volveré a saltar hacia un break.")
-                break
-        else:
-            #Si la API no estaba apagada, éste es el camino normal.
-            contador =+ 1
+            #ESTO SERÁ LO QUE AHORA QUEREMOS EJECUTAR 4 VECES:
+
+            #Cuantos samples por foto querremos.
+            cantidad_resultados = 4
+
+            for j in range(cantidad_resultados):
+
+                take = j + 1
+
+                print(f"Estamos en la take número: {j} de tantos: {cantidad_resultados}")            
+
+                #POSICIÓN
+                ruta_posicion, shot = getPosition()
+                print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
+                #Prepara la posición para gradio.
+                imagenPosition = gradio_client.handle_file(ruta_posicion)
+                #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.        
+
+                #PROMPT
+                lista_estilos = data.lista_estilos
+                lista_subjects = data.lista_subjects
+                style = random.choice(lista_estilos)
+                subject = random.choice(lista_subjects)
+                prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
+                print("Building prompt: ", prompt)
+
+
+                #STABLE DIFFUSION
+                print("Iniciando Stable Difussion...")
+                resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
+
+                #-->Aquí es donde llegan los breaks cuando la API estaba apagada.
+                
+                #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
+                if resultado == "api apagada":
+                    print("La api está apagada, esperando a que reinicie.")
+                    configuracion.api_apagada = True
+                    #Se definirá si esperar a que reinicie o no.
+                    if configuracion.wait_awake == True: 
+                        print("Esperando 500 segundos a que reinicie...")
+                        time.sleep(configuracion.wait_time)
+                        configuracion.waited = True
+                        break #Se va a donde acaba el for de 4.
+                    else: 
+                        time.sleep(1)
+                        configuracion.waited = False
+                        break                
+                else: 
+                    print("Se fue al else porque type(resultado) es: ", type(resultado))
+
+                time.sleep(1)
+            
+                #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
+                if isinstance(resultado, tuple):
+                    print("Es una tupla: ", resultado)
+                    print("Vamos a guardar el resultado, y la ruta_final o destino es: ", target_dir)
+                    guardarResultado(dataframe, resultado, foto_path, take, shot, style, subject, target_dir, 'Image processed')
+
+                #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
+                else:
+                    print("No es una tupla: ", resultado)
+                    print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
+                    
+                    texto = str(resultado)
+                    segmentado = texto.split('exception:')
+                    print("Segmentado es una posible causa de error, analiza segmentado es: ", segmentado)
+                    time.sleep(5)
+                    print("Segmentado[1] es: ", segmentado[1])
+                    
+                    print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
+                    #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
+                    guardarResultado(dataframe, imagenSource, foto_path, take, shot, style, subject, target_dir, segmentado[1])
+                    #actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
+                    #Aquí haremos un break porque no tiene caso intentarlo 4 veces. 
+                    break
+                    
+                print("Salí del if instance...")
+
+                #AQUÍ TERMINA EL PROCESO QUE BIEN PODRÍAMOS REPETIR 4 VECES.
+
+            #Revisa si éste for debería tener un try-except.
+            print("Salí del for de 4....")
+            #Aquí llega el break si la API estaba apagada, habiendo esperado o no."        
+            
+            if configuracion.api_apagada == True:
+                if configuracion.waited == True: 
+                #Si estaba apagada, pero esperó, ya no hagas el segundo break.
+                    configuracion.waited = False #Solo regresa a waited al estado normal. (quizá no es necesario pq no llega aquí.)
+                else: 
+                    #Si estaba apagada y no esperaste, salte totalmente con el segundo break...
+                    print("Como el problema fue que la API estaba apagada, volveré a saltar hacia un break.")
+                    break
+            else:
+                #Si la API no estaba apagada, éste es el camino normal.
+                contador =+ 1
+    except KeyboardInterrupt:
+        print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
+        time.sleep(3)
+        pretools.df2Excel(dataframe, configuracion.filename)
+
         
 def getPosition():
 
@@ -270,7 +284,7 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
         print("XXXXX")
         return e
     
-def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ruta_final):
+def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ruta_final, message):
 
     """
     Guarda el resultado con una nomenclatura específica. Y lo guarda en disco.
@@ -283,37 +297,50 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ru
     shot
     estilo
     ruta_final
+    message: el mensaje textual que irá en la columna stable diffusion: si fue error el error, si no: Image Processed.
 
     Returns:
     bool: True si se guardó el archivo correctamente.
     """
     
-    profile_split = foto_dir.split('.')
-    nombre_sin_extension = profile_split[0]
-    nombre_archivo = nombre_sin_extension + "-Take=" + str(take) + "-Shot=" + shot + "-Style=" + style + "-Subject=" + subject + ".png"
-    ruta_total = os.path.join(ruta_final, nombre_archivo)
+    
            
-    ruta_imagen_local = result[0]  
+    
+    #Aquí guardará la imagen.
+    #Ésta parte solo debe hacerla si no viene de error. 
 
-    with open(ruta_imagen_local, "rb") as archivo_lectura:
-        contenido_imagen = archivo_lectura.read()	
+    print("HOY: Estamos en guardarResultado, y el mensaje que recibimos como parámetro es: ", message)
+    time.sleep(3)
 
-    with open(ruta_total, "wb") as archivo_escritura:
-        archivo_escritura.write(contenido_imagen)
-        print(f"Imagen guardada correctamente en: {ruta_total}")
-        print("Estamos por actualizar excel...")
-        #actualizaExcel(dataframe, 'C4D03AQEi0TQ389Qscw.png')
-        #Diffusion Status (Se agrega + 'take' al nombre de cada columna para distinguirlas y ordenarlas.)
+    if message == "Image processed":
 
-        actualizaRow(dataframe, 'Name', foto_dir, 'Diffusion Status', 'Image processed')
-        #Take
-        actualizaRow(dataframe, 'Name', foto_dir, 'Take' + str(take), take)
-        #Shot
-        actualizaRow(dataframe, 'Name', foto_dir, 'Shot' + str(take), shot)
-        #Style
-        actualizaRow(dataframe, 'Name', foto_dir, 'Style' + str(take), style)
-        #Hero
-        actualizaRow(dataframe, 'Name', foto_dir, 'Hero' + str(take), style)
+        #Crear el nombre que tendrá el archivo.
+        profile_split = foto_dir.split('.')
+        nombre_sin_extension = profile_split[0]
+        nombre_archivo = nombre_sin_extension + "-Take=" + str(take) + "-Shot=" + shot + "-Style=" + style + "-Subject=" + subject + ".png"
+        ruta_total = os.path.join(ruta_final, nombre_archivo)
+
+        ruta_imagen_local = result[0]  
+
+        with open(ruta_imagen_local, "rb") as archivo_lectura:
+            contenido_imagen = archivo_lectura.read()	
+
+        with open(ruta_total, "wb") as archivo_escritura:
+            archivo_escritura.write(contenido_imagen)
+            print(f"Imagen guardada correctamente en: {ruta_total}")
+            print("Estamos por actualizar excel...")
+            #actualizaExcel(dataframe, 'C4D03AQEi0TQ389Qscw.png')
+            #Diffusion Status (Se agrega + str(take) al nombre de cada columna para distinguirlas y ordenarlas.)
+
+    actualizaRow(dataframe, 'Name', foto_dir, 'Diffusion Status', message)
+    #Take
+    actualizaRow(dataframe, 'Name', foto_dir, 'Take' + str(take), take)
+    #Shot
+    actualizaRow(dataframe, 'Name', foto_dir, 'Shot' + str(take), shot)
+    #Style
+    actualizaRow(dataframe, 'Name', foto_dir, 'Style' + str(take), style)
+    #Hero
+    actualizaRow(dataframe, 'Name', foto_dir, 'Hero' + str(take), subject)
 
 
 def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido): 
@@ -345,14 +372,16 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
         print("y tipo de contenido es: ", type(contenido))
         print(f"Valor de la celda que coincide: {cell_value}")
         print("-------")
-        print("-------")
-        print("-------")
+        
+        print("En éste momento vamos a actualizar la row con las características de la imagen...")
+        print(f"Se hará ésto: dataframe.loc[index, receiving_col] = contenido, en donde index es: {index} y receiving_col es: {receiving_col}...")
+        
         dataframe.loc[index, receiving_col] = contenido
        
     else:
         print("No se encontró la celda coincidente.")        
 
-def subirTodo(dataframe, sesion, foto_complete_url):
+def subirTodo(dataframe, sesion, foto_complete_url_dir):
 
     print("Entramos a subir todo, la sesión es: ", sesion) 
 
@@ -365,11 +394,11 @@ def subirTodo(dataframe, sesion, foto_complete_url):
     directorio_receptor = carpeta_remota + sesion
     print(f"El directorio receptor será entonces: {directorio_receptor} y su tipo es: {type(directorio_receptor)}")
     
-    #Define ruta de la carpeta local.
+    #Define ruta de la carpeta local donde se encuentran los resultados.
     carpeta_local = 'imagenes\\resultados\\' + sesion + '-results'
 
-
-    resultado = servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
+    #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
+    resultado = servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_dir)
     #Checar si aquí tendría que regresar el dataframe para tener sus modificaciones.
     print(resultado)
 

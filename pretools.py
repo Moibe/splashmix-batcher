@@ -109,7 +109,11 @@ def procesaImagenes(sesion, dataframe):
         filename = os.path.dirname(foto_url)
         partes = filename.split('image/')
         siguiente = partes[1].split('/')
-        image_id = f"{siguiente[0]}.png"
+        #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
+        
+        nombre = siguiente[0].replace("-", "")
+        
+        image_id = f"{nombre}.png"
 
         #Actualiza la columna 'Name' con el nombre del archivo.
         dataframe.loc[i, 'Name'] = image_id

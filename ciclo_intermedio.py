@@ -1,4 +1,4 @@
-import pretools, postools, time, configuracion
+import pretools, postools, configuracion
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
 base_url = configuracion.base_url
@@ -10,10 +10,10 @@ filename = configuracion.filename
 postools.creaDirectorioResults(sesion)
 
 #Crea el dataframe necesario.
-dataframe = postools.preparaDataframe(filename)
+dataframe = postools.preparaDataframe(configuracion.filename)
 
 #Hacer el Stable Diffusion.
 postools.fullProcess(sesion, dataframe)
 
 #Finaliza Excel después de preproducción.
-pretools.df2Excel(dataframe, filename)
+pretools.df2Excel(dataframe, configuracion.filename)

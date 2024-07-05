@@ -1,7 +1,8 @@
 import os
 import time
-import paramiko 
-import postools
+import paramiko
+import configuracion 
+import pretools, postools
 import nycklar.nodes as nodes
 
 def conecta(): 
@@ -42,7 +43,7 @@ def escribe(sftp, archivo, contenido):
 
   return "Contenido escrito"
 
-def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url):
+def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_dir):
 
   """
   Sube una carpeta local completa a una carpeta remota.
@@ -52,13 +53,13 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
     dataframe
     carpeta_local
     directorio_receptor
-    foto_complete_url
+    foto_complete_url_dir: Es la ruta del directorio local donde están todos los resultados, 
 
   Returns:
   dataframe:Regresa dataframe.
   """ 
 
-  print("Llegamos a servidor.sube y foto_complete_url es:", foto_complete_url)
+  print("Llegamos a servidor.sube y foto_complete_url_dir o dirección donde se subirá todo es:", foto_complete_url_dir)
 
   try:       
         #Crea directorio
@@ -102,8 +103,9 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
             print("Así quedó el nuevo directorio receptor: ", nuevo_directorio_receptor)
 
             #Ahora extraeremos su ID y su Take: 
-            segmentos = imagen.split(',')
+            segmentos = imagen.split('-')
             id = segmentos[0] + '.png'  #El segmento 0 es el ID.
+            print("Ahora que cambiamos a guión (dash) el id queda bien?: ", id)
             take_textual = segmentos[1] #Take=1
             segmentos_take = take_textual.split('=')
             take = segmentos_take[1] #segmento[1] es el número.
@@ -129,8 +131,8 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
             print("---")
             print("---")
             print("---")
-            print("---")
-            ruta_completa = foto_complete_url + '/' + imagen
+            
+            ruta_completa = foto_complete_url_dir + '/' + imagen
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             campo_receptor = 'URL'+ take
             print("El campo receptor quedó como: ", campo_receptor)
@@ -149,10 +151,14 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url)
         print(mensaje)
         print("XXXXXXXX")
         print("XXXXXXXX")
-        print("XXXXXXXX")
-        print("XXXXXXXX")
         
         return f"OJO: Error al subir un archivo: {e}"
+
+  except KeyboardInterrupt:
+      print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
+      time.sleep(2)
+      pretools.df2Excel(dataframe, configuracion.filename)
+
   finally: 
       contador += 1
   
