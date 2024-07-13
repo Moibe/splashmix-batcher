@@ -97,13 +97,48 @@ def fullProcess(sesion, dataframe):
                 imagenPosition = gradio_client.handle_file(ruta_posicion)
                 #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.        
 
-                #PROMPT
+                #PROMPT PARA HEROES
                 lista_estilos = data.lista_estilos
                 lista_subjects = data.lista_subjects
                 style = random.choice(lista_estilos)
                 subject = random.choice(lista_subjects)
                 prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
                 print("Building prompt: ", prompt)
+
+                lista_adjective = data.lista_adjective
+                adjective = random.choice(lista_adjective)
+
+                lista_type_girl = data.lista_type_girl
+                type_girl = random.choice(lista_type_girl)
+
+                lista_hair_style = data.lista_hair_style
+                hair_style = random.choice(lista_hair_style)
+
+                lista_boobs = data.lista_boobs
+                boobs = random.choice(lista_boobs)
+
+                lista_wardrobe_top = data.lista_wardrobe_top
+                wardrobe_top = random.choice(lista_wardrobe_top)
+
+                lista_wardrobe_accesories = data.lista_wardrobe_accesories
+                wardrobe_accesories = random.choice(lista_wardrobe_accesories)
+                
+                lista_wardrobe_bottom = data.lista_wardrobe_bottom
+                wardrobe_bottom = random.choice(lista_wardrobe_bottom)
+                
+                lista_wardrobe_shoes = data.lista_wardrobe_shoes
+                wardrobe_shoes = random.choice(lista_wardrobe_shoes)
+                
+                lista_situacion = data.lista_situacion
+                situation = random.choice(lista_situacion)
+                
+                lista_place = data.lista_place
+                place = random.choice(lista_place)
+
+                lista_complemento = data.lista_complemento
+                complemento = random.choice(lista_complemento)
+
+                prompt = f"A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situation} at {place} {complemento}"
 
 
                 #STABLE DIFFUSION
@@ -317,7 +352,9 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ru
         #Crear el nombre que tendrá el archivo.
         profile_split = foto_dir.split('.')
         nombre_sin_extension = profile_split[0]
-        nombre_archivo = nombre_sin_extension + "-Take=" + str(take) + "-Shot=" + shot + "-Style=" + style + "-Subject=" + subject + ".png"
+        #nombre_archivo = nombre_sin_extension + "-Take=" + str(take) + "-Shot=" + shot + "-Style=" + style + "-Subject=" + subject + ".png"
+        #Ahora ya se hará nombre corto pq las características están en el excel: 
+        nombre_archivo = nombre_sin_extension + "-Take" + str(take) + ".png"
         ruta_total = os.path.join(ruta_final, nombre_archivo)
 
         ruta_imagen_local = result[0]  
@@ -371,7 +408,7 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
         print("Para la revisión de Warning, valor de contenido es: ", contenido)
         print("y tipo de contenido es: ", type(contenido))
         print(f"Valor de la celda que coincide: {cell_value}")
-        print("-------")
+       
         
         print("En éste momento vamos a actualizar la row con las características de la imagen...")
         print(f"Se hará ésto: dataframe.loc[index, receiving_col] = contenido, en donde index es: {index} y receiving_col es: {receiving_col}...")

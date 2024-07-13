@@ -2,6 +2,7 @@ import os
 import requests
 import pandas as pd
 import time
+from openpyxl import Workbook, load_workbook
 
 def creaDirectorioInicial(sesion): 
     """
@@ -80,7 +81,7 @@ def creaDataframe(archivo):
 
     return df
     
-def procesaImagenes(sesion, dataframe):
+def descargaImagenes(sesion, dataframe):
 
     """
     Recorre cada imagen obteniendo su nombre y guardándolo en el dataframe.
@@ -134,7 +135,45 @@ def procesaImagenes(sesion, dataframe):
         except Exception as e:
             download_status = f"Error: {response.status_code}"
             dataframe.loc[i, 'Download Status'] = download_status
-            print(f"Error downloading image: {foto_url} - {e}")            
+            print(f"Error downloading image: {foto_url} - {e}")
+
+def directoriador(directorio):
+
+    try:
+        excel = directorio + ".xlsx"
+        #Las imagenes tuvieron que haber sido subidas a la ruta correcta previamente.
+        directory_address = "imagenes/fuentes/" + directorio
+        print("El excel que usaremos es: ", excel)
+        print("La ruta completa es: ", directory_address)
+        
+        workbook = load_workbook(excel)
+
+    except FileNotFoundError:
+        workbook = Workbook()
+
+    worksheet = workbook.active
+
+    # Agregar encabezado para la segunda columna
+    worksheet.cell(row=1, column=1).value = "Name"
+    # Agregar encabezado para la segunda columna
+    worksheet.cell(row=1, column=2).value = "Download Status"
+
+    row = 2  # Comenzar desde la fila 2 (después del encabezado)
+
+    for filename in os.listdir(directory_address):
+        #if filename.endswith(".jpg") or filename.endswith(".png"):
+            
+            # Agregar nombre de archivo en la primera columna
+            worksheet.cell(row=row, column=1).value = filename
+
+            # Agregar "Success" en la segunda columna
+            worksheet.cell(row=row, column=2).value = "Success"
+
+            row += 1
+
+    workbook.save(excel)
+
+          
 
 def df2Excel(dataframe, filename):
 
