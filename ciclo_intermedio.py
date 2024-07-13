@@ -1,15 +1,19 @@
-import pretools, postools, configuracion
+import pretools, postools, configuracion, time
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
+
 base_url = configuracion.base_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
+print("foto_complete_url es: ", foto_complete_url)
+time.sleep(1)
+#Por ejemplo https://dominio.com/results/minitest
 filename = configuracion.filename
 
 #Crea los directorios necesarios.
 postools.creaDirectorioResults(sesion)
 
-#Crea el dataframe necesario.
+#Crea el dataframe necesario con el excel designado en configuración.
 dataframe = postools.preparaDataframe(configuracion.filename)
 
 #Hacer el Stable Diffusion.

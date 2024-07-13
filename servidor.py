@@ -96,7 +96,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_
             #Origen
             ruta_origen = os.path.join(os.getcwd(), carpeta_local, imagen)
             print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen} y su tipo es: {type(ruta_origen)}.")
-            time.sleep(3)
+            time.sleep(1)
 
             #Destino
             nuevo_directorio_receptor = directorio_receptor.replace("/", "\\")

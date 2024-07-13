@@ -3,7 +3,6 @@ import pretools
 import configuracion
 
 #CICLO INICIAL: OBTENCIÓN DE IMAGENES 
-
 #Las imagenes se pueden obtener ya sea de una lista de excel o de un directorio que ya contenga las imagenes.
 
 #Nombra la sesión para tener un nuevo directorio por cada sesión.

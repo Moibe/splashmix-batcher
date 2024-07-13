@@ -45,26 +45,30 @@ def creaDataframe(archivo):
     #Importante: Crea las nuevas columnas que necesitará:
     df['Name'] = ''
     df['Download Status'] = ''
-    df['Diffusion Status']=''
+    
     #Revisar si la cantidad de campos URL la podrías crear dinámicamente.
+    df['DiffusionStatus1']=''
     df['Take1'] = ''
     df['Shot1'] = ''
     df['Style1'] = ''
     df['Hero1'] = ''
     df['URL1']=''
 
+    df['DiffusionStatus2']=''
     df['Take2'] = ''
     df['Shot2'] = ''
     df['Style2'] = ''
     df['Hero2'] = ''
     df['URL2']=''
 
+    df['DiffusionStatus3']=''
     df['Take3'] = ''
     df['Shot3'] = ''
     df['Style3'] = ''
     df['Hero3'] = ''
     df['URL3']=''
 
+    df['DiffusionStatus4']=''
     df['Take4'] = ''
     df['Shot4'] = ''
     df['Style4'] = ''
@@ -153,10 +157,12 @@ def directoriador(directorio):
 
     worksheet = workbook.active
 
-    # Agregar encabezado para la segunda columna
+    
     worksheet.cell(row=1, column=1).value = "Name"
-    # Agregar encabezado para la segunda columna
+    
     worksheet.cell(row=1, column=2).value = "Download Status"
+    
+    worksheet.cell(row=1, column=2).value = "Diffusion Status"
 
     row = 2  # Comenzar desde la fila 2 (después del encabezado)
 
@@ -182,6 +188,7 @@ def df2Excel(dataframe, filename):
 
     Parameters:
     dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+    filename
 
     Returns:
     bool: True si se guardó el archivo correctamente.

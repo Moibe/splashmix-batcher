@@ -44,13 +44,14 @@ def fullProcess(sesion, dataframe):
     bool: True si se guardó el archivo correctamente.
     """
     #Origen
-    ruta_origen = os.path.join('imagenes', 'fuentes', sesion)
-    ruta_destino = sesion + "-results"
+    ruta_origen = os.path.join('imagenes', 'fuentes', sesion)    
 
     #Destino
+    ruta_destino = sesion + "-results"
     target_dir = os.path.join('imagenes', 'resultados', ruta_destino)
     print("This is the target: ", target_dir)
 
+    #En caso de no existir el directorio destino, lo creará.
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
 
@@ -71,6 +72,8 @@ def fullProcess(sesion, dataframe):
 
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
+
+            print(f"El valor de i es: {i} y su tipo es: {type(i)}...")
 
             #FOTO
             foto = os.path.join(ruta_origen, foto_path)
@@ -105,11 +108,14 @@ def fullProcess(sesion, dataframe):
                 prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
                 print("Building prompt: ", prompt)
 
+                #PROMPT PARA CHICAS
                 lista_adjective = data.lista_adjective
                 adjective = random.choice(lista_adjective)
 
                 lista_type_girl = data.lista_type_girl
                 type_girl = random.choice(lista_type_girl)
+                #Hacemos ésto momentaneamente para que no se conflictue con el guardado de excel q está hecho para Superheroes.
+                subject = type_girl
 
                 lista_hair_style = data.lista_hair_style
                 hair_style = random.choice(lista_hair_style)
@@ -169,10 +175,13 @@ def fullProcess(sesion, dataframe):
                 #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
                 if isinstance(resultado, tuple):
                     print("Es una tupla: ", resultado)
-                    print("Vamos a guardar el resultado, y la ruta_final o destino es: ", target_dir)
+                    print(f"IMPORTANTE: Vamos a guardar el resultado, y la ruta_final o destino es {target_dir} y es del tipo: {type(target_dir)}...")
+                    time.sleep(1)
+                    #IMPORTANTE, aquí guarda el resultado.
                     guardarResultado(dataframe, resultado, foto_path, take, shot, style, subject, target_dir, 'Image processed')
 
                 #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
+                #CORRIGE IMPORTANTE: QUE NO SE SALGA DEL CICLO DE ESA IMAGEN AL ENCONTRAR ERROR.
                 else:
                     print("No es una tupla: ", resultado)
                     print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
@@ -180,15 +189,26 @@ def fullProcess(sesion, dataframe):
                     texto = str(resultado)
                     segmentado = texto.split('exception:')
                     print("Segmentado es una posible causa de error, analiza segmentado es: ", segmentado)
-                    time.sleep(5)
-                    print("Segmentado[1] es: ", segmentado[1])
+                    ###FUTURE: Agregar que si tuvo problemas con la imagen de referencia, agregue en un 
+                    #Log de errores porque ya no lo hará en el excel, porque le dará la oportunidad con otra 
+                    #imagen de posición.
+                    try:
+                        #Lo pongo en try porque si no hay segmentado[1], suspende toda la operación. 
+                        print("Segmentado[1] es: ", segmentado[1])
+                    except Exception as e:
+                        print("Error en el segmentado: ", e)
+                    finally: 
+                        pass
                     
                     print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
                     #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
                     guardarResultado(dataframe, imagenSource, foto_path, take, shot, style, subject, target_dir, segmentado[1])
                     #actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
-                    #Aquí haremos un break porque no tiene caso intentarlo 4 veces. 
-                    break
+                    #Aquí haremos un break porque no tiene caso intentarlo 4 veces.
+                    #Quité el break porque al parecer si tiene caso intentarlo 4 veces. 
+                    #Sin embargo si vale la pena cuando posición estuvo mal, así es que mejor cambia a detectar cuando posición
+                    #es la que estuvo mal.
+                    #break
                     
                 print("Salí del if instance...")
 
@@ -338,18 +358,17 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ru
     bool: True si se guardó el archivo correctamente.
     """
     
-    
-           
-    
     #Aquí guardará la imagen.
     #Ésta parte solo debe hacerla si no viene de error. 
 
     print("HOY: Estamos en guardarResultado, y el mensaje que recibimos como parámetro es: ", message)
-    time.sleep(3)
+    time.sleep(1)
 
     if message == "Image processed":
 
         #Crear el nombre que tendrá el archivo.
+        #Quieres todo lo que va antes del punto de la extensión.
+        #Ve si existe otra forma de separar la extensión, más específica, porque esto se presta a errores si el archivo tuviera punto en su nombre.
         profile_split = foto_dir.split('.')
         nombre_sin_extension = profile_split[0]
         #nombre_archivo = nombre_sin_extension + "-Take=" + str(take) + "-Shot=" + shot + "-Style=" + style + "-Subject=" + subject + ".png"
@@ -369,7 +388,7 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ru
             #actualizaExcel(dataframe, 'C4D03AQEi0TQ389Qscw.png')
             #Diffusion Status (Se agrega + str(take) al nombre de cada columna para distinguirlas y ordenarlas.)
 
-    actualizaRow(dataframe, 'Name', foto_dir, 'Diffusion Status', message)
+    actualizaRow(dataframe, 'Name', foto_dir, 'DiffusionStatus' + str(take), message)
     #Take
     actualizaRow(dataframe, 'Name', foto_dir, 'Take' + str(take), take)
     #Shot
@@ -408,11 +427,7 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
         print("Para la revisión de Warning, valor de contenido es: ", contenido)
         print("y tipo de contenido es: ", type(contenido))
         print(f"Valor de la celda que coincide: {cell_value}")
-       
-        
-        print("En éste momento vamos a actualizar la row con las características de la imagen...")
-        print(f"Se hará ésto: dataframe.loc[index, receiving_col] = contenido, en donde index es: {index} y receiving_col es: {receiving_col}...")
-        
+               
         dataframe.loc[index, receiving_col] = contenido
        
     else:
