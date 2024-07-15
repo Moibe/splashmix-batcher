@@ -8,6 +8,7 @@ import gradio_client
 import servidor
 import nycklar.nodes as nodes
 import configuracion
+from prompts import Prompt, Superhero, Hotgirl
 
 def creaDirectorioResults(sesion):
     """
@@ -102,13 +103,63 @@ def fullProcess(sesion, dataframe):
 
                 #IMPORTANTE, AQUÍ SE OBTENÍA EL PROMPT.
                 #prompt = prompter()
-                #Estoy usando la clase llamada Prompt creada por mi, para hacer el prompt."
-                prompt = Prompt()
 
-                print("Hola soy un prompt: ", prompt)
-                print("Éste es mi estilo: ", prompt.style)
-                print("Y éste es mi subject:  ", prompt.subject)
-                time.sleep(8)
+                mi_chica = Hotgirl()
+                time.sleep(3)
+
+                #PROMPT PARA HEROES
+                lista_estilos = data.lista_estilos
+                lista_subjects = data.lista_subjects
+                style = random.choice(lista_estilos)
+                subject = random.choice(lista_subjects)
+                prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
+
+                #PROMPT PARA CHICAS
+                lista_estilos = data.lista_estilos
+                style = random.choice(lista_estilos)
+
+                lista_subjects = data.lista_subjects
+                subject = random.choice(lista_subjects)
+                
+                lista_adjective = data.lista_adjective
+                adjective = random.choice(lista_adjective)
+
+                lista_type_girl = data.lista_type_girl
+                type_girl = random.choice(lista_type_girl)
+                
+                lista_hair_style = data.lista_hair_style
+                hair_style = random.choice(lista_hair_style)
+
+                lista_boobs = data.lista_boobs
+                boobs = random.choice(lista_boobs)
+
+                lista_wardrobe_top = data.lista_wardrobe_top
+                wardrobe_top = random.choice(lista_wardrobe_top)
+
+                lista_wardrobe_accesories = data.lista_wardrobe_accesories
+                wardrobe_accesories = random.choice(lista_wardrobe_accesories)
+                
+                lista_wardrobe_bottom = data.lista_wardrobe_bottom
+                wardrobe_bottom = random.choice(lista_wardrobe_bottom)
+                
+                lista_wardrobe_shoes = data.lista_wardrobe_shoes
+                wardrobe_shoes = random.choice(lista_wardrobe_shoes)
+                
+                lista_situacion = data.lista_situacion
+                situation = random.choice(lista_situacion)
+                
+                lista_place = data.lista_place
+                place = random.choice(lista_place)
+
+                lista_complemento = data.lista_complemento
+                complemento = random.choice(lista_complemento)
+
+                #prompt = f"A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situation} at {place} {complemento}"
+                #print(prompt)
+
+                #Ésta es la prueba de fuego, haremos el prompt, con nuestro objeto:
+                prompt = f"A {mi_chica.style} of a {mi_chica.adjective} {mi_chica.type_girl} {mi_chica.subject} with {mi_chica.boobs} and {mi_chica.hair_style} wearing {mi_chica.wardrobe_top}, {mi_chica.wardrobe_accesories}, {mi_chica.wardrobe_bottom}, {mi_chica.wardrobe_shoes}, {mi_chica.situacion} at {mi_chica.place} {mi_chica.complemento}"
+                print(prompt) 
                 
                 #STABLE DIFFUSION
                 print("Iniciando Stable Difussion...")
@@ -161,7 +212,7 @@ def fullProcess(sesion, dataframe):
                         mensaje = segmentado[1]
                     except Exception as e:
                         print("Error en el segmentado: ", e)
-                        mensaje = "concurrent.futures._base.CancelledError""
+                        mensaje = "concurrent.futures._base.CancelledError"
                     finally: 
                         pass
                     
@@ -199,10 +250,7 @@ def fullProcess(sesion, dataframe):
         time.sleep(3)
         pretools.df2Excel(dataframe, configuracion.filename)
 
-class Prompt:
-    def __init__(self, style=None, subject=None):
-        self.style = random.choice(data.lista_estilos)
-        self.subject = random.choice(data.lista_subjects)
+
 
 def prompter(data):
 
@@ -311,9 +359,27 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
     #Revisar si se puede subir el hf_token.
 
     #Hacer primer contacto con API, ésto ayudará a saber si está apagada y prenderla automáticamente.
+
+    print("Acabo de entrar a stablediffuse...")
+    print("Prompt now as text is: ", prompt)
+    print("Y prompt es del tipo: ", type(prompt))
+    
+    time.sleep(4)
+
     try: 
 
+        #Usando Moibe Splashmix
         client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+
+        #Usando Moibe InstantID
+        #client = gradio_client.Client("Moibe/InstantID", hf_token=nodes.splashmix_token)
+
+        #Usando original
+        #client = gradio_client.Client("InstantX/InstantID")
+
+        #Usando recién clonado.
+        #client = gradio_client.Client("Moibe/superheroes", hf_token=nodes.splashmix_token)
+
 
     except Exception as e:
         print("API apagada o pausada...", e)
