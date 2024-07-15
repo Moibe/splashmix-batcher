@@ -100,53 +100,16 @@ def fullProcess(sesion, dataframe):
                 imagenPosition = gradio_client.handle_file(ruta_posicion)
                 #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.        
 
-                #PROMPT PARA HEROES
-                lista_estilos = data.lista_estilos
-                lista_subjects = data.lista_subjects
-                style = random.choice(lista_estilos)
-                subject = random.choice(lista_subjects)
-                prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
-                print("Building prompt: ", prompt)
+                #IMPORTANTE, AQUÍ SE OBTENÍA EL PROMPT.
+                #prompt = prompter()
+                #Estoy usando la clase llamada Prompt creada por mi, para hacer el prompt."
+                prompt = Prompt()
 
-                #PROMPT PARA CHICAS
-                lista_adjective = data.lista_adjective
-                adjective = random.choice(lista_adjective)
-
-                lista_type_girl = data.lista_type_girl
-                type_girl = random.choice(lista_type_girl)
-                #Hacemos ésto momentaneamente para que no se conflictue con el guardado de excel q está hecho para Superheroes.
-                subject = type_girl
-
-                lista_hair_style = data.lista_hair_style
-                hair_style = random.choice(lista_hair_style)
-
-                lista_boobs = data.lista_boobs
-                boobs = random.choice(lista_boobs)
-
-                lista_wardrobe_top = data.lista_wardrobe_top
-                wardrobe_top = random.choice(lista_wardrobe_top)
-
-                lista_wardrobe_accesories = data.lista_wardrobe_accesories
-                wardrobe_accesories = random.choice(lista_wardrobe_accesories)
+                print("Hola soy un prompt: ", prompt)
+                print("Éste es mi estilo: ", prompt.style)
+                print("Y éste es mi subject:  ", prompt.subject)
+                time.sleep(8)
                 
-                lista_wardrobe_bottom = data.lista_wardrobe_bottom
-                wardrobe_bottom = random.choice(lista_wardrobe_bottom)
-                
-                lista_wardrobe_shoes = data.lista_wardrobe_shoes
-                wardrobe_shoes = random.choice(lista_wardrobe_shoes)
-                
-                lista_situacion = data.lista_situacion
-                situation = random.choice(lista_situacion)
-                
-                lista_place = data.lista_place
-                place = random.choice(lista_place)
-
-                lista_complemento = data.lista_complemento
-                complemento = random.choice(lista_complemento)
-
-                prompt = f"A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situation} at {place} {complemento}"
-
-
                 #STABLE DIFFUSION
                 print("Iniciando Stable Difussion...")
                 resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
@@ -195,14 +158,16 @@ def fullProcess(sesion, dataframe):
                     try:
                         #Lo pongo en try porque si no hay segmentado[1], suspende toda la operación. 
                         print("Segmentado[1] es: ", segmentado[1])
+                        mensaje = segmentado[1]
                     except Exception as e:
                         print("Error en el segmentado: ", e)
+                        mensaje = "concurrent.futures._base.CancelledError""
                     finally: 
                         pass
                     
                     print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
                     #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
-                    guardarResultado(dataframe, imagenSource, foto_path, take, shot, style, subject, target_dir, segmentado[1])
+                    guardarResultado(dataframe, imagenSource, foto_path, take, shot, style, subject, target_dir, mensaje)
                     #actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
                     #Aquí haremos un break porque no tiene caso intentarlo 4 veces.
                     #Quité el break porque al parecer si tiene caso intentarlo 4 veces. 
@@ -233,6 +198,67 @@ def fullProcess(sesion, dataframe):
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         time.sleep(3)
         pretools.df2Excel(dataframe, configuracion.filename)
+
+class Prompt:
+    def __init__(self, style=None, subject=None):
+        self.style = random.choice(data.lista_estilos)
+        self.subject = random.choice(data.lista_subjects)
+
+def prompter(data):
+
+    #PROMPT PARA HEROES
+                lista_estilos = data.lista_estilos
+                lista_subjects = data.lista_subjects
+                style = random.choice(lista_estilos)
+                subject = random.choice(lista_subjects)
+                prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
+                
+
+                #PROMPT PARA CHICAS
+
+                lista_estilos = data.lista_estilos
+                style = random.choice(lista_estilos)
+
+                lista_subjects = data.lista_subjects
+                subject = random.choice(lista_subjects)
+                
+                lista_adjective = data.lista_adjective
+                adjective = random.choice(lista_adjective)
+
+                lista_type_girl = data.lista_type_girl
+                type_girl = random.choice(lista_type_girl)
+                
+                lista_hair_style = data.lista_hair_style
+                hair_style = random.choice(lista_hair_style)
+
+                lista_boobs = data.lista_boobs
+                boobs = random.choice(lista_boobs)
+
+                lista_wardrobe_top = data.lista_wardrobe_top
+                wardrobe_top = random.choice(lista_wardrobe_top)
+
+                lista_wardrobe_accesories = data.lista_wardrobe_accesories
+                wardrobe_accesories = random.choice(lista_wardrobe_accesories)
+                
+                lista_wardrobe_bottom = data.lista_wardrobe_bottom
+                wardrobe_bottom = random.choice(lista_wardrobe_bottom)
+                
+                lista_wardrobe_shoes = data.lista_wardrobe_shoes
+                wardrobe_shoes = random.choice(lista_wardrobe_shoes)
+                
+                lista_situacion = data.lista_situacion
+                situation = random.choice(lista_situacion)
+                
+                lista_place = data.lista_place
+                place = random.choice(lista_place)
+
+                lista_complemento = data.lista_complemento
+                complemento = random.choice(lista_complemento)
+
+                prompt = f"A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situation} at {place} {complemento}"
+
+                print(prompt)
+                return prompt
 
         
 def getPosition():

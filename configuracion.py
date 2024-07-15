@@ -1,6 +1,6 @@
 #El dominio donde se presentan las imagenes guardadas.
 base_url = "https://euroglitter.com/results/"
-sesion = 'gals_mini'
+sesion = 'chicksComplete'
 #Source list es false porque no viene de una lista de excel si no de un directorio con fotos.
 source_list = False
 #filename = 'iteracionesTest.xlsx' #El filename podría salir del nombre de la sesión.

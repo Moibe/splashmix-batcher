@@ -194,6 +194,8 @@ def df2Excel(dataframe, filename):
     bool: True si se guardó el archivo correctamente.
     
     """
+
+    #IMPORTANTE: Agrega que si el archivo está abierto, de tiempo para corregir y no mande a error.
      
     # Obtiene la ruta actual del script (directorio raíz del proyecto)
     ruta_actual = os.path.dirname(__file__)

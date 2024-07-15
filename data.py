@@ -7,6 +7,8 @@ lista_estilos = ["hentai style",
                  "impresionist", 
                  "art nouveau", 
                  "pulp fiction", 
+                 "hentai syle",
+                 "porn toon",
                  "japanese-style-manga", 
                  "japanese-animation", 
                  "watercolor", 
@@ -17,25 +19,26 @@ lista_estilos = ["hentai style",
                  "painting", 
                  "watercolor", 
                  "anime", 
-                 "comic", 
+                 "comic",
+                 "alphonse mucha style", 
                  "dibujo", 
                  "manga", 
                  "lineart", 
                  "manga", 
                  "pin-up"]
 
-lista_adjective = ["beautiful", "", "hot", "naughty"]
+lista_adjective = ["beautiful", "", "hot", "naughty", "", "provocative", "", "sensual"]
 lista_type_girl = ["blonde", "", "brunette", "", "white", "", "whore"]
 lista_subjects = ["girl", "woman", "tranny", "girl", "woman", "girl", "woman"]
-lista_boobs = ["", "tight boobs", "",  "naught boobs", "", "sweet boobs", "little boobs", "", "medium boobs", "huge boobs", "big boobs", "A Cup", "B Cup", "C Cup", "D Cup", "DD Cup",  ]
+lista_boobs = ["", "tight boobs", "",  "naughty boobs", "", "sweet boobs", "", "little boobs", "", "medium boobs", "", "huge boobs", "", "big boobs", "", "rounded boobs", "",  "A Cup", "B Cup", "C Cup", "D Cup", "DD Cup", "", "plain chest", ""]
 lista_hair_style = ["long hair", "short hair", "bob style haircut", "pigtails", "dreadlocks", "curly hair", "pony tail", "long wavy hair", "braids"]
-lista_wardrobe_top = ["bikini", "swimsuit, lingerie", "sailor moon", "hot slave costume leia", "babydoll", "topless", "tight bra", "too tight lingerie bra", "tight lingerie bra",  "lingerie", "maid uniform",  "", "uniform", "tennis player uniform",  "", "school uniform", "police uniform", "nike tight top tank", "tight top tank", "topless"]
-lista_wardrobe_accesories = ["princess crown", "diadem", "", "choke", "", "bubble gum", "nose piercing", "garter belt"]
+lista_wardrobe_top = ["soccer girl", "", "bikini", "swimsuit", "lingerie", "in Victoria's Secret", "sailor moon", "hot slave leia costume ", "mini lingerie", "provocative lingerie",  "babydoll", "topless", "tight bra", "too tight lingerie bra", "tight lingerie bra",  "lingerie", "maid uniform",  "", "uniform", "tennis player uniform",  "", "school uniform", "police uniform", "nike tight top tank", "tight top tank", "topless"]
+lista_wardrobe_accesories = ["butt plug", "", "fox tail", "", "cat tail", "princess crown", "diadem", "", "diadema", "", "choke", "", "bubble gum", "nose piercing", "garter belt"]
 lista_wardrobe_bottom = ["babydoll", "", "skirt", "babydoll", "",  "school uniform", "babydoll", "tight shorts", "cocktail dress", "babydoll", "cocktail dress with cleavage", "cocktail dress with sequins", "cocktail tight dress with sequins", "executive dress",  "tight dress"]
 lista_wardrobe_shoes = ["high heels","heels", "high socks"]
 lista_situacion = ["chained", "hogtied", "tied", "", "with a snake around her neck", "a rope around her neck", "an slave chain around her neck"]
-lista_place = ["the street", "a bar", "a pole dance", "a hotel room", "a gym", "a dance club", "a crack house", "no background"]
-lista_complemento = ["", "full of horny men", "", "", "surrounded by men", "",  "with slave girls", "", "with prostitutes", "", "surrounded by snakes", ""]
+lista_place = ["", "the street", "", "a bar", "", "a pole dance", "", "a hotel room", "", "a gym", "", "a dance club", "", "a crack house", "", "a dungeon", "", "no background"]
+lista_complemento = ["", "", "a room full of pink dildos floating around", "", "", "a room full of colorful ballons", "", "", "full of horny men", "", "full of horny people", "","", "full of naughty girls", "",  "", "surrounded by men", "",  "with slave girls", "", "with prostitutes", "", "surrounded by snakes", ""]
 
 
 lista_whole = ["goth", "rocker", "skater", ]
