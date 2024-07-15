@@ -1,42 +1,58 @@
+import data.data as data, data.data_girls as data_girls, data.data_heroes as data_heroes
+import time
 import random
-import data
 
 class Prompt:
-    def __init__(self, style=None, subject=None):
-        
-        self.style = random.choice(data.lista_estilos)
-        self.subject = random.choice(data.lista_subjects)
-        self.message = f"A {self.style} of a superhero like {self.subject} "
+    def __init__(self, style=None):
 
-        print("Style: ", self.style)
-        print("Subject: ", self.subject)
-        print("Message: ", self.message)
+        self.style = style or random.choice(data.lista_estilos)
+        
+        
 
 class Superhero(Prompt):
-    def __init__(self, logo, affiliation):
+    def __init__(self,
+                 subject=None, 
+                 ):
         super().__init__()  # Call the parent class constructor
-        self.logo = logo
-        self.affiliation = affiliation
-
-        print("Logo: ", self.logo)
-        print("Affiliation: ", self.affiliation)
-
+        #Se especifica cuál es su databank:
+        databank = data_heroes
+        self.subject = subject or random.choice(databank.lista_subjects)
+        print("El heroe será: ", self.subject)
+        time.sleep(1)
+        
 class Hotgirl(Prompt):
-    def __init__(self, logo=None, affiliation=None):
-        super().__init__()  # Call the parent class constructor
-        self.logo = logo
-        self.affiliation = affiliation
-        self.adjective = random.choice(data.lista_estilos)
-        self.type_girl = random.choice(data.lista_type_girl)
-        self.hair_style = random.choice(data.lista_hair_style)
-        self.boobs = random.choice(data.lista_boobs)
-        self.wardrobe_top = random.choice(data.lista_wardrobe_top)
-        self.wardrobe_accesories = random.choice(data.lista_wardrobe_accesories)
-        self.wardrobe_bottom = random.choice(data.lista_wardrobe_bottom)
-        self.wardrobe_shoes = random.choice(data.lista_wardrobe_shoes)
-        self.situacion = random.choice(data.lista_situacion)
-        self.place = random.choice(data.lista_place)
-        self.complemento = random.choice(data.lista_complemento)
+    def __init__(self,
+                 style=None,
+                 subject=None,
+                 adjective=None,
+                 type_girl=None,
+                 hair_style=None,
+                 boobs=None,
+                 wardrobe_top=None,
+                 wardrobe_accesories=None,
+                 wardrobe_bottom=None,
+                 wardrobe_shoes=None,
+                 situacion=None,
+                 place=None,
+                 complemento=None,
+                 ):
+        super().__init__(style)  # Call the parent class constructor
+
+        #Se especifica cuál es su databank:
+        databank = data_girls
+        
+        self.subject = subject or random.choice(databank.lista_subjects)
+        self.adjective = adjective or random.choice(databank.lista_adjective)
+        self.type_girl = type_girl or random.choice(databank.lista_type_girl)
+        self.hair_style = hair_style or random.choice(databank.lista_hair_style)
+        self.boobs = boobs or random.choice(databank.lista_boobs)
+        self.wardrobe_top = wardrobe_top or random.choice(data_girls.lista_wardrobe_top)
+        self.wardrobe_accesories = wardrobe_accesories or random.choice(databank.lista_wardrobe_accesories)
+        self.wardrobe_bottom = wardrobe_bottom or random.choice(databank.lista_wardrobe_bottom)
+        self.wardrobe_shoes = wardrobe_shoes or random.choice(databank.lista_wardrobe_shoes)
+        self.situacion = situacion or random.choice(databank.lista_situacion)
+        self.place = place or random.choice(databank.lista_place)
+        self.complemento = complemento or random.choice(databank.lista_complemento)
 
         print(f"**Character Description:**")
         print(f"- Adjective: {self.adjective}")
