@@ -57,7 +57,6 @@ def fullProcess(sesion, dataframe):
         os.makedirs(target_dir)
 
     #Va todo en un try para que podamos guardar el dataframe en un excel en caso de interrupción del ciclo:
-
     try: 
 
         # Filtra las filas donde 'Download Status' es igual a 'Success'

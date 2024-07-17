@@ -2,7 +2,7 @@ import time
 import pretools
 import configuracion
 
-#CICLO INICIAL: OBTENCIÓN DE IMAGENES 
+#CICLO INICIAL: OBTENCIÓN DE IMAGENES Y CREACIÓN DE EXCEL DINÁMICO
 #Las imagenes se pueden obtener ya sea de una lista de excel o de un directorio que ya contenga las imagenes.
 
 #Nombra la sesión para tener un nuevo directorio por cada sesión.
@@ -15,10 +15,8 @@ if configuracion.source_list == True:
 
     #Si se usará un excel con urls, entonces creará un directorio para recibirlos.
 
-    #Ésto solo cea el directorio de fotos.
+    #Ésto solo crea el directorio de fotos.
     pretools.creaDirectorioInicial(sesion)
-
-    
     dataframe = pretools.creaDataframe(filename)
     pretools.descargaImagenes(sesion, dataframe)
     pretools.df2Excel(dataframe, filename)

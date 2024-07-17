@@ -41,6 +41,9 @@ def creaDataframe(archivo):
      
     df = pd.read_excel(archivo)
 
+    #Aquí dinámicamente indico cuantos samples haré.
+    n = 4
+
 
     #Importante: Crea las nuevas columnas que necesitará:
     df['Name'] = ''
@@ -49,8 +52,14 @@ def creaDataframe(archivo):
     # Set of column names to repeat
     column_names = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
 
-    # Create dynamic column names using list comprehension and repetition
-    dynamic_columns = [f"{name}{i + 1}" for name in column_names for i in range(n)]
+    # Create a list of desired column order
+    desired_order = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+
+    # Sort column names based on desired order and repeat
+    column_groups = [[f"{name}{i + 1}" for name in group] for i in range(n) for group in zip(*sorted(zip(desired_order, column_names)))]
+
+    # Flatten the nested list into a single list
+    dynamic_columns = [item for sublist in column_groups for item in sublist]
 
     # Add dynamic columns to the DataFrame
     df[dynamic_columns] = ''
@@ -86,8 +95,7 @@ def creaDataframe(archivo):
     # df['Hero4'] = ''
     # df['URL4']=''
 
-    # #Aquí dinámicamente indico cuantos samples haré.
-    # max_url_columns = 4
+    
 
     # for i in range(1, max_url_columns + 1):
 
