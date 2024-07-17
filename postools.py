@@ -308,12 +308,6 @@ def stableDiffuse(imagenSource, imagenPosition, prompt, shot):
 
     #Hacer primer contacto con API, ésto ayudará a saber si está apagada y prenderla automáticamente.
 
-    print("Acabo de entrar a stablediffuse...")
-    print("Prompt now as text is: ", prompt)
-    print("Y prompt es del tipo: ", type(prompt))
-    
-    time.sleep(4)
-
     try: 
 
         #Usando Moibe Splashmix

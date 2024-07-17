@@ -14,7 +14,11 @@ filename = configuracion.filename
 if configuracion.source_list == True: 
 
     #Si se usará un excel con urls, entonces creará un directorio para recibirlos.
+
+    #Ésto solo cea el directorio de fotos.
     pretools.creaDirectorioInicial(sesion)
+
+    
     dataframe = pretools.creaDataframe(filename)
     pretools.descargaImagenes(sesion, dataframe)
     pretools.df2Excel(dataframe, filename)

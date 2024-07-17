@@ -45,43 +45,54 @@ def creaDataframe(archivo):
     #Importante: Crea las nuevas columnas que necesitará:
     df['Name'] = ''
     df['Download Status'] = ''
+
+    # Set of column names to repeat
+    column_names = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+
+    # Create dynamic column names using list comprehension and repetition
+    dynamic_columns = [f"{name}{i + 1}" for name in column_names for i in range(n)]
+
+    # Add dynamic columns to the DataFrame
+    df[dynamic_columns] = ''
+
+    return df
     
     #Revisar si la cantidad de campos URL la podrías crear dinámicamente.
-    df['DiffusionStatus1']=''
-    df['Take1'] = ''
-    df['Shot1'] = ''
-    df['Style1'] = ''
-    df['Hero1'] = ''
-    df['URL1']=''
+    # df['DiffusionStatus1']=''
+    # df['Take1'] = ''
+    # df['Shot1'] = ''
+    # df['Style1'] = ''
+    # df['Hero1'] = ''
+    # df['URL1']=''
 
-    df['DiffusionStatus2']=''
-    df['Take2'] = ''
-    df['Shot2'] = ''
-    df['Style2'] = ''
-    df['Hero2'] = ''
-    df['URL2']=''
+    # df['DiffusionStatus2']=''
+    # df['Take2'] = ''
+    # df['Shot2'] = ''
+    # df['Style2'] = ''
+    # df['Hero2'] = ''
+    # df['URL2']=''
 
-    df['DiffusionStatus3']=''
-    df['Take3'] = ''
-    df['Shot3'] = ''
-    df['Style3'] = ''
-    df['Hero3'] = ''
-    df['URL3']=''
+    # df['DiffusionStatus3']=''
+    # df['Take3'] = ''
+    # df['Shot3'] = ''
+    # df['Style3'] = ''
+    # df['Hero3'] = ''
+    # df['URL3']=''
 
-    df['DiffusionStatus4']=''
-    df['Take4'] = ''
-    df['Shot4'] = ''
-    df['Style4'] = ''
-    df['Hero4'] = ''
-    df['URL4']=''
+    # df['DiffusionStatus4']=''
+    # df['Take4'] = ''
+    # df['Shot4'] = ''
+    # df['Style4'] = ''
+    # df['Hero4'] = ''
+    # df['URL4']=''
 
-    #Aquí dinámicamente indico cuantos samples haré.
-    max_url_columns = 4
+    # #Aquí dinámicamente indico cuantos samples haré.
+    # max_url_columns = 4
 
-    for i in range(1, max_url_columns + 1):
+    # for i in range(1, max_url_columns + 1):
 
-        column_name = f"URL{i}"  # Create column name dynamically
-        df[column_name] = ''  # Create the new column with an empty string
+    #     column_name = f"URL{i}"  # Create column name dynamically
+    #     df[column_name] = ''  # Create the new column with an empty string
 
     return df
     
