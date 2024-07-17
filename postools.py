@@ -100,14 +100,28 @@ def fullProcess(sesion, dataframe):
                 imagenPosition = gradio_client.handle_file(ruta_posicion)
                 #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.        
 
-                #prompt = prompter()
+                #PROMPT PARA CHICA
+                creacion = Hotgirl(style="Anime", place="-")
+                prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
 
-                mi_chica = Hotgirl(style="Anime", place="-")
+                #PROMPT PARA HEROE
+                # creacion = Superhero()
+                # prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #agregar otros atributos random aquí posteriormente.
                 
-                #Ésta es la prueba de fuego, haremos el prompt, con nuestro objeto:
-                prompt = f"A {mi_chica.style} of a {mi_chica.adjective} {mi_chica.type_girl} {mi_chica.subject} with {mi_chica.boobs} and {mi_chica.hair_style} wearing {mi_chica.wardrobe_top}, {mi_chica.wardrobe_accesories}, {mi_chica.wardrobe_bottom}, {mi_chica.wardrobe_shoes}, {mi_chica.situacion} at {mi_chica.place} {mi_chica.complemento}"
-                print(prompt) 
+                print(prompt)
+
+                diccionario_atributos = creacion.__dict__.keys()
+
+                #AQUÍ VAMOS A CREAR EL DATAFRAMA AHORA...
+                #Ahora aquí crearemos las columnas necesarias.
+                dataframe = pretools.createColumns(dataframe, 4, diccionario_atributos)
+                print("Creo que la creación fue exitosa...")
+                print(dataframe)
                 
+                
+
+
+
                 #STABLE DIFFUSION
                 print("Iniciando Stable Difussion...")
                 resultado = stableDiffuse(imagenSource, imagenPosition, prompt, shot)
@@ -137,9 +151,9 @@ def fullProcess(sesion, dataframe):
                 if isinstance(resultado, tuple):
                     print("Es una tupla: ", resultado)
                     print(f"IMPORTANTE: Vamos a guardar el resultado, y la ruta_final o destino es {target_dir} y es del tipo: {type(target_dir)}...")
-                    time.sleep(1)
+                    
                     #IMPORTANTE, aquí guarda el resultado.
-                    guardarResultado(dataframe, resultado, foto_path, take, shot, mi_chica.style, mi_chica.subject, target_dir, 'Image processed')
+                    guardarResultado(dataframe, resultado, foto_path, take, shot, creacion.style, creacion.subject, target_dir, 'Image processed')
 
                 #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
                 #CORRIGE IMPORTANTE: QUE NO SE SALGA DEL CICLO DE ESA IMAGEN AL ENCONTRAR ERROR.
@@ -165,7 +179,7 @@ def fullProcess(sesion, dataframe):
                     
                     print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
                     #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
-                    guardarResultado(dataframe, imagenSource, foto_path, take, shot, mi_chica.style, mi_chica.subject, target_dir, mensaje)
+                    guardarResultado(dataframe, imagenSource, foto_path, take, shot, creacion.style, creacion.subject, target_dir, mensaje)
                     #actualizaRow(dataframe, 'Name', foto_path, 'Diffusion Status', segmentado[1])
                     #Aquí haremos un break porque no tiene caso intentarlo 4 veces.
                     #Quité el break porque al parecer si tiene caso intentarlo 4 veces. 
@@ -197,65 +211,6 @@ def fullProcess(sesion, dataframe):
         time.sleep(3)
         pretools.df2Excel(dataframe, configuracion.filename)
 
-
-
-def prompter(data):
-
-    #PROMPT PARA HEROES
-                lista_estilos = data.lista_estilos
-                lista_subjects = data.lista_subjects
-                style = random.choice(lista_estilos)
-                subject = random.choice(lista_subjects)
-                prompt = f"A {style} of a superhero like {subject} " #agregar otros atributos random aquí posteriormente.
-                
-
-                #PROMPT PARA CHICAS
-
-                lista_estilos = data.lista_estilos
-                style = random.choice(lista_estilos)
-
-                lista_subjects = data.lista_subjects
-                subject = random.choice(lista_subjects)
-                
-                lista_adjective = data.lista_adjective
-                adjective = random.choice(lista_adjective)
-
-                lista_type_girl = data.lista_type_girl
-                type_girl = random.choice(lista_type_girl)
-                
-                lista_hair_style = data.lista_hair_style
-                hair_style = random.choice(lista_hair_style)
-
-                lista_boobs = data.lista_boobs
-                boobs = random.choice(lista_boobs)
-
-                lista_wardrobe_top = data.lista_wardrobe_top
-                wardrobe_top = random.choice(lista_wardrobe_top)
-
-                lista_wardrobe_accesories = data.lista_wardrobe_accesories
-                wardrobe_accesories = random.choice(lista_wardrobe_accesories)
-                
-                lista_wardrobe_bottom = data.lista_wardrobe_bottom
-                wardrobe_bottom = random.choice(lista_wardrobe_bottom)
-                
-                lista_wardrobe_shoes = data.lista_wardrobe_shoes
-                wardrobe_shoes = random.choice(lista_wardrobe_shoes)
-                
-                lista_situacion = data.lista_situacion
-                situation = random.choice(lista_situacion)
-                
-                lista_place = data.lista_place
-                place = random.choice(lista_place)
-
-                lista_complemento = data.lista_complemento
-                complemento = random.choice(lista_complemento)
-
-                prompt = f"A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situation} at {place} {complemento}"
-
-                print(prompt)
-                return prompt
-
-        
 def getPosition():
 
     """
@@ -468,7 +423,7 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
 
 def subirTodo(dataframe, sesion, foto_complete_url_dir):
 
-    print("Entramos a subir todo, la sesión es: ", sesion) 
+    print("Entramos a subir todo, la sesión es: ", sesion)
 
     #Conexión al servidor.
     ssh, sftp = servidor.conecta()

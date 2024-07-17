@@ -1,15 +1,45 @@
 #si "comic". "pop-art", "watercolor"
-lista_estilos = ["stan lee comic", "alphonse mucha style", "akira toriyama", "michaelangelo renaissance fresh", "renaissance masterpiece", "caravaggio style", "masterpiece", "impresionist", "art nouveau", "japanese-style-manga", "japanese-animation", "watercolor", "comic-book", "comic", "picture", "pop-art", "painting", "watercolor", "anime", "watercolor", "comic", "watercolor", "dibujo", "manga", "pop-art", "lineart", "manga"]
+lista_estilos = ["stan lee comic", 
+                 "alphonse mucha style", 
+                 "akira toriyama", 
+                 "michaelangelo renaissance fresh", 
+                 "renaissance masterpiece", 
+                 "caravaggio style", 
+                 "masterpiece", 
+                 "impresionist", 
+                 "art nouveau", 
+                 "japanese-style-manga", 
+                 "japanese-animation", 
+                 "watercolor", 
+                 "comic-book", 
+                 "comic", 
+                 "picture", 
+                 "pop-art", 
+                 "painting", 
+                 "watercolor", 
+                 "anime", 
+                 "watercolor", 
+                 "comic", 
+                 "watercolor", 
+                 "dibujo", 
+                 "manga", 
+                 "pop-art", 
+                 "lineart", 
+                 "manga"]
+
 lista_subjects = ["Aquaman",
                   "", 
                   "Birdman",
                   "",
-                  "Bruce Wayne",
-
-                  "Bruce Wayne Batman", 
-                  "", 
-                  
+                  "Blade Vampire Hunter",
+                  "",
                   "Blue Beetle",
+                  "",
+                  "Bruce Wayne",
+                  "",
+                  "Bruce Wayne Batman", 
+                  "",                  
+                  "Unmasked Batman",
                   "",
                   "Colossus",
                   "Deathshot",
@@ -17,9 +47,7 @@ lista_subjects = ["Aquaman",
                   "", 
                   "Dr.Manhattan",
                   "Dr.Strange", 
-                  "", 
-                  
-                  "Frozone",
+                  "",                  
                   "Flash Gordon",
                   "Green Lantern", 
                   "",
@@ -28,6 +56,7 @@ lista_subjects = ["Aquaman",
                   "",
                   "Logan Wolverine",
                   "",
+                  "Unmasked Wolverine",
                   "Magneto",
                   "Mr. Fantastic",
                   "", 
@@ -36,16 +65,10 @@ lista_subjects = ["Aquaman",
                   "",
                   "Shazam", 
                   "", 
-                   
                   "X-Men Colossus" 
                   "",
-                   
-                  
-                   
                   "", 
-                  
                   "", 
-                   
                   "", 
                   "StarLord", 
                   "", 
@@ -62,12 +85,12 @@ lista_subjects = ["Aquaman",
                   "Peter Parker",
                   "",
                   "Silver Surfer",
-
                   "",
                   "The Boys John Homelander", 
                   "Flash", 
                   "", 
                   "Robin",
+                  "Unmasked Robin"
                   "",
                   "Watchmen",
                   "Watchmen Comedian",
@@ -77,9 +100,9 @@ lista_subjects = ["Aquaman",
                   "Warlock", 
                   "",
                   "Wade Wilson Deadpool", 
+                  "Unmasked Deadpool",
+                  "Unmasked Superhero"
                   "X-Men", 
                   "", 
                   "X-men Cyclops"
                   ]
-#salieron: "", "image" e "imagen"
-#salieron: "thor", "punisher", "Captain-America"

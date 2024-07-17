@@ -8,6 +8,7 @@ sesion = configuracion.sesion
 foto_complete_url_dir = base_url + sesion
 
 #Crea el dataframe necesario.
+#¿Por qué volver a hacer dataframe? Porque la subida se puede hacer en algún momento separado al ciclo intermedio.
 dataframe = postools.preparaDataframe(filename)
 
 #Sube todo

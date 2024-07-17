@@ -40,69 +40,35 @@ def creaDataframe(archivo):
     """
      
     df = pd.read_excel(archivo)
-
-    #Aquí dinámicamente indico cuantos samples haré.
-    n = 4
-
-
+    
     #Importante: Crea las nuevas columnas que necesitará:
     df['Name'] = ''
     df['Download Status'] = ''
 
-    # Set of column names to repeat
-    column_names = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+    
+    return df
 
+def createColumns(dataframe, amount, diccionario_atributos):
+
+    # Set of column names to repeat
+    #column_names = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+    column_names = list(diccionario_atributos)
     # Create a list of desired column order
-    desired_order = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+    #desired_order = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+    desired_order = ['DiffusionStatus'] + [name for name in column_names if name != 'DiffusionStatus'] + ['URL']
 
     # Sort column names based on desired order and repeat
-    column_groups = [[f"{name}{i + 1}" for name in group] for i in range(n) for group in zip(*sorted(zip(desired_order, column_names)))]
-
+    column_groups = [[f"{name}{i + 1}" for name in group] for i in range(amount) for group in zip(*sorted(zip(desired_order, column_names)))]
+    
+    
     # Flatten the nested list into a single list
     dynamic_columns = [item for sublist in column_groups for item in sublist]
 
     # Add dynamic columns to the DataFrame
-    df[dynamic_columns] = ''
+    dataframe[dynamic_columns] = ''
 
-    return df
-    
-    #Revisar si la cantidad de campos URL la podrías crear dinámicamente.
-    # df['DiffusionStatus1']=''
-    # df['Take1'] = ''
-    # df['Shot1'] = ''
-    # df['Style1'] = ''
-    # df['Hero1'] = ''
-    # df['URL1']=''
-
-    # df['DiffusionStatus2']=''
-    # df['Take2'] = ''
-    # df['Shot2'] = ''
-    # df['Style2'] = ''
-    # df['Hero2'] = ''
-    # df['URL2']=''
-
-    # df['DiffusionStatus3']=''
-    # df['Take3'] = ''
-    # df['Shot3'] = ''
-    # df['Style3'] = ''
-    # df['Hero3'] = ''
-    # df['URL3']=''
-
-    # df['DiffusionStatus4']=''
-    # df['Take4'] = ''
-    # df['Shot4'] = ''
-    # df['Style4'] = ''
-    # df['Hero4'] = ''
-    # df['URL4']=''
-
-    
-
-    # for i in range(1, max_url_columns + 1):
-
-    #     column_name = f"URL{i}"  # Create column name dynamically
-    #     df[column_name] = ''  # Create the new column with an empty string
-
-    return df
+    return dataframe
+   
     
 def descargaImagenes(sesion, dataframe):
 
