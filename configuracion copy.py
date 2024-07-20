@@ -13,11 +13,3 @@ wait_awake = False #Lo dejaré en false pq en realidad, esperando o no, termina 
 waited = False
 api_apagada = False
 wait_time = 500
-
-#
-foto_path = 'Art.png'
-ronda = 2
-foto_path = 'iri-real.jpg'
-ronda = 3
-foto_path = 'primejb_36348.jpg'
-ronda = 3

@@ -147,8 +147,6 @@ def directoriador(directorio):
     
     worksheet.cell(row=1, column=2).value = "Download Status"
     
-    worksheet.cell(row=1, column=2).value = "Diffusion Status"
-
     row = 2  # Comenzar desde la fila 2 (después del encabezado)
 
     for filename in os.listdir(directory_address):

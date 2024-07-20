@@ -15,7 +15,12 @@ postools.creaDirectorioResults(sesion)
 dataframe = postools.preparaDataframe(configuracion.filename)
 
 #Hacer el Stable Diffusion.
-postools.fullProcess(sesion, dataframe)
+#Future: Las características importantes deberían pasarse desde aquí... (que objeto, etc.)
+#El 4 representa a los samples.
+#1 es la ronda.
+#inicial indica el archivo desde donde debe empezar.
+postools.fullProcess(sesion, dataframe, samples=4, ronda=1)
 
 #Finaliza Excel después de preproducción.
+print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")
 pretools.df2Excel(dataframe, configuracion.filename)

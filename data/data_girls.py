@@ -1,6 +1,6 @@
 lista_adjective = ["beautiful", "", "hot", "naughty", "", "provocative", "", "sensual", "in leather"]
 lista_type_girl = ["blonde", "", "brunette", "", "white", "", "whore", "redhead", "bitch", "slut"]
-lista_subjects = ["girl", "woman", "tranny", "girl", "woman", "girl", "woman"]
+lista_subjects = ["german bartender", "girl", "woman", "tranny", "girl", "woman", "girl", "woman", "girl with finger in her mouth", "girl smiling", "girl drooling", "girl open mouth"]
 lista_boobs = ["", "tight boobs", "",  "naughty boobs", "", "sweet boobs", "", "little boobs", "", "medium boobs", "", "huge boobs", "", "big boobs", "", "rounded boobs", "",  "A Cup", "B Cup", "C Cup", "D Cup", "DD Cup", "", "plain chest", ""]
 lista_hair_style = ["ringlets hair", "curly hair", "waivy hair", "mohawk", "fauxhawk", "long hair", "short hair", "bob style haircut", "pigtails", "dreadlocks", "curly hair", "pony tail", "long wavy hair", "braids"]
 lista_wardrobe_top = ["jumpsuit", "with shackles around her neck", "shackles", "soccer girl", "", "bikini", "swimsuit", "lingerie", "in Victoria's Secret", "sailor moon", "hot slave leia costume ", "mini lingerie", "provocative lingerie",  "babydoll", "topless", "tight bra", "too tight lingerie bra", "tight lingerie bra",  "lingerie", "maid uniform", "french maid", "hot maid",  "", "uniform", "tennis player uniform",  "", "school uniform", "police uniform", "nike tight top tank", "tight top tank", "topless"]
