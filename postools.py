@@ -28,9 +28,27 @@ def creaDirectorioResults(sesion):
 
 def preparaDataframe(filename):
 
-    df = pd.read_excel(filename)
+    #Primero extraemos el dataframe:
+    dataframe = pd.read_excel(filename)
 
-    return df
+    #Después vemos cuales son Success:
+
+     # Filtra las filas donde 'Download Status' es igual a 'Success'
+    df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
+
+    # Crea una nueva columna 'columna_imagenes' a partir de la columna 'Nombre'
+    columna_imagenes = df_images_ok['Name']
+    print("Esto es columna imagenes Name: ", columna_imagenes)
+
+        #Crea un filename:
+
+    for imagen in columna_imagenes:
+
+        nombre, extension = imagen.split(".")
+        filename = nombre + "-" + "t" + str(1) + "." + extension
+        actualizaRow(dataframe, 'Name', imagen, 'File', filename)
+
+    return dataframe
 
 def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
 
@@ -73,35 +91,32 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
             # Ésta es la foto donde iniciará, que se pasa como parámetro a fullProcess.
             texto_fila_objetivo = inicial  # Replace with your actual search text
             print("El archivo en el que iniciaremos es: ", inicial)
-            time.sleep(5)
+            
             # Create a boolean mask to identify the row matching the text
             mascara_fila_objetivo = df_images_ok['Name'].str.contains(texto_fila_objetivo)
             # Get the index of the matching row
             indice_fila_objetivo = mascara_fila_objetivo.idxmax()  # Assumes only one match
             print("Su índice idmax es: ", indice_fila_objetivo)
-            time.sleep(5)
+            
             # If the text is found, get the names from that row onward
             if indice_fila_objetivo is not None:
                 nombres_a_partir_fila_objetivo = columna_imagenes.iloc[indice_fila_objetivo:]
                 print("Objetivo encontrado: ", nombres_a_partir_fila_objetivo)
-                time.sleep(6)
+                columna_imagenes = nombres_a_partir_fila_objetivo
             else:
                 # Handle the case where the text is not found (no matching row)
                 print(f"No se encontró la fila con el texto: {texto_fila_objetivo}")
                 print("Esto es nombres_a_partor_fila_objetivo: ", nombres_a_partir_fila_objetivo)
-                time.sleep(7)
-                print("Vaciando las series...")
+                #Finalmente vacia las series.
                 nombres_a_partir_fila_objetivo = pd.Series([])  # Empty Series
-        
 
         contador = 0
-        cuantos = len(nombres_a_partir_fila_objetivo)
+        cuantos = len(columna_imagenes)
         print("La cantidad de resultados son: ", cuantos)
-        time.sleep(3)
-
+        
         #IMPORTANTE, A VER CREA EL CLIENTE AQUÍ, Y QUE SEA EL MISMO PARA CADA OCASIÓN
         print("Estoy entrando a éste cliente una vez...")
-        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(nombres_a_partir_fila_objetivo):
@@ -139,6 +154,8 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
                 imagenPosition = gradio_client.handle_file(ruta_posicion)
                 #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.        
 
+                #Creación será el objeto que contiene todos los atributos de lo que vamos a crear.
+
                 #PROMPT PARA CHICA
                 creacion = Hotgirl(style="anime", adjective="surprised")
                 prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
@@ -149,18 +166,24 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
                 
                 print(prompt)
 
-                diccionario_atributos = creacion.__dict__.keys()
+                # #AQUÍ VAMOS A CREAR EL DATAFRAMA AHORA...
+                # #Ahora aquí crearemos las columnas necesarias.
+                # #Quizá no sea necesario crear las columnas ahora, que mejor la vaya creando conforme escribe!
+                # dataframe = pretools.createColumns(dataframe, 4, diccionario_atributos)
+                # print("Creo que la creación fue exitosa...")
+                # print(dataframe)
 
-                #AQUÍ VAMOS A CREAR EL DATAFRAMA AHORA...
-                #Ahora aquí crearemos las columnas necesarias.
-                dataframe = pretools.createColumns(dataframe, 4, diccionario_atributos)
-                print("Creo que la creación fue exitosa...")
-                print(dataframe)
+                print("Estoy por entrar a guardar registro, el foto_path es: ", foto_path)
+                time.sleep(1)
+
+                #Antes de iniciar el stablediffusion vamos a guardar nuestro registro: 
+                guardarRegistro(dataframe, foto_path, creacion, take, shot)
 
 
                 #STABLE DIFFUSION
                 print("Iniciando Stable Difussion...")
-                resultado = stableDiffuse(client, imagenSource, imagenPosition, prompt, shot)
+                #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
+                #resultado = stableDiffuse(client, imagenSource, imagenPosition, prompt, shot)
 
                 #-->Aquí es donde llegan los breaks cuando la API estaba apagada.
                 
@@ -172,7 +195,7 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
                         # Escribir los valores en el archivo
                         archivo.write(f"\n foto_path = {foto_path}\n")
                         archivo.write(f"ronda = {j}\n")
-                    time.sleep(13)
+                    
                     print("La api está apagada, esperando a que reinicie.")
                     print("Aquí vamos a guardar el excel, porque se apago la API...")
                     
@@ -256,7 +279,7 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
             # Escribir los valores en el archivo
             archivo.write(f"foto_path = '{foto_path}'\n")
             archivo.write(f"ronda = {j}\n")
-        time.sleep(13)
+        
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
@@ -383,6 +406,49 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt, shot):
         print("XXXXX")
         print("XXXXX")
         return e
+
+def guardarRegistro(dataframe, foto_dir, creacion, take, shot):
+
+    """
+    Guarda el registro de lo que se va a hacer en excel.
+
+    Parameters:
+    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+    result
+    foto_dir
+    take
+    shot
+    estilo
+    ruta_final
+    message: el mensaje textual que irá en la columna stable diffusion: si fue error el error, si no: Image Processed.
+
+    Returns:
+    bool: True si se guardó el archivo correctamente.
+    """
+
+
+    #Primero agrega la take:
+    actualizaRow(dataframe, 'Name', foto_dir, 'Take', take)
+
+    #Después cada atributo
+    for nombre_atributo in dir(creacion):
+        # Verificar si el nombre es un atributo real
+        if not nombre_atributo.startswith("__"):
+            valor_atributo = getattr(creacion, nombre_atributo)
+            print(f"Atributo: {nombre_atributo}, Valor: {valor_atributo}")
+            actualizaRow(dataframe, 'Name', foto_dir, nombre_atributo, valor_atributo)
+
+    #Y al final el shot: 
+    actualizaRow(dataframe, 'Name', foto_dir, 'Shot', shot)
+
+    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
+    pretools.df2Excel(dataframe, configuracion.filename)
+
+    print("Me detuve porque terminé, deténme...")
+    time.sleep(29)
+    
+
+
     
 def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ruta_final, message):
 
@@ -434,16 +500,21 @@ def guardarResultado(dataframe, result, foto_dir, take, shot, style, subject, ru
 
     #FUTURE: Ésto se tiene que hacer dinámicamente.
 
+
+    #actualiza Row actualiza una sola row.
     print("Estoy por actualizarRow y el mensaje es:", message)
     print("y su foto_dir (índice) es: ", foto_dir)
     print("Y la take es es: ", take)
     time.sleep(3)
+    #Sin problema ya puede actualizar el respectivo DiffusionStatus porque siempre está presente.
     actualizaRow(dataframe, 'Name', foto_dir, 'DiffusionStatus' + str(take), message)
 
+    #La cosa es actualizar los valores dinámicos.
     columnas = ["Take", "Shot", "Style", "Hero"]
 
     for columna in columnas:
-        print("Hola, de la lista de atributos estoy en la columna: ", columna)
+        print("Hola, de la lista de atributos estoy en la columna/atributo: ", columna)
+        print("Lo voy a actualizar.")
         actualizaRow(dataframe, 'Name', foto_dir, columna + str(take), shot)
    
     # #Take
@@ -472,22 +543,24 @@ def actualizaRow(dataframe, index_col, imagen, receiving_col, contenido):
     #receiving_col = 'Diffusion Status'
     
     print("Estamos en actualizaRow...")
-    print("El nombre de la imagen es: ", imagen)
+    print("El nombre de la imagen buscada es: ", imagen)
     index = dataframe[dataframe[index_col] == imagen].index
     print("Esto es index: ", index)
     print("Y la receiving_col es: ", receiving_col)
-    time.sleep(9)
-    
+        
     # If the value exists, get the corresponding cell value
     if not index.empty:
         print("El index no estuvo empty...")
         
         cell_value = dataframe.loc[index[0], index_col]  # Get the value at the first matching index
+        print(f"Valor de la celda que coincide: {cell_value}")
+        
+
         print("Para la revisión de Warning, valor de contenido es: ", contenido)
         print("y tipo de contenido es: ", type(contenido))
-        print(f"Valor de la celda que coincide: {cell_value}")
-               
+                       
         dataframe.loc[index, receiving_col] = contenido
+        #dataframe.loc['last', receiving_col] = contenido
        
     else:
         print("No se encontró la celda coincidente.")        

@@ -19,7 +19,7 @@ dataframe = postools.preparaDataframe(configuracion.filename)
 #El 4 representa a los samples.
 #1 es la ronda.
 #inicial indica el archivo desde donde debe empezar.
-postools.fullProcess(sesion, dataframe, samples=4, ronda=1)
+#postools.fullProcess(sesion, dataframe, inicial="Perroni.png", samples=4, ronda=1)
 
 #Finaliza Excel después de preproducción.
 print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")

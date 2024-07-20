@@ -48,6 +48,7 @@ def creaDataframe(archivo):
     
     return df
 
+#mejor le pasas el objeto completo llamado creación y que de ahí lea cada uno de sus atributos.
 def createColumns(dataframe, amount, diccionario_atributos):
 
     # Set of column names to repeat
