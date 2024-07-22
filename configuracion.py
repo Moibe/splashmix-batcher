@@ -13,4 +13,3 @@ wait_awake = False #Lo dejaré en false pq en realidad, esperando o no, termina 
 waited = False
 api_apagada = False
 wait_time = 500
-

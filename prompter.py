@@ -25,7 +25,7 @@ def obtenAtributosObjeto(sample_objeto):
     return atributos
 
 
-def creaPrompt(dataframe, indice):
+def creaContenedor(dataframe, indice):
     #PROMPT para CHICA
     #Prompt es la frase que ordena a los atributos que ya tenemos.
 
@@ -37,42 +37,60 @@ def creaPrompt(dataframe, indice):
 
     for atributo in atributos:
         print("Entramos al for de atributos...")
-        contenedor[atributo] = obten(dataframe, indice, atributo)
+        contenedor[atributo] = obten(dataframe, indice, atributo) if isinstance(obten(dataframe, indice, atributo), str) else ""
         print("Lo recién impreso es: ", contenedor[atributo])
+        print("Y el tipo de lo recién impreso es: ", type(contenedor[atributo]))
+                
         
     #Al final agrega el shot porque siempre lo traerá.
     contenedor['shot'] = obten(dataframe, indice, 'Shot')
-
-    print("Terminó el for de atributos...")
-    time.sleep(3)
+    
     print("Y esto es el contendio de contenedor: ", contenedor)
-    time.sleep(5)
+    
     
     return contenedor
 
-if __name__ == "__main__":
-    creaPrompt()
+def creaPrompt(contenedor):
 
+    print("Entré a crearPrompt....")
+    
+    #Importante El if instance es porque si viene como float nan, lo cambio a texto que sea vacío.
+    #Porque si no me parece que deja la palabra nan o lo manifiesta como float, tendríamos que probar.
+
+    style = contenedor['style'] #if isinstance(contenedor.get('style'), str) else ""
+    adjective = contenedor['adjective'] #if isinstance(contenedor.get('adjective'), str) else ""
+    boobs = contenedor['boobs'] #if isinstance(contenedor.get('style'), str) else ""
+    complemento = contenedor['complemento'] #if isinstance(contenedor.get('style'), str) else ""
+    hair_style = contenedor['hair_style'] #if isinstance(contenedor.get('style'), str) else ""
+    place = contenedor['place'] #if isinstance(contenedor.get('place'), str) else ""
+    situacion = contenedor['situacion'] #if isinstance(contenedor.get('style'), str) else ""
+    subject = contenedor['subject'] #if isinstance(contenedor.get('style'), str) else ""
+    type_girl = contenedor['type_girl'] #if isinstance(contenedor.get('style'), str) else ""
+    wardrobe_top = contenedor['wardrobe_top'] #if isinstance(contenedor.get('style'), str) else ""
+    wardrobe_accesories = contenedor['wardrobe_accesories'] #if isinstance(contenedor.get('style'), str) else ""
+    wardrobe_bottom = contenedor['wardrobe_bottom'] #if isinstance(contenedor.get('style'), str) else ""
+    wardrobe_shoes = contenedor['wardrobe_shoes'] #if isinstance(contenedor.get('style'), str) else ""
+    
+    prompt = f"""A {style} 
+            of a {adjective} 
+            {type_girl} 
+            {subject} with 
+            {boobs} and 
+            {hair_style} 
+            wearing 
+            {wardrobe_top}, 
+            {wardrobe_accesories}, 
+            {wardrobe_bottom}, 
+            {wardrobe_shoes}, 
+            {situacion} 
+            at {place} 
+            {complemento}"""           
+
+    print("Si el tipo del prompt es str, signifia que si metió nan como palabra... su tipo es: ", type(prompt))
+    print("El prompt creado quedó así: ", prompt)
    
-
-    # prompt = f"A {} 
-    #         of a {creacion.adjective} 
-    #         {creacion.type_girl} 
-    #         {creacion.subject} with 
-    #         {creacion.boobs} and 
-    #         {creacion.hair_style} 
-    #         wearing 
-    #         {creacion.wardrobe_top}, 
-    #         {creacion.wardrobe_accesories}, 
-    #         {creacion.wardrobe_bottom}, 
-    #         {creacion.wardrobe_shoes}, 
-    #         {creacion.situacion} 
-    #         at {creacion.place} 
-    #         {creacion.complemento}"           
-
-
-
-
 
     #PROMPT PARA HEROE
     # prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #agregar otros atributos random aquí posteriormente.
+
+    return prompt

@@ -26,10 +26,10 @@ dataframe = pd.read_excel(filename)
 #inicial indica el archivo desde donde debe empezar.
 
 #Preprocess es la que llena los ATRIBUTOS!!!!
-postools.preProcess(sesion, dataframe, inicial="primejb_103662-t1.jpg")
+#postools.preProcess(sesion, dataframe, inicial="primejb_23104-t2.jpg")
 
 #FULL ES LA QUE HACE EL STABLE DIFF
-#postools.fullProcess(sesion, dataframe, samples=4, inicial=None, ronda=None)
+postools.fullProcess(sesion, dataframe, samples=4, inicial=None, ronda=None)
 
 #Finaliza Excel después de preproducción.
 #print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")

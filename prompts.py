@@ -55,6 +55,7 @@ class Hotgirl(Prompt):
         self.complemento = complemento or random.choice(databank.lista_complemento)
 
         print(f"**Character Description:**")
+        print(f"- Style: {self.style}")
         print(f"- Adjective: {self.adjective}")
         print(f"- Type of girl: {self.type_girl}")
         print(f"- Hair style: {self.hair_style}")
