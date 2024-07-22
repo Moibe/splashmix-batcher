@@ -44,6 +44,9 @@ def creaDataframe(archivo):
     #Importante: Crea las nuevas columnas que necesitará:
     df['Name'] = ''
     df['Download Status'] = ''
+    df['Take'] = ''
+    df['File'] = ''
+    df['Diffusion Status'] = ''
 
     
     return df
@@ -145,8 +148,10 @@ def directoriador(directorio):
 
     
     worksheet.cell(row=1, column=1).value = "Name"
-    
     worksheet.cell(row=1, column=2).value = "Download Status"
+    worksheet.cell(row=1, column=3).value = "Take"
+    worksheet.cell(row=1, column=4).value = "File"
+    worksheet.cell(row=1, column=5).value = "Diffusion Status"
     
     row = 2  # Comenzar desde la fila 2 (después del encabezado)
 

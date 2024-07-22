@@ -1,3 +1,7 @@
-from prompts import Prompt
+from prompts import Prompt, Hotgirl
 
-mi_prompt = Prompt()
+# Get attribute names using dir()
+class_attributes = dir(Hotgirl)
+
+print(class_attributes.__doc__)
+
