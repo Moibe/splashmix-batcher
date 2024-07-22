@@ -23,7 +23,7 @@ def creaDirectorioResults(sesion):
     bool: True si se guardó el archivo correctamente.
 
     """
-    results_dir = os.path.join('imagenes', 'fuentes', 'resultados', sesion + "-results" )   
+    results_dir = os.path.join('imagenes', 'resultados', sesion + "-results" )   
     
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
@@ -41,15 +41,11 @@ def preparaDataframe(filename, samples):
 
     # Crea una nueva columna 'columna_imagenes' a partir de la columna 'Nombre'
     columna_imagenes = df_images_ok['Name']
-    
 
     #Crea las rows para sus samples
     for imagen in columna_imagenes:
         #Separa la imagen antes de crearla 4 veces (para no separar cada vez de esas 4)
-        print("Con ésta imagen estamos trabajando...", imagen)
-        print("Le vamos a hacer split para separar nombre de extensión...")
-        nombre, extension = imagen.split(".")
-       
+        nombre, extension = imagen.split(".")       
 
         #Cuando encuentra la imagen llena los datos de la primera incidencia.
         indice = obtenIndexRow(dataframe, 'Name', imagen)
@@ -61,9 +57,7 @@ def preparaDataframe(filename, samples):
             #Empieza desde el 2 porque ya hizo la 1.
             filename = nombre + "-" + "t" + str(i+2) + "." + extension
             creaRow(dataframe, imagen, i + 2, filename)
-
-    #print("Éste es el dataframe tal cual")
-
+    
     #Reordeno alfabéticamente.
     dataframe = dataframe.sort_values(['Name','Take'])
 
@@ -73,8 +67,6 @@ def preparaDataframe(filename, samples):
     return dataframe
 
 def preProcess(sesion, dataframe, inicial=None):
-
-    print("Estoy en preProcess y esto es inicial: ", inicial)
     
     #Destino
     ruta_destino = sesion + "-results"
@@ -96,8 +88,6 @@ def preProcess(sesion, dataframe, inicial=None):
         #Si se le pasó el valor como parámetro entonces hace la búsqueda desde donde empezará.
         if inicial is not None: 
             #PROCESO PARA INICIAR DONDE NOS QUEDAMOS
-            print("Si entré a inicial...")
-           
             
             # Ésta es la foto donde iniciará, que se pasa como parámetro a full Process.
             texto_fila_objetivo = inicial  # Replace with your actual search text
@@ -130,11 +120,6 @@ def preProcess(sesion, dataframe, inicial=None):
         print("La cantidad de resultados son: ", cuantos)
         print("Y ésta es la lista total...", columna_samples)
         
-        
-
-        print("Ahora repasaremos cada foto de esa columna de imagenes:")
-       
-        
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_samples):
 
@@ -143,7 +128,6 @@ def preProcess(sesion, dataframe, inicial=None):
                                 
             #POSICIÓN
             print("Obteniendo la posición...")
-
             ruta_posicion, shot = getPosition()
             print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
             
@@ -160,10 +144,6 @@ def preProcess(sesion, dataframe, inicial=None):
             print("Éstos son los atributos que estamos a punto de guardar en el excel...")
             print(prompt)
            
-            
-            print("Estoy por entrar a guardar Registro, el foto_path es: ", foto_path)
-            
-
             #Antes de iniciar el stablediffusion vamos a guardar nuestro registro: 
             print("Entrará a guardarRegistro cada que haya un objeto nuevo...")
             print(f"Estámos entrando con el objeto {creacion}, y la shot {shot}...")
@@ -186,7 +166,7 @@ def preProcess(sesion, dataframe, inicial=None):
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
         #pretools.df2Excel(dataframe, configuracion.filename)
 
-def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
+def fullProcess(sesion, dataframe, samples, inicial=None):
     """
     Ciclo completo de toma de imagen, llevado a HF, guardado en disco y actualización de archivo de Excel.
 
@@ -220,8 +200,9 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
 
         # Crea un dataset 'columna_imagenes' a partir de la columna 'Nombre'
         #IMPORTANTE: Aquí si debe ser 'Name' ya que solo tenemos una foto origen (aunq tengamos 4 samples).
-        columna_imagenes = df_images_ok['Name']
-        
+        columna_imagenes = df_images_ok['Name'].unique()
+        #print("Ésta es la columna de imagenes sin repetidos...", columna_imagenes)
+                
         #Si se le pasó el valor como parámetro entonces hace la búsqueda desde donde empezará.
         if inicial is not None: 
             #PROCESO PARA INICIAR DONDE NOS QUEDAMOS
@@ -250,56 +231,48 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
 
         contador = 0
         cuantos = len(columna_imagenes)
-        print("La cantidad de resultados son: ", cuantos)
-       
+        #print("La cantidad de resultados son: ", cuantos)
+               
         #Así solo entrará al cliente una vez y no cada que de vuelta el for.
-        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
 
-            print(f"El valor de i es: {i} y su tipo es: {type(i)}...")
-            print(f"La foto_path es {foto_path}..., checa si es lo que deseas.")
-            
+            print(f"El valor de i es: {i} y su tipo es: {type(i)}...")                      
                                     
             #FOTO
             foto = os.path.join(ruta_origen, foto_path)
-            
+                        
             #Prepara la imagen para gradio.
             imagenSource = gradio_client.handle_file(foto)
             #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
-        
-            #ESTO SERÁ LO QUE EJECUTAREMOS TANTAS VECES COMO SAMPLES SE INDIQUE:            
-            #Cuantos samples por foto querremos.
-            cantidad_resultados = samples
-
-            for j in range(cantidad_resultados):
+ 
+            for j in range(samples):
 
                 take = j + 1
 
-                print(f"Estamos en la take número: {j} de tantos: {cantidad_resultados}") 
-                       
+                print(f"Estamos en la take número: {j} de tantos: {samples}") 
+                                       
                 nombre, extension = foto_path.split(".")
                 filename = nombre + "-t" + str(take) + "." + extension
                 #Obtén el índice de la row que contiene al objeto con el que trabajaremos.
-                print("Éste es el filename que usaremos para obtener el índice...:", filename)                
+                print("Éste es el filename que usaremos para obtener el índice...:", filename)
+                print("Ahora si estamos usando el filename...")                        
                 
                 indice = obtenIndexRow(dataframe, 'File', filename) 
                 print("El índice de la row u objeto de donde sacaremos los atributos es: ", indice)
-                                
+                                                
                 #Éste contenedor contendrá los atributos que sacó de la respectiva ROW.
                 contenedor = prompter.creaContenedor(dataframe, indice)
 
                 print("Esto es el contenedor que me regreso...>")
-                print(contenedor)                
+                print(contenedor)                         
 
                 #AHORA CREA EL PROMPT
                 print("Creando prompt después de meterle el contenedor...")
                 prompt=prompter.creaPrompt(contenedor)
-
-                # print("Antes una prueba más quiero saber cual es la posición dentro del contenedor: ", contenedor['shot'])
-                # time.sleep(3)
-
+               
                 #Mini proceso para sacar la ruta de la posición. 
                 #Future: Ver si lo haces función o lo combinas con getPosition. 
                 #O si haces una función creadora de rutas.
@@ -316,22 +289,19 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
                 ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
 
                 print("Ésta es la ruta_posicion que se meterá al cliente de gradio, verifica si es correcta:", ruta_posicion)
-                time.sleep(1)
-                                      
+                                                      
                 imagenPosition = gradio_client.handle_file(ruta_posicion)
                 #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
 
                 print("Ésto es el prompt obtenido de creaPrompt: ", prompt)
-                time.sleep(1)
-                
-                print("LISTO PARA STABLE DIFFUSION!!!!!")
-                time.sleep(3)
-                
+                               
+                print("LISTO PARA STABLE DIFFUSION!!!!!")                               
 
                 #STABLE DIFFUSION
                 print("Iniciando Stable Difussion...")
                 #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
                 resultado = stableDiffuse(client, imagenSource, imagenPosition, prompt)
+                print("El resultado de predict fue: ", resultado)
 
                 #-->Aquí es donde llegan los breaks cuando la API estaba apagada.
                 
@@ -371,7 +341,6 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
                     
                     #Future: guardar Resultado ahora debe pasar el diccionario de atributos y después usarlo adentro en actualiza Row.
                     print("Vamos a guardar un resultado existoso:")
-                    time.sleep(6)
                     guardarResultado(dataframe, resultado, filename, target_dir, 'Completed')
 
                 #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
@@ -399,8 +368,8 @@ def fullProcess(sesion, dataframe, samples, inicial=None, ronda=None):
                     print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
                     #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
                     print("Vamos a guardar un resultado no exitoso:")
-                    time.sleep(5)
-                    guardarResultado(dataframe, imagenSource, foto_path, target_dir, mensaje)
+                    
+                    guardarResultado(dataframe, imagenSource, filename, target_dir, mensaje)
                     
                 print("Salí del if instance...")
 
@@ -485,7 +454,7 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
 
         #Usando Moibe Splashmix
         print("Estoy adentro, donde se usaba el cliente...")
-        # client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
 
     except Exception as e:
@@ -506,7 +475,7 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
     try:
 
         print("Ahora estoy ya en el predict...")
-        time.sleep(1)
+        
         result = client.predict(
                 imagenSource,
                 imagenPosition,
@@ -521,7 +490,8 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
                 depth_strength=0.4,
                 controlnet_selection=["pose"], #pueden ser ['pose', 'canny', 'depth']
                 guidance_scale=5,
-                seed=42,
+                #seed=43,
+                seed=42, #Wow deje una seed fija desde siempre, por eso con las mismas características creará lo mismo. Está bien!
                 scheduler="EulerDiscreteScheduler",
                 enable_LCM=False,
                 enhance_face_region=True,
@@ -532,6 +502,8 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
     except Exception as e:
         print("Hubo un error, recuerda éste prompt...", e)
         print("Aquí llega cuando la imagen no existe, no cuando no se pudo procesar, revisar si eso llega al excel, la e sería: ", e)
+        #No está llegando al excel, pero no es necesario porque cuando se sale llega a la línea: 364
+        print("XXXXX")
         print("XXXXX")
         print("XXXXX")
         return e
@@ -576,12 +548,7 @@ def guardarRegistro(dataframe, foto_dir, creacion, shot):
     #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
     pretools.df2Excel(dataframe, configuracion.filename)
 
-    # print("Me detuve porque terminé, deténme...")
-    # time.sleep(29)
-    
-
-
-    
+      
 def guardarResultado(dataframe, result, filename, ruta_final, message):
     """
     Guarda el resultado con una nomenclatura específica. Y lo guarda en disco.
@@ -604,20 +571,20 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
     #Ésta parte solo debe hacerla si no viene de error. 
 
     print("HOY: Estamos en guardar Resultado, y el mensaje que recibimos como parámetro es: ", message)
+    ruta_total = ""
 
     if message == "Completed":
         #ENTONCES SI HAY UNA IMAGEN QUE GUARDAR EN DISCO DURO.
         
         ruta_total = os.path.join(ruta_final, filename)
-        print("El resultado del SD fue exitoso, y su ruta total es: ", ruta_total)
-        time.sleep(9)
-
-        #Como el resultado viene en una tupla, la ruta de la imagen local es result[0]
-        #¿Es la de gradio??
+        print("El resultado del SD fue exitoso, y su ruta total es/será: ", ruta_total)
+        raiz_pc = os.getcwd()
+        ruta_absoluta = os.path.join(raiz_pc, ruta_total)
+        print("La ruta absoluta es desde donde le podré dar click desde el excel...", ruta_absoluta)
+                
         ruta_imagen_local = result[0] 
-        print("La ruta de grtadio? en result[0] es: ", ruta_imagen_local)
-        time.sleep(8) 
-
+        print("La ruta de gradio en result[0] es: ", ruta_imagen_local)
+        
         #IMPORTANTE, GUARDANDO EN DISCO DURO.
         with open(ruta_imagen_local, "rb") as archivo_lectura:
             contenido_imagen = archivo_lectura.read()	
@@ -626,9 +593,7 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
             archivo_escritura.write(contenido_imagen)
             print(f"Imagen guardada correctamente en: {ruta_total}")
             print("Estamos por actualizar excel...")
-            #actualizaExcel(dataframe, 'C4D03AQEi0TQ389Qscw.png')
-            #Diffusion Status (Se agrega + str(take) al nombre de cada columna para distinguirlas y ordenarlas.)
-
+            
     #FUTURE: Ésto se tiene que hacer dinámicamente.
 
     #Después, haya o no guardado en disco duro, registrará que terminó en el excel.
@@ -638,14 +603,11 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
     print("y su filename (índice) es: ", filename)
     
     #Sin problema ya puede actualizar el respectivo DiffusionStatus porque siempre está presente.
-    actualizaRow(dataframe, 'File', filename, 'Diffusion Status', message)
-    print("Actualiza row usual, el de Diffusion Status, actualizado correctamente.")
-    time.sleep(4)
+    actualizaRow(dataframe, 'File', filename, 'Diffusion Status', message)      
+    actualizaRow(dataframe, 'File', filename, 'Direccion', ruta_absoluta)
 
-    print("Ahora actualizaremos el no existente de 'Direccion'...")
-    time.sleep(3)
-    actualizaRow(dataframe, 'File', filename, 'Direccion', ruta_total)
-    print("Actualizada Dirección...")
+    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
+    pretools.df2Excel(dataframe, configuracion.filename)
 
 
 def creaRow(dataframe, imagen, take, filename):    
@@ -676,15 +638,15 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     Returns:
     dataframe:Regresa dataframe.
     """
-    # Find the index of the row where the 'Nombre' column value matches 'C4D03AQEi0TQ389Qscw.png'
-    # Por lo tanto index_col = 'Nombre'
-    #index_col = 'Nombre'
-    #receiving_col = 'Diffusion Status'
 
+    print("Estoy en actualiza row...")
+    print(f"El indicador es: {indicador}")
     
+        
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
     index = obtenIndexRow(dataframe, 'File', indicador)
-    
+    print(f"El indice obtenido es: {index}")
+        
     print("Y la receiving_col es: ", receiving_col)
     
         

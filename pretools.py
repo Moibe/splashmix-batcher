@@ -184,6 +184,8 @@ def df2Excel(dataframe, filename):
     
     """
 
+    #Future que si está abierto el excel no arruine el flujo y de tiempo para cerrarlo.
+
     #IMPORTANTE: Agrega que si el archivo está abierto, de tiempo para corregir y no mande a error.
      
     # Obtiene la ruta actual del script (directorio raíz del proyecto)

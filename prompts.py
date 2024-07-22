@@ -18,8 +18,7 @@ class Superhero(Prompt):
         databank = data_heroes
         self.subject = subject or random.choice(databank.lista_subjects)
         print("El heroe será: ", self.subject)
-        time.sleep(1)
-        
+                
 class Hotgirl(Prompt):
     def __init__(self,
                  style=None,

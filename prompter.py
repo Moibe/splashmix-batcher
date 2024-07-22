@@ -20,8 +20,7 @@ def obtenAtributosObjeto(sample_objeto):
         if not nombre_atributo.startswith("__"):
             atributos.append(nombre_atributo)
 
-    print("Lista de atributos:", atributos)
-
+    #print("Lista de atributos:", atributos)
     return atributos
 
 
@@ -38,15 +37,14 @@ def creaContenedor(dataframe, indice):
     for atributo in atributos:
         print("Entramos al for de atributos...")
         contenedor[atributo] = obten(dataframe, indice, atributo) if isinstance(obten(dataframe, indice, atributo), str) else ""
-        print("Lo recién impreso es: ", contenedor[atributo])
-        print("Y el tipo de lo recién impreso es: ", type(contenedor[atributo]))
+        # print("Lo recién impreso es: ", contenedor[atributo])
+        # print("Y el tipo de lo recién impreso es: ", type(contenedor[atributo]))
                 
         
     #Al final agrega el shot porque siempre lo traerá.
     contenedor['shot'] = obten(dataframe, indice, 'Shot')
     
-    print("Y esto es el contendio de contenedor: ", contenedor)
-    
+    #print("Y esto es el contendio de contenedor: ", contenedor)    
     
     return contenedor
 
@@ -71,24 +69,10 @@ def creaPrompt(contenedor):
     wardrobe_bottom = contenedor['wardrobe_bottom'] #if isinstance(contenedor.get('style'), str) else ""
     wardrobe_shoes = contenedor['wardrobe_shoes'] #if isinstance(contenedor.get('style'), str) else ""
     
-    prompt = f"""A {style} 
-            of a {adjective} 
-            {type_girl} 
-            {subject} with 
-            {boobs} and 
-            {hair_style} 
-            wearing 
-            {wardrobe_top}, 
-            {wardrobe_accesories}, 
-            {wardrobe_bottom}, 
-            {wardrobe_shoes}, 
-            {situacion} 
-            at {place} 
-            {complemento}"""           
+    prompt = f"""A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, 
+            {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situacion} at {place} {complemento}"""           
 
-    print("Si el tipo del prompt es str, signifia que si metió nan como palabra... su tipo es: ", type(prompt))
-    print("El prompt creado quedó así: ", prompt)
-   
+    print("El prompt creado quedó así: ", prompt)   
 
     #PROMPT PARA HEROE
     # prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #agregar otros atributos random aquí posteriormente.

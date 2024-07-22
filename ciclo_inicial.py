@@ -24,5 +24,4 @@ if configuracion.source_list == True:
 #Si se usa BULK.
 else:
     #Si se usará un bulk de subido de imagenes, el directorio ya existirá y lo que creará es el excel!
-    print("Analizando las imagenes del directorio...")
     pretools.directoriador(directorio)

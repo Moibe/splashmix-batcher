@@ -164,7 +164,6 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_
 
   except KeyboardInterrupt:
       print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
-      time.sleep(2)
       pretools.df2Excel(dataframe, configuracion.filename)
 
   finally: 
