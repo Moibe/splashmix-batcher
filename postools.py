@@ -203,9 +203,8 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
         #IMPORTANTE: Aquí si debe ser 'Name' ya que solo tenemos una foto origen (aunq tengamos 4 samples).
         #columna_imagenes = df_images_ok['Name'].unique()
         columna_imagenes = df_images_ok['File']
-        print("Ésta es la columna_imagenes con la que trabajaremos...")
-        print(columna_imagenes)
-        time.sleep(18)
+      
+        
         
         #print("Ésta es la columna de imagenes sin repetidos...", columna_imagenes)
                 
@@ -224,7 +223,7 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
             # Get the index of the matching row
             indice_fila_objetivo = mascara_fila_objetivo.idxmax()  # Assumes only one match
             print("VIEW: Su índice idmax es: ", indice_fila_objetivo)
-            time.sleep(1)
+            
             
             # If the text is found, get the names from that row onward
             #Para cuando llega aquí tenemos que re arreglarle el nombre.
@@ -257,12 +256,11 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
             #Como el archivo podría tener otros guiones, el que nos interesa a nosotros es
             source_photo = tools.obtenerArchivoOrigen(foto_path)
             print(f"La source_photo que obtuvimos es: {source_photo} y su tipo es: {type(source_photo)}...")
-            time.sleep(1)
-                                    
+                                              
             #FOTO
             foto = os.path.join(ruta_origen, source_photo)
             print("La ruta de Foto quedó despues de obtener su original como: ", foto)
-            time.sleep(1)
+            
             #Prepara la imagen para gradio.
             
             imagenSource = gradio_client.handle_file(foto)

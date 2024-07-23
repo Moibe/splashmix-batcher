@@ -33,7 +33,7 @@ dataframe = pd.read_excel(filename)
 #FULL ES LA QUE HACE EL STABLE DIFF
 #Inicial debe ser basado en 'Name' no en 'File'
 #Future: Corregir para que empiece exacto.
-postools.fullProcess(sesion, dataframe, samples=4, inicial="AleCaballeroCreadoraDigital-t1.jpg")
+postools.fullProcess(sesion, dataframe, samples=4, inicial="4-t2.jpg")
 
 #Finaliza Excel después de preproducción.
 print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")
