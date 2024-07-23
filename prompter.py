@@ -71,9 +71,7 @@ def creaPrompt(contenedor):
     
     prompt = f"""A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, 
             {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situacion} at {place} {complemento}"""           
-
-    print("El prompt creado quedó así: ", prompt)   
-
+   
     #PROMPT PARA HEROE
     # prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #agregar otros atributos random aquí posteriormente.
 
