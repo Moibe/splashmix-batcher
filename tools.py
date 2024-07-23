@@ -29,3 +29,5 @@ def obtenerArchivoOrigen(foto_path):
     union_final = resultado_final[0] + resultado_final[1]
 
     print(f"El resultado final es: {union_final} ")
+
+    return union_final

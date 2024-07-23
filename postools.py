@@ -203,6 +203,9 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
         #IMPORTANTE: Aquí si debe ser 'Name' ya que solo tenemos una foto origen (aunq tengamos 4 samples).
         #columna_imagenes = df_images_ok['Name'].unique()
         columna_imagenes = df_images_ok['File']
+        print("Ésta es la columna_imagenes con la que trabajaremos...")
+        print(columna_imagenes)
+        time.sleep(18)
         
         #print("Ésta es la columna de imagenes sin repetidos...", columna_imagenes)
                 
@@ -217,11 +220,11 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
             # Create a boolean mask to identify the row matching the text
             mascara_fila_objetivo = df_images_ok['File'].str.contains(texto_fila_objetivo)
             print("Ésto es máscara fila objetivo: ", mascara_fila_objetivo)
-            time.sleep(10)
+            
             # Get the index of the matching row
             indice_fila_objetivo = mascara_fila_objetivo.idxmax()  # Assumes only one match
             print("VIEW: Su índice idmax es: ", indice_fila_objetivo)
-            time.sleep(5)
+            time.sleep(1)
             
             # If the text is found, get the names from that row onward
             #Para cuando llega aquí tenemos que re arreglarle el nombre.
@@ -247,23 +250,24 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
         for i, foto_path in enumerate(columna_imagenes):
 
             print(f"El valor de i es: {i} y su tipo es: {type(i)}...")  
-            print("VIEW: La primer foto con la que estaremos trabajando será: ", foto_path)
-            time.sleep(3)       
+            print(f"VIEW: La primer foto con la que estaremos trabajando será: {foto_path} y su tipo es: {type(foto_path)}...")
+            time.sleep(1)       
 
             #Aquí debes darle la correcta original (2.jpg), y no la incorrecta (2-t1.jpg)
             #Como el archivo podría tener otros guiones, el que nos interesa a nosotros es
             source_photo = tools.obtenerArchivoOrigen(foto_path)
+            print(f"La source_photo que obtuvimos es: {source_photo} y su tipo es: {type(source_photo)}...")
+            time.sleep(1)
                                     
             #FOTO
             foto = os.path.join(ruta_origen, source_photo)
             print("La ruta de Foto quedó despues de obtener su original como: ", foto)
-            time.sleep(3)
+            time.sleep(1)
             #Prepara la imagen para gradio.
             
             imagenSource = gradio_client.handle_file(foto)
             #Poner una excepción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
  
-
             #Ya no necesito crear el nombre de archivos como t, porque ya es el que tengo, no necesitamos 
             # éste for de hecho.     
             # nombre, extension = foto_path.split(".")
@@ -320,7 +324,7 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
             #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
             if resultado == "api apagada":
                 print("Me quedé en la foto_path: ", foto_path)
-                print("Y la ronda número: ", j)
+                
                 with open("configuracion.py", "a") as archivo:
                     # Escribir los valores en el archivo
                     archivo.write(f"\n foto_path = {foto_path}\n")
@@ -403,7 +407,7 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
                 contador =+ 1
     except KeyboardInterrupt:
         print("Me quedé en la foto_path: ", foto_path)
-        print("Y la ronda número: ", j)
+        
         # Abrir el archivo configuracion.py en modo append
         with open("configuracion.py", "a") as archivo:
             # Escribir los valores en el archivo

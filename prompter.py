@@ -7,7 +7,7 @@ def obten(dataframe, indice, atributo):
     print(f"Para calcular usaré el índice: {indice}, y el atributo {atributo}...")
         
     valor = dataframe.loc[indice[0], atributo]
-    print("Y éste es el valor que obtuve: ", valor)
+    #print("Y éste es el valor que obtuve: ", valor)
     
 
     return valor
