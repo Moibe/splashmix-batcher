@@ -14,7 +14,7 @@ postools.creaDirectorioResults(sesion)
 
 #Crea el dataframe necesario con el excel designado en configuración.
 #ÉSTA ES LA QUE CREA LOS SAMPLES!!
-#dataframe = postools.preparaDataframe(configuracion.filename, 4)
+#dataframe = postools.preparaSamples(configuracion.filename, 4)
 
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
 
@@ -33,7 +33,7 @@ dataframe = pd.read_excel(filename)
 #FULL ES LA QUE HACE EL STABLE DIFF
 #Inicial debe ser basado en 'Name' no en 'File'
 #Future: Corregir para que empiece exacto.
-postools.fullProcess(sesion, dataframe, samples=4, inicial="4-t2.jpg")
+postools.fullProcess(sesion, dataframe, samples=4, inicial="DamarizGonzalez-t4.jpg")
 
 #Finaliza Excel después de preproducción.
 print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")

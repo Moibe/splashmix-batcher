@@ -3,8 +3,7 @@ import time
 
 def obten(dataframe, indice, atributo):
 
-    print("Entre a obten a secas, que es de donde sacamos del excel...")
-    print(f"Para calcular usaré el índice: {indice}, y el atributo {atributo}...")
+    #print(f"Para calcular usaré el índice: {indice}, y el atributo {atributo}...")
         
     valor = dataframe.loc[indice[0], atributo]
     #print("Y éste es el valor que obtuve: ", valor)
@@ -35,7 +34,7 @@ def creaContenedor(dataframe, indice):
     contenedor = {}
 
     for atributo in atributos:
-        print("Entramos al for de atributos...")
+        
         contenedor[atributo] = obten(dataframe, indice, atributo) if isinstance(obten(dataframe, indice, atributo), str) else ""
         # print("Lo recién impreso es: ", contenedor[atributo])
         # print("Y el tipo de lo recién impreso es: ", type(contenedor[atributo]))
