@@ -20,7 +20,7 @@ dataframe = postools.preparaSamples(configuracion.filename, 4)
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
 
 #Útil: Auxiliar para obtener dataframe: (como cuando no quieres correr prepararDataFrame de nuevo.)
-dataframe = pd.read_excel(filename)
+#dataframe = pd.read_excel(filename)
 
 #Hacer el Stable Diffusion.
 #Future: Las características importantes deberían pasarse desde aquí... (que objeto, etc.)
@@ -35,7 +35,7 @@ dataframe = pd.read_excel(filename)
 #Inicial debe ser basado en 'Name' no en 'File'
 #Future: Corregir para que empiece exacto.
 #Debes de poner en inicial LA ULTIMA QUE SI SE HIZO...
-postools.fullProcess(sesion, dataframe, samples=4, inicial="IsaRomo-t1.jpg")
+#postools.fullProcess(sesion, dataframe, samples=4, inicial="IsaRomo-t1.jpg")
 
 #Finaliza Excel después de preproducción.
 print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")
