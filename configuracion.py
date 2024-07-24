@@ -13,4 +13,5 @@ wait_awake = False #Lo dejaré en false pq en realidad, esperando o no, termina 
 waited = False
 api_apagada = False
 wait_time = 500
-foto_path = '4-t4.jpg'
+
+foto_path = 'IsaRomo-t2.jpg'

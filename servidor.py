@@ -43,7 +43,7 @@ def escribe(sftp, archivo, contenido):
 
   return "Contenido escrito"
 
-def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_dir):
+def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto):
 
   """
   Sube una carpeta local completa a una carpeta remota.
@@ -59,7 +59,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_
   dataframe:Regresa dataframe.
   """ 
 
-  print("Llegamos a servidor.sube y foto_complete_url_dir o dirección donde se subirá todo es:", foto_complete_url_dir)
+  print("Llegamos a servidor.sube y el directorio remoto o dirección donde se subirá todo es:", directorio_remoto)
 
   try:       
         #Crea directorio
@@ -99,28 +99,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_
             #Destino
             nuevo_directorio_receptor = directorio_receptor.replace("/", "\\")
             print("Así quedó el nuevo directorio receptor: ", nuevo_directorio_receptor)
-
-            #Ahora extraeremos su ID y su Take:
-            # 
-            # #La imagen originalmente se llama: C4D03AQEi0TQ389Qscw-Take1.png 
-            segmentos = imagen.split('-')
-            print("Imprimiendo segmentos completo: ", segmentos) #C4D03AQEi0TQ389Qscw, Take1.png 
-            
-            id = segmentos[0] + '.png'  #El segmento 0 es el ID.
-            
-            print("Ahora que cambiamos a guión (dash) el id queda bien: ", id)
-            
-            take_textual = segmentos[1] #Que es Take1.png
-            
-            segmentos_take = take_textual.split('Take') 
-            print("Ahora imprimiendo segmentos_take completo...", segmentos_take) #Queda "", 1.png 
-            
-            segmentos_take_2 = segmentos_take[1].split('.') #Ahora quedarían 1" y "png" 
-            take = segmentos_take_2[0] 
-            
-            print("El id con el que estamos trabajando es: ", id)
-            print("La take es: ", take)
-                                   
+                                               
             #Crear la ruta completa del archivo remoto
             ruta_destino = directorio_receptor + "\\" + imagen
             #ruta_destino = os.path.join(nuevo_directorio_receptor, imagen) #Así se va a moibe pq no encuentra nada.
@@ -135,15 +114,15 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, foto_complete_url_
             print(f"La ruta destino es: {ruta_destino}, y su tipo es: {type(ruta_destino)}.")
             
             sftp.put(ruta_origen, ruta_destino)
-            print("La imagen ha sido subida al servidor...")
+            print(f"¡La imagen {imagen} se ha sido subido al servidor!")
             print("---")
             print("---")
                        
-            ruta_completa = foto_complete_url_dir + '/' + imagen
+            ruta_completa = directorio_remoto + '/' + imagen
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
-            campo_receptor = 'URL'+ take
-            print("El campo receptor quedó como: ", campo_receptor)
-            postools.actualizaRow(dataframe, 'Name', id, campo_receptor, ruta_completa)
+            
+            #dataframe, columna indexadora, index, columna_receptora, url.
+            postools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)

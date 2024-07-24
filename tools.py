@@ -1,4 +1,5 @@
 import pandas as pd
+import time
 
 def obtenerArchivoOrigen(foto_path):
     """
@@ -35,6 +36,8 @@ def obtenerArchivoOrigen(foto_path):
     return union_final
 
 def preparaColumnaImagenes(dataframe, inicial):
+        
+        print("Entré a prepara columna imagenes..., e inicial es: ", inicial)
     
         #Va todo en un try para que podamos guardar el dataframe en un excel en caso de interrupción del ciclo:
         try: 
@@ -46,19 +49,16 @@ def preparaColumnaImagenes(dataframe, inicial):
             #IMPORTANTE: Aquí si debe ser 'Name' ya que solo tenemos una foto origen (aunq tengamos 4 samples).
             #columna_imagenes = df_images_ok['Name'].unique()
             columna_imagenes = df_images_ok['File']
-        
-            
-            
-            #print("Ésta es la columna de imagenes sin repetidos...", columna_imagenes)
-                    
+            print("Ésta es la columna de imagenes sin repetidos...", columna_imagenes)
+                                
             #Si se le pasó el valor como parámetro entonces hace la búsqueda desde donde empezará.
             if inicial is not None: 
                 #PROCESO PARA INICIAR DONDE NOS QUEDAMOS
                 
                 # Ésta es la foto donde iniciará, que se pasa como parámetro a full Process.
                 texto_fila_objetivo = inicial  # Replace with your actual search text
-                print("El archivo en el que iniciaremos es: ", inicial)
-                
+                print("Dentro de inicial...El archivo en el que iniciaremos es: ", inicial)
+                                
                 # Create a boolean mask to identify the row matching the text
                 mascara_fila_objetivo = df_images_ok['File'].str.contains(texto_fila_objetivo)
                 print("Ésto es máscara fila objetivo: ", mascara_fila_objetivo)
@@ -82,7 +82,9 @@ def preparaColumnaImagenes(dataframe, inicial):
 
             contador = 0
             cuantos = len(columna_imagenes)
-            
+            print("La columna imagenes quedó:")
+            print(columna_imagenes)
+                        
             return columna_imagenes
 
         except KeyboardInterrupt:
