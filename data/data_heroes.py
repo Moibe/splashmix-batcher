@@ -101,7 +101,7 @@ lista_subjects = ["Aquaman",
                   "",
                   "Wade Wilson Deadpool", 
                   "Unmasked Deadpool",
-                  "Unmasked Superhero"
+                  "Unmasked Superhero",
                   "X-Men", 
                   "", 
                   "X-men Cyclops"

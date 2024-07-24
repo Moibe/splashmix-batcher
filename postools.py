@@ -32,7 +32,7 @@ def creaDirectorioResults(sesion):
 def preparaSamples(filename, samples):
 
     #Primero extraemos el dataframe:
-    dataframe = pd.read_excel(filename)    
+    dataframe = pd.read_excel('results_excel\\' + filename)    
 
     #Después vemos cuales son Success:
     #Filtra las filas donde 'Download Status' es igual a 'Success'
@@ -69,7 +69,7 @@ def preProcess(sesion, dataframe, inicial=None):
 
     #IMPORTANTE, Asigna los atributos a cada sample.
     
-    #Destino
+    #Destino donde irán los resultados.
     ruta_destino = sesion + "-results"
     target_dir = os.path.join('imagenes', 'resultados', ruta_destino)
 
@@ -576,10 +576,20 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
     pretools.df2Excel(dataframe, configuracion.filename)
 
 
-def creaRow(dataframe, imagen, take, filename):    
+def creaRow(dataframe, imagen, take, filename): 
 
-    #Aquí en lugar de len(dataframef) abía un -1 y por eso hacia también las dos líneas comentadas de abajo.
-    dataframe.loc[len(dataframe)] = [imagen, 'Success', take, filename, ""]  #adding a row
+    #Importante, verifica si creaRow solo participa en la creación de samples.   
+    
+    #Para imagenes de Sourcelist
+    #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4.
+    #Future, haz prueba con más samples.
+    dataframe.loc[len(dataframe)] = ["", imagen, 'Success', take, filename, ""]  #adding a row
+    #Para imagenes de directorio.
+    #dataframe.loc[len(dataframe)] = [imagen, 'Success', take, filename, ""]  #adding a row
+
+
+    #Aquí en lugar de len(dataframe) había un -1 y por eso hacia también las dos líneas comentadas de abajo.
+    # dataframe.loc[-1] = [imagen, 'Success', take, filename, ""]  #adding a row
     # dataframe.index = dataframe.index + 1  #shifting index
     # dataframe = dataframe.sort_index()  # sorting by index
 
@@ -604,14 +614,12 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     Returns:
     dataframe:Regresa dataframe.
     """
-
-    print("Estoy en actualiza row...")
-    print(f"El indicador es: {indicador}")
     
+    #print(f"El indicador es: {indicador}")    
         
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
     index = obtenIndexRow(dataframe, 'File', indicador)
-    print(f"El indice obtenido es: {index}")
+    
         
     print("Y la receiving_col es: ", receiving_col)
     
