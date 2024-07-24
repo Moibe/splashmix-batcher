@@ -2,6 +2,7 @@ import os
 import requests
 import pandas as pd
 import time
+import configuracion
 from openpyxl import Workbook, load_workbook
 
 def creaDirectorioInicial(sesion): 
@@ -18,15 +19,13 @@ def creaDirectorioInicial(sesion):
 
     # Define the desired directory path
     target_dir = os.path.join('imagenes', 'fuentes', sesion)
-    print("This is the target: ", target_dir)
+    print("Directorio para ésta sesión creado en: ", target_dir)
 
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
-
     
 
 def creaDataframe(archivo):
-
     """
     Lee el archivo Excel en un DataFrame (asumiendo que está en la raíz del proyecto) y
     crea las columnas nuevas que necesitará.
@@ -39,15 +38,19 @@ def creaDataframe(archivo):
 
     """
      
-    df = pd.read_excel(archivo)
+    df = pd.read_excel('source_excel\\' + archivo)
     
     #Importante: Crea las nuevas columnas que necesitará:
+    #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
     df['Name'] = ''
     df['Download Status'] = ''
     df['Take'] = ''
     df['File'] = ''
     df['Diffusion Status'] = ''
 
+    #Ve si afecta actualizar el excel antes de entregar el dataframe.
+    #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
+    df2Excel(df, configuracion.filename)
     
     return df
 
@@ -132,6 +135,9 @@ def descargaImagenes(sesion, dataframe):
 
 def directoriador(directorio):
 
+    #FUTURE: Que los exceles iniciales residan en una carpeta exclusiva para eso.
+    #FUTURE: Que el directoriador mande la carpeta hecha a un directorio específico.
+
     try:
         excel = directorio + ".xlsx"
         #Las imagenes tuvieron que haber sido subidas a la ruta correcta previamente.
@@ -184,6 +190,10 @@ def df2Excel(dataframe, filename):
     
     """
 
+    #IMPORTANTE: df2Excel ya siempre considerará que:
+    # 1.- Está guardando el excel de resultados no el excel origen (que nunca se modificará.)
+    # 2.- Ese excel siempre estará en la carpeta results_excel 
+
     #Future que si está abierto el excel no arruine el flujo y de tiempo para cerrarlo.
 
     #IMPORTANTE: Agrega que si el archivo está abierto, de tiempo para corregir y no mande a error.
@@ -192,8 +202,10 @@ def df2Excel(dataframe, filename):
     ruta_actual = os.path.dirname(__file__)
     print("Esto es la ruta actual: ", ruta_actual)
 
+    ruta_excel = os.path.join(ruta_actual, "results_excel")
+
     # Combina la ruta actual con el nombre del archivo para obtener la ruta relativa
-    ruta_archivo = os.path.join(ruta_actual, filename )
+    ruta_archivo = os.path.join(ruta_excel, filename )
     print("Ésto es la ruta archivo: ", ruta_archivo)
 
     # Guarda el DataFrame con la nueva columna en el archivo Excel

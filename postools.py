@@ -36,8 +36,7 @@ def preparaSamples(filename, samples):
 
     #Después vemos cuales son Success:
     #Filtra las filas donde 'Download Status' es igual a 'Success'
-    df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
-    
+    df_images_ok = dataframe[dataframe['Download Status'] == 'Success']    
 
     # Crea una nueva columna 'columna_imagenes' a partir de la columna 'Nombre'
     columna_imagenes = df_images_ok['Name']
@@ -67,6 +66,8 @@ def preparaSamples(filename, samples):
     return dataframe
 
 def preProcess(sesion, dataframe, inicial=None):
+
+    #IMPORTANTE, Asigna los atributos a cada sample.
     
     #Destino
     ruta_destino = sesion + "-results"
@@ -77,6 +78,7 @@ def preProcess(sesion, dataframe, inicial=None):
         os.makedirs(target_dir)
 
     #Va todo en un try para que podamos guardar el dataframe en un excel en caso de interrupción del ciclo:
+    #FUTURE, manda el proceso de creación de columna a la fución obtenColumnaSamples o una parecida.
     try: 
 
         # Filtra las filas donde 'Download Status' es igual a 'Success'
@@ -132,14 +134,16 @@ def preProcess(sesion, dataframe, inicial=None):
             print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
             
             #Creación será el objeto que contiene todos los atributos de lo que vamos a crear.
+            if configuracion.creacion == "Superhero":
+                #PROMPT PARA HEROE
+                creacion = Superhero()
+                prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #agregar otros atributos random aquí posteriormente.
 
-            #PROMPT PARA CHICA
-            creacion = Hotgirl(style="anime")
-            prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
-
-            #PROMPT PARA HEROE
-            # creacion = Superhero()
-            # prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #agregar otros atributos random aquí posteriormente.
+            else:
+                #PROMPT PARA CHICA
+                creacion = Hotgirl(style="anime")
+                prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
+          
             
             print("Éstos son los atributos que estamos a punto de guardar en el excel...")
             print(prompt)
@@ -176,8 +180,6 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
     #Future, que los dataframes sean independientes.
     #Primero extraemos el dataframe:
     #dataframe = pd.read_excel(filename)
-
-    print("Entré a FullProcess...")
 
     #Origen
     ruta_origen = os.path.join('imagenes', 'fuentes', sesion)    
@@ -226,14 +228,15 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
             
                                             
             #Éste contenedor contendrá los atributos que sacó de la respectiva ROW.
-            contenedor = prompter.creaContenedor(dataframe, indice)
+            #Es solo un cascarón.
+            contenedor = prompter.creaContenedorTemplate(dataframe, indice, configuracion.creacion) #Superhero o #Hotgirl por ahora.
 
             print("Esto es el contenedor que me regreso...>")
             print(contenedor)                         
 
             #AHORA CREA EL PROMPT
             print("Creando prompt después de meterle el contenedor...")
-            prompt=prompter.creaPrompt(contenedor)
+            prompt = prompter.creaPrompt(contenedor, configuracion.creacion)
             
             #Mini proceso para sacar la ruta de la posición. 
             #Future: Ver si lo haces función o lo combinas con getPosition. 
@@ -649,7 +652,7 @@ def subirTodo(excel, sesion, directorio_remoto):
     
     #Define ruta de la carpeta local donde se encuentran los resultados.
     carpeta_local = 'imagenes\\resultados\\' + sesion + '-results'
-
+    
     #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
     resultado = servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
     #Checar si aquí tendría que regresar el dataframe para tener sus modificaciones.

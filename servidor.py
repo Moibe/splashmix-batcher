@@ -44,7 +44,6 @@ def escribe(sftp, archivo, contenido):
   return "Contenido escrito"
 
 def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto):
-
   """
   Sube una carpeta local completa a una carpeta remota.
 
@@ -78,6 +77,11 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   # Subir los resultados al servidor remoto
   print("Vamos a repasar los archivos de la carpeta local que se encuentra en: ", carpeta_local)
   resultados = os.listdir(carpeta_local)
+  print(resultados)
+  
+  #FUTURE: Hoy en día vuelve a subir todo, pero cuando hablemos de miles de imagenes por sesión, quizá si sería mejor empezar desde donde nos quedamos. 
+  #Para ello lo que tenemos que hacer es contrastar la lista de imagenes (resultados) y quitar de la lista aquellas que se encuentren en una columna obtenida con la función:
+  #preparaColumnaImagenes()
 
   #Para el conteo de avance en subida.
   contador = 0 

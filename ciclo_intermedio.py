@@ -14,7 +14,8 @@ postools.creaDirectorioResults(sesion)
 
 #Crea el dataframe necesario con el excel designado en configuración.
 #ÉSTA ES LA QUE CREA LOS SAMPLES!!
-#dataframe = postools.preparaSamples(configuracion.filename, 4)
+#Y ASIGNA LOS ATRIBUTOS A CADA SAMPLE.
+dataframe = postools.preparaSamples(configuracion.filename, 4)
 
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
 

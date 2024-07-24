@@ -1,7 +1,6 @@
 import pretools, postools, time, configuracion
 
 #CICLO FINAL: ALTA EN SERVER
-
 excel = configuracion.filename
 base_url = configuracion.base_url
 sesion = configuracion.sesion
