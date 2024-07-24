@@ -3,3 +3,6 @@
 /imagenes/
 /__pycache__/
 *.xlsx
+/results_excel/
+/source_excel/
+/excel_pruebas_previas/
