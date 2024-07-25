@@ -201,7 +201,7 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
     try:    
         
         #Así solo entrará al cliente una vez y no cada que de vuelta el for.
-        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
@@ -236,6 +236,8 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
 
             #AHORA CREA EL PROMPT
             print("Creando prompt después de meterle el contenedor...")
+            print("El contenedor es: ", contenedor)
+            print("Configuración. creación es: ", configuracion.creacion)
             prompt = prompter.creaPrompt(contenedor, configuracion.creacion)
             
             #Mini proceso para sacar la ruta de la posición. 
@@ -267,8 +269,9 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
 
             print("Ésto es el prompt obtenido de creaPrompt: ", prompt)
                             
-            print("LISTO PARA STABLE DIFFUSION!!!!!")                               
-
+            print("LISTO PARA STABLE DIFFUSION!!!!!") 
+            print("No la haré porque aquí acabo la prueba, esperaremos 39 segundos.")
+            
             #STABLE DIFFUSION
             print("Iniciando Stable Difussion...")
             #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
@@ -419,7 +422,7 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
     try:
         #Usando Moibe Splashmix
         print("Estoy adentro, donde se usaba el cliente...")
-        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
 
     except Exception as e:
@@ -613,20 +616,15 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
 
     Returns:
     dataframe:Regresa dataframe.
-    """
-    
+    """    
     #print(f"El indicador es: {indicador}")    
         
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
-    index = obtenIndexRow(dataframe, 'File', indicador)
-    
-        
-    print("Y la receiving_col es: ", receiving_col)
-    
+    index = obtenIndexRow(dataframe, 'File', indicador)    
         
     # If the value exists, get the corresponding cell value
     if not index.empty:
-        print("El index se encontró...")
+        #print("El index se encontró...")
                 
         cell_value = dataframe.loc[index[0], index_col]  # Get the value at the first matching index
         print(f"Valor de la celda que coincide: {cell_value}")        

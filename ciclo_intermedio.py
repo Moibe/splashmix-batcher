@@ -31,13 +31,14 @@ dataframe = pd.read_excel('results_excel/' + filename)
 
 #Preprocess es la que llena los ATRIBUTOS!!!!
 #inicial="primejb_23104-t2.jpg" cuando quieras empezar desde uno en particular.
-postools.preProcess(sesion, dataframe)
+#postools.preProcess(sesion, dataframe)
 
 #FULL ES LA QUE HACE EL STABLE DIFF
 #Inicial debe ser basado en 'Name' no en 'File'
 #Future: Corregir para que empiece exacto.
-#Debes de poner en inicial LA ULTIMA QUE SI SE HIZO...
-#postools.fullProcess(sesion, dataframe, samples=4, inicial="IsaRomo-t1.jpg")
+#Debes de poner en inicial LA ULTIMA QUE SI SE HIZO... si quieres inicial va así: inicial="IsaRomo-t1.jpg"
+#FUTURE: Que samples venga de configuración para evitar discrepancias entre preProcess y fullProcess.
+postools.fullProcess(sesion, dataframe, samples=4)
 
 #Finaliza Excel después de preproducción.
 print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")

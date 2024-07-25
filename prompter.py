@@ -53,11 +53,13 @@ def creaContenedorTemplate(dataframe, indice, objeto):
 
 def creaPrompt(contenedor, creacion):
 
-    print("Entré a crearPrompt....")
+    print("Entré a crearPrompt....")    
 
     #FUTURE: Detectar atributos dinámicamente.
 
     if creacion == "Superhero":
+        print("Si entré a Superhero...")
+        
 
         style = contenedor['style'] #if isinstance(contenedor.get('style'), str) else ""
         subject = contenedor['subject'] #if isinstance(contenedor.get('style'), str) else ""  
@@ -91,4 +93,4 @@ def creaPrompt(contenedor, creacion):
         prompt = f"""A {style} of a {adjective} {type_girl} {subject} with {boobs} and {hair_style} wearing {wardrobe_top}, 
                 {wardrobe_accesories}, {wardrobe_bottom}, {wardrobe_shoes}, {situacion} at {place} {complemento}"""   
 
-        return prompt
+    return prompt
