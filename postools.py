@@ -199,9 +199,9 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
 
     #Try para stablediff...
     try:    
-        
+        #ÉSTE ES EL CLIENT CORRECTO!!!!
         #Así solo entrará al cliente una vez y no cada que de vuelta el for.
-        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
@@ -270,7 +270,6 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
             print("Ésto es el prompt obtenido de creaPrompt: ", prompt)
                             
             print("LISTO PARA STABLE DIFFUSION!!!!!") 
-            print("No la haré porque aquí acabo la prueba, esperaremos 39 segundos.")
             
             #STABLE DIFFUSION
             print("Iniciando Stable Difussion...")
@@ -422,7 +421,8 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
     try:
         #Usando Moibe Splashmix
         print("Estoy adentro, donde se usaba el cliente...")
-        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+        #ÉSTE CLIENTE YA NO SE USA PORQUE SE CARGABA CADA VEZ Y CADA VEZ.
+        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
 
     except Exception as e:
@@ -448,7 +448,7 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
                 imagenSource,
                 imagenPosition,
                 prompt=prompt,
-                negative_prompt="(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, pet collar, gun, weapon, blue, 3d, drones, drone, buildings in background, green",
+                negative_prompt="(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, pet collar, gun, weapon, 3d, drones, drone, buildings in background",
                 style_name="(No style)", #ver lista en styles.txt
                 num_steps=30,
                 identitynet_strength_ratio=0.8,

@@ -9,6 +9,10 @@ foto_complete_url = base_url + sesion
 #Por ejemplo https://dominio.com/results/minitest
 filename = configuracion.filename
 
+for i in range(10, 0, -1):
+  print(f"{i} seconds remaining...")
+  time.sleep(1)
+
 #Crea los directorios necesarios.
 #postools.creaDirectorioResults(sesion)
 
@@ -38,7 +42,8 @@ dataframe = pd.read_excel('results_excel/' + filename)
 #Future: Corregir para que empiece exacto.
 #Debes de poner en inicial LA ULTIMA QUE SI SE HIZO... si quieres inicial va así: inicial="IsaRomo-t1.jpg"
 #FUTURE: Que samples venga de configuración para evitar discrepancias entre preProcess y fullProcess.
-postools.fullProcess(sesion, dataframe, samples=4)
+postools.fullProcess(sesion, dataframe, samples=4, inicial="C4E03AQH2FsbLl6arEw-t1.png")
+#FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
 
 #Finaliza Excel después de preproducción.
 print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")
