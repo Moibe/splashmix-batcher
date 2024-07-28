@@ -49,8 +49,17 @@ def preparaColumnaImagenes(dataframe, inicial):
             #IMPORTANTE: Aquí si debe ser 'Name' ya que solo tenemos una foto origen (aunq tengamos 4 samples).
             #columna_imagenes = df_images_ok['Name'].unique()
             columna_imagenes = df_images_ok['File']
-            print("Ésta es la columna de imagenes sin repetidos...", columna_imagenes)
-                                
+            print("Ésta es la columna de imagenes:")
+            print(columna_imagenes)
+            print("El len de la columna_imagenes es: ", len(columna_imagenes))
+            
+
+            for imagen in columna_imagenes:
+                 print(imagen)
+                 
+                 if imagen == "C4E03AQH183r1z76ATw-t4.png": #Éste es el anterior al que estamos buscando.
+                      print("Atención, encontré a la candidata, ve que sigue...")
+                                                      
             #Si se le pasó el valor como parámetro entonces hace la búsqueda desde donde empezará.
             if inicial is not None: 
                 #PROCESO PARA INICIAR DONDE NOS QUEDAMOS
@@ -61,7 +70,18 @@ def preparaColumnaImagenes(dataframe, inicial):
                                 
                 # Create a boolean mask to identify the row matching the text
                 mascara_fila_objetivo = df_images_ok['File'].str.contains(texto_fila_objetivo)
-                print("Ésto es máscara fila objetivo: ", mascara_fila_objetivo)
+                print("Ésto es máscara fila objetivo:")
+                print(mascara_fila_objetivo)
+                print("El len de mascara fila objetivo es: ", len(mascara_fila_objetivo))
+                
+                print("Ahora voy a repasar la mascara:")
+                for mask in mascara_fila_objetivo:
+                     print(mask)
+                     print("next")
+                     
+                     if mask == "True":
+                          print("Atención, encontré a True.")
+                          
                 
                 # Get the index of the matching row
                 indice_fila_objetivo = mascara_fila_objetivo.idxmax()  # Assumes only one match
@@ -82,8 +102,16 @@ def preparaColumnaImagenes(dataframe, inicial):
 
             contador = 0
             cuantos = len(columna_imagenes)
-            print("La columna imagenes quedó:")
-            print(columna_imagenes)
+            
+            print("Voy a volver a repasar la nueva columna de imagenes que mide ahora: ", len(columna_imagenes))
+            
+            for imagen in columna_imagenes:
+                 print(imagen)
+                 print("siguiente")
+                 if imagen == "C4E03AQH2FsbLl6arEw-t2.png":
+                      print("Se encontró el resultado final por fin.")
+                     
+                      print("continuo182...")
                         
             return columna_imagenes
 

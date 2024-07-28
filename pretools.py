@@ -139,7 +139,7 @@ def directoriador(directorio):
     #FUTURE: Que el directoriador mande la carpeta hecha a un directorio específico.
 
     try:
-        excel = directorio + ".xlsx"
+        excel = "source_excel\\" + directorio + ".xlsx"
         #Las imagenes tuvieron que haber sido subidas a la ruta correcta previamente.
         directory_address = "imagenes/fuentes/" + directorio
         print("El excel que usaremos es: ", excel)

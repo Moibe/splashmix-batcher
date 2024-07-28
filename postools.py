@@ -208,13 +208,12 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
 
             print(f"El valor de i es: {i} y su tipo es: {type(i)}...")  
             print(f"VIEW: La primer foto con la que estaremos trabajando será: {foto_path} y su tipo es: {type(foto_path)}...")
-            
+                        
             #Aquí debes darle la correcta original (2.jpg), y no la incorrecta (2-t1.jpg)
             #Como el archivo podría tener otros guiones, el que nos interesa a nosotros es
             source_photo = tools.obtenerArchivoOrigen(foto_path)
             print(f"La source_photo que obtuvimos es: {source_photo} y su tipo es: {type(source_photo)}...")
-            
-                                            
+                                         
             #FOTO
             foto = os.path.join(ruta_origen, source_photo)
             print("La ruta de Foto quedó despues de obtener su original como: ", foto)
