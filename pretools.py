@@ -137,9 +137,10 @@ def directoriador(directorio):
 
     #FUTURE: Que los exceles iniciales residan en una carpeta exclusiva para eso.
     #FUTURE: Que el directoriador mande la carpeta hecha a un directorio específico.
+    #FUTURE: Que source_excel y results_excel, estén en la misma carpeta.
 
     try:
-        excel = "source_excel\\" + directorio + ".xlsx"
+        excel = "results_excel\\" + directorio + ".xlsx"
         #Las imagenes tuvieron que haber sido subidas a la ruta correcta previamente.
         directory_address = "imagenes/fuentes/" + directorio
         print("El excel que usaremos es: ", excel)

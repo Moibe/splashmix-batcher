@@ -55,6 +55,7 @@ def preparaSamples(filename, samples):
         for i in range(samples - 1): 
             #Empieza desde el 2 porque ya hizo la 1.
             filename = nombre + "-" + "t" + str(i+2) + "." + extension
+            #FUTURE, que el chequeo de configuracion.source_list se haga aquí y no cada vez dentro de crea row.
             creaRow(dataframe, imagen, i + 2, filename)
     
     #Reordeno alfabéticamente.
@@ -144,7 +145,6 @@ def preProcess(sesion, dataframe, inicial=None):
                 creacion = Hotgirl(style="anime")
                 prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
           
-            
             print("Éstos son los atributos que estamos a punto de guardar en el excel...")
             print(prompt)
            
@@ -197,180 +197,181 @@ def fullProcess(sesion, dataframe, samples, inicial=None):
     print(columna_imagenes)
     
 
+    tools.carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe)
+    #IMPORTANTE: ESTO ES LO QUE SE CONVERTIRÁ EN EL CARRUSEL.
     #Try para stablediff...
-    try:    
-        #ÉSTE ES EL CLIENT CORRECTO!!!!
-        #Así solo entrará al cliente una vez y no cada que de vuelta el for.
-        client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+    # try:    
+    #     #ÉSTE ES EL CLIENT CORRECTO!!!!
+    #     #Así solo entrará al cliente una vez y no cada que de vuelta el for.
+    #     client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
-        # Recorre cada URL de foto en la columna
-        for i, foto_path in enumerate(columna_imagenes):
+    #     # Recorre cada URL de foto en la columna
+    #     for i, foto_path in enumerate(columna_imagenes):
 
-            print(f"El valor de i es: {i} y su tipo es: {type(i)}...")  
-            print(f"VIEW: La primer foto con la que estaremos trabajando será: {foto_path} y su tipo es: {type(foto_path)}...")
+    #         print(f"El valor de i es: {i} y su tipo es: {type(i)}...")  
+    #         print(f"VIEW: La primer foto con la que estaremos trabajando será: {foto_path} y su tipo es: {type(foto_path)}...")
                         
-            #Aquí debes darle la correcta original (2.jpg), y no la incorrecta (2-t1.jpg)
-            #Como el archivo podría tener otros guiones, el que nos interesa a nosotros es
-            source_photo = tools.obtenerArchivoOrigen(foto_path)
-            print(f"La source_photo que obtuvimos es: {source_photo} y su tipo es: {type(source_photo)}...")
+    #         #Aquí debes darle la correcta original (2.jpg), y no la incorrecta (2-t1.jpg)
+    #         #Como el archivo podría tener otros guiones, el que nos interesa a nosotros es
+    #         source_photo = tools.obtenerArchivoOrigen(foto_path)
+    #         print(f"La source_photo que obtuvimos es: {source_photo} y su tipo es: {type(source_photo)}...")
                                          
-            #FOTO
-            foto = os.path.join(ruta_origen, source_photo)
-            print("La ruta de Foto quedó despues de obtener su original como: ", foto)
+    #         #FOTO
+    #         foto = os.path.join(ruta_origen, source_photo)
+    #         print("La ruta de Foto quedó despues de obtener su original como: ", foto)
             
         
-            #Prepara ID la imagen para gradio.        
-            imagenSource = gradio_client.handle_file(foto)                      
+    #         #Prepara ID la imagen para gradio.        
+    #         imagenSource = gradio_client.handle_file(foto)                      
             
-            indice = obtenIndexRow(dataframe, 'File', foto_path) 
-            print(f"El índice de foto_path: {foto_path} la row u objeto de donde sacaremos los atributos es: ", indice)
+    #         indice = obtenIndexRow(dataframe, 'File', foto_path) 
+    #         print(f"El índice de foto_path: {foto_path} la row u objeto de donde sacaremos los atributos es: ", indice)
             
                                             
-            #Éste contenedor contendrá los atributos que sacó de la respectiva ROW.
-            #Es solo un cascarón.
-            contenedor = prompter.creaContenedorTemplate(dataframe, indice, configuracion.creacion) #Superhero o #Hotgirl por ahora.
+    #         #Éste contenedor contendrá los atributos que sacó de la respectiva ROW.
+    #         #Es solo un cascarón.
+    #         contenedor = prompter.creaContenedorTemplate(dataframe, indice, configuracion.creacion) #Superhero o #Hotgirl por ahora.
 
-            print("Esto es el contenedor que me regreso...>")
-            print(contenedor)                         
+    #         print("Esto es el contenedor que me regreso...>")
+    #         print(contenedor)                         
 
-            #AHORA CREA EL PROMPT
-            print("Creando prompt después de meterle el contenedor...")
-            print("El contenedor es: ", contenedor)
-            print("Configuración. creación es: ", configuracion.creacion)
-            prompt = prompter.creaPrompt(contenedor, configuracion.creacion)
+    #         #AHORA CREA EL PROMPT
+    #         print("Creando prompt después de meterle el contenedor...")
+    #         print("El contenedor es: ", contenedor)
+    #         print("Configuración. creación es: ", configuracion.creacion)
+    #         prompt = prompter.creaPrompt(contenedor, configuracion.creacion)
             
-            #Mini proceso para sacar la ruta de la posición. 
-            #Future: Ver si lo haces función o lo combinas con getPosition. 
-            #O si haces una función creadora de rutas.
-            ruta_carpeta = os.path.join("imagenes", "positions\\posiciones")
-            #ruta_carpeta = "imagenes\\posiciones"
+    #         #Mini proceso para sacar la ruta de la posición. 
+    #         #Future: Ver si lo haces función o lo combinas con getPosition. 
+    #         #O si haces una función creadora de rutas.
+    #         ruta_carpeta = os.path.join("imagenes", "positions\\posiciones")
+    #         #ruta_carpeta = "imagenes\\posiciones"
 
-            lista_archivos = os.listdir(ruta_carpeta)
+    #         lista_archivos = os.listdir(ruta_carpeta)
             
-            if not lista_archivos:
-                print("La carpeta está vacía o no existe.")
-                exit()
+    #         if not lista_archivos:
+    #             print("La carpeta está vacía o no existe.")
+    #             exit()
             
-            imagen_posicion = contenedor['shot']
-            try: 
-                ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
-            except:
-                print("No hay imagen de posición, continua así...")
-                ruta_posicion = ""
-                #IMPORTANTE, Ya no se para pero no guarda registro, ni siquiera hace el SD, revisa por qué.
-            #Si la row viniera todo vacío no podrá crear nada, revisa por que.
-            #Future: es que debes ponerle una excepción a ruta_posición, puede venir vacía pero que no pase nada si no la forma.
+    #         imagen_posicion = contenedor['shot']
+    #         try: 
+    #             ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
+    #         except:
+    #             print("No hay imagen de posición, continua así...")
+    #             ruta_posicion = ""
+    #             #IMPORTANTE, Ya no se para pero no guarda registro, ni siquiera hace el SD, revisa por qué.
+    #         #Si la row viniera todo vacío no podrá crear nada, revisa por que.
+    #         #Future: es que debes ponerle una excepción a ruta_posición, puede venir vacía pero que no pase nada si no la forma.
 
-            print("Ésta es la ruta_posicion que se meterá al cliente de gradio, verifica si es correcta:", ruta_posicion)
+    #         print("Ésta es la ruta_posicion que se meterá al cliente de gradio, verifica si es correcta:", ruta_posicion)
                                                     
-            imagenPosition = gradio_client.handle_file(ruta_posicion)
-            #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
+    #         imagenPosition = gradio_client.handle_file(ruta_posicion)
+    #         #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
 
-            print("Ésto es el prompt obtenido de creaPrompt: ", prompt)
+    #         print("Ésto es el prompt obtenido de creaPrompt: ", prompt)
                             
-            print("LISTO PARA STABLE DIFFUSION!!!!!") 
+    #         print("LISTO PARA STABLE DIFFUSION!!!!!") 
             
-            #STABLE DIFFUSION
-            print("Iniciando Stable Difussion...")
-            #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
-            resultado = stableDiffuse(client, imagenSource, imagenPosition, prompt)
-            print("El resultado de predict fue: ", resultado)
+    #         #STABLE DIFFUSION
+    #         print("Iniciando Stable Difussion...")
+    #         #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
+    #         resultado = stableDiffuse(client, imagenSource, imagenPosition, prompt)
+    #         print("El resultado de predict fue: ", resultado)
             
-            #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
-            if resultado == "api apagada":
-                print("Me quedé en la foto_path: ", foto_path)
+    #         #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
+    #         if resultado == "api apagada":
+    #             print("Me quedé en la foto_path: ", foto_path)
                 
-                with open("configuracion.py", "a") as archivo:
-                    # Escribir los valores en el archivo
-                    archivo.write(f"\n foto_path = {foto_path}\n")
+    #             with open("configuracion.py", "a") as archivo:
+    #                 # Escribir los valores en el archivo
+    #                 archivo.write(f"\n foto_path = {foto_path}\n")
                                         
-                print("La api está apagada, esperando a que reinicie.")
-                print("Aquí vamos a guardar el excel, porque se apago la API...")
+    #             print("La api está apagada, esperando a que reinicie.")
+    #             print("Aquí vamos a guardar el excel, porque se apago la API...")
                 
-                pretools.df2Excel(dataframe, configuracion.filename)
-                configuracion.api_apagada = True
-                #Se definirá si esperar a que reinicie o no.
-                if configuracion.wait_awake == True: 
-                    print("Esperando 500 segundos a que reinicie...")
-                    time.sleep(configuracion.wait_time)
-                    configuracion.waited = True
-                    #break #Se va a donde acaba el for de 4.
-                else: 
+    #             pretools.df2Excel(dataframe, configuracion.filename)
+    #             configuracion.api_apagada = True
+    #             #Se definirá si esperar a que reinicie o no.
+    #             if configuracion.wait_awake == True: 
+    #                 print("Esperando 500 segundos a que reinicie...")
+    #                 time.sleep(configuracion.wait_time)
+    #                 configuracion.waited = True
+    #                 #break #Se va a donde acaba el for de 4.
+    #             else: 
                     
-                    configuracion.waited = False
-                    #break                
-            else: 
-                print("Se fue al else porque type(resultado) es: ", type(resultado))
+    #                 configuracion.waited = False
+    #                 #break                
+    #         else: 
+    #             print("Se fue al else porque type(resultado) es: ", type(resultado))
 
-            #PROCESO DESPÚES DE QUE YA TERMINÓ EL STABLE DIFUSSE:
-            #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
-            if isinstance(resultado, tuple):
-                print("Es una tupla: ", resultado)
-                print(f"IMPORTANTE: Vamos a guardar el resultado, y la ruta_final o destino es {target_dir} y es del tipo: {type(target_dir)}...")
+    #         #PROCESO DESPÚES DE QUE YA TERMINÓ EL STABLE DIFUSSE:
+    #         #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
+    #         if isinstance(resultado, tuple):
+    #             print("Es una tupla: ", resultado)
+    #             print(f"IMPORTANTE: Vamos a guardar el resultado, y la ruta_final o destino es {target_dir} y es del tipo: {type(target_dir)}...")
                 
-                #Future: guardar Resultado ahora debe pasar el diccionario de atributos y después usarlo adentro en actualiza Row.
-                print("Vamos a guardar un resultado existoso:")
-                guardarResultado(dataframe, resultado, foto_path, target_dir, 'Completed')
+    #             #Future: guardar Resultado ahora debe pasar el diccionario de atributos y después usarlo adentro en actualiza Row.
+    #             print("Vamos a guardar un resultado existoso:")
+    #             guardarResultado(dataframe, resultado, foto_path, target_dir, 'Completed')
 
-            #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
-            #CORRIGE IMPORTANTE: QUE NO SE SALGA DEL CICLO DE ESA IMAGEN AL ENCONTRAR ERROR.
-            else:
-                print("No es una tupla: ", resultado)
-                print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
+    #         #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
+    #         #CORRIGE IMPORTANTE: QUE NO SE SALGA DEL CICLO DE ESA IMAGEN AL ENCONTRAR ERROR.
+    #         else:
+    #             print("No es una tupla: ", resultado)
+    #             print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
                 
-                texto = str(resultado)
-                segmentado = texto.split('exception:')
-                print("Segmentado es una posible causa de error, analiza segmentado es: ", segmentado)
-                ###FUTURE: Agregar que si tuvo problemas con la imagen de referencia, agregue en un 
-                #Log de errores porque ya no lo hará en el excel, porque le dará la oportunidad con otra 
-                #imagen de posición.
-                try:
-                    #Lo pongo en try porque si no hay segmentado[1], suspende toda la operación. 
-                    print("Segmentado[1] es: ", segmentado[1])
-                    mensaje = segmentado[1]
-                except Exception as e:
-                    print("Error en el segmentado: ", e)
-                    mensaje = "concurrent.futures._base.CancelledError"
-                finally: 
-                    pass
+    #             texto = str(resultado)
+    #             segmentado = texto.split('exception:')
+    #             print("Segmentado es una posible causa de error, analiza segmentado es: ", segmentado)
+    #             ###FUTURE: Agregar que si tuvo problemas con la imagen de referencia, agregue en un 
+    #             #Log de errores porque ya no lo hará en el excel, porque le dará la oportunidad con otra 
+    #             #imagen de posición.
+    #             try:
+    #                 #Lo pongo en try porque si no hay segmentado[1], suspende toda la operación. 
+    #                 print("Segmentado[1] es: ", segmentado[1])
+    #                 mensaje = segmentado[1]
+    #             except Exception as e:
+    #                 print("Error en el segmentado: ", e)
+    #                 mensaje = "concurrent.futures._base.CancelledError"
+    #             finally: 
+    #                 pass
                 
-                print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
-                #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
-                print("Vamos a guardar un resultado no exitoso:")
+    #             print("Si no la pudo procesar, no la guarda, solo actualiza el excel.")
+    #             #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
+    #             print("Vamos a guardar un resultado no exitoso:")
                 
-                guardarResultado(dataframe, imagenSource, foto_path, target_dir, mensaje)
+    #             guardarResultado(dataframe, imagenSource, foto_path, target_dir, mensaje)
                 
-            print("Salí del if instance...")
+    #         print("Salí del if instance...")
 
-                #AQUÍ TERMINA EL PROCESO QUE BIEN PODRÍAMOS REPETIR 4 VECES.
+    #             #AQUÍ TERMINA EL PROCESO QUE BIEN PODRÍAMOS REPETIR 4 VECES.
 
-            #Revisa si éste for debería tener un try-except.
-            print("Salí del for de 4....")
-            #Aquí llega el break si la API estaba apagada, habiendo esperado o no."        
+    #         #Revisa si éste for debería tener un try-except.
+    #         print("Salí del for de 4....")
+    #         #Aquí llega el break si la API estaba apagada, habiendo esperado o no."        
             
-            if configuracion.api_apagada == True:
-                if configuracion.waited == True: 
-                #Si estaba apagada, pero esperó, ya no hagas el segundo break.
-                    configuracion.waited = False #Solo regresa a waited al estado normal. (quizá no es necesario pq no llega aquí.)
-                else: 
-                    #Si estaba apagada y no esperaste, salte totalmente con el segundo break...
-                    print("Como el problema fue que la API estaba apagada, volveré a saltar hacia un break.")
-                    #break
-            else:
-                #Si la API no estaba apagada, éste es el camino normal.
-                contador =+ 1
-    except KeyboardInterrupt:
-        print("Me quedé en la foto_path: ", foto_path)
+    #         if configuracion.api_apagada == True:
+    #             if configuracion.waited == True: 
+    #             #Si estaba apagada, pero esperó, ya no hagas el segundo break.
+    #                 configuracion.waited = False #Solo regresa a waited al estado normal. (quizá no es necesario pq no llega aquí.)
+    #             else: 
+    #                 #Si estaba apagada y no esperaste, salte totalmente con el segundo break...
+    #                 print("Como el problema fue que la API estaba apagada, volveré a saltar hacia un break.")
+    #                 #break
+    #         else:
+    #             #Si la API no estaba apagada, éste es el camino normal.
+    #             contador =+ 1
+    # except KeyboardInterrupt:
+    #     print("Me quedé en la foto_path: ", foto_path)
         
-        # Abrir el archivo configuracion.py en modo append
-        with open("configuracion.py", "a") as archivo:
-            # Escribir los valores en el archivo
-            archivo.write(f"\nfoto_path = '{foto_path}'\n")           
+    #     # Abrir el archivo configuracion.py en modo append
+    #     with open("configuracion.py", "a") as archivo:
+    #         # Escribir los valores en el archivo
+    #         archivo.write(f"\nfoto_path = '{foto_path}'\n")           
         
-        print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
-        print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
-        #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
-        #pretools.df2Excel(dataframe, configuracion.filename)
+    #     print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
+    #     print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
+    
 
 def getPosition():
     """
@@ -585,15 +586,15 @@ def creaRow(dataframe, imagen, take, filename):
     #Para imagenes de Sourcelist
     #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4.
     #Future, haz prueba con más samples.
-    dataframe.loc[len(dataframe)] = ["", imagen, 'Success', take, filename, ""]  #adding a row
-    #Para imagenes de directorio.
-    #dataframe.loc[len(dataframe)] = [imagen, 'Success', take, filename, ""]  #adding a row
 
+    # print("Configuración source list es: ", configuracion.source_list)
+    
+    if configuracion.source_list is True:
+        dataframe.loc[len(dataframe)] = ["", imagen, 'Success', take, filename, ""]  #adding a row
+    else:         
+        #Para imagenes de directorio.
+        dataframe.loc[len(dataframe)] = [imagen, 'Success', take, filename, ""]  #adding a row
 
-    #Aquí en lugar de len(dataframe) había un -1 y por eso hacia también las dos líneas comentadas de abajo.
-    # dataframe.loc[-1] = [imagen, 'Success', take, filename, ""]  #adding a row
-    # dataframe.index = dataframe.index + 1  #shifting index
-    # dataframe = dataframe.sort_index()  # sorting by index
 
 def obtenIndexRow(dataframe, deColumna, indicador):
        

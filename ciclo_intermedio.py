@@ -9,17 +9,13 @@ foto_complete_url = base_url + sesion
 #Por ejemplo https://dominio.com/results/minitest
 filename = configuracion.filename
 
-# for i in range(5, 0, -1):
-#   print(f"{i} seconds remaining...")
-#   time.sleep(1)
-
 #Crea los directorios necesarios.
 #postools.creaDirectorioResults(sesion)
 
 #Crea el dataframe necesario con el excel designado en configuración.
 #ÉSTA ES LA QUE CREA LOS SAMPLES!!
 #Y ASIGNA LOS ATRIBUTOS A CADA SAMPLE.
-#dataframe = postools.preparaSamples(configuracion.filename, 4)
+#dataframe = postools.preparaSamples(configuracion.filename, 2)
 
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
 
@@ -35,6 +31,7 @@ dataframe = pd.read_excel('results_excel/' + filename)
 
 #Preprocess es la que llena los ATRIBUTOS!!!!
 #inicial="primejb_23104-t2.jpg" cuando quieras empezar desde uno en particular.
+#FUTURE: Que preProcess haga su propia extracción del excel.
 #postools.preProcess(sesion, dataframe)
 
 #FULL ES LA QUE HACE EL STABLE DIFF
@@ -42,7 +39,7 @@ dataframe = pd.read_excel('results_excel/' + filename)
 #Future: Corregir para que empiece exacto.
 #Debes de poner en inicial LA ULTIMA QUE SI SE HIZO... si quieres inicial va así: inicial="IsaRomo-t1.jpg"
 #FUTURE: Que samples venga de configuración para evitar discrepancias entre preProcess y fullProcess.
-postools.fullProcess(sesion, dataframe, samples=4, inicial="C5603AQEQGQKuAuqlIA-t2.png")
+postools.fullProcess(sesion, dataframe, samples=2)
 #FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
 
 #Finaliza Excel después de preproducción.
