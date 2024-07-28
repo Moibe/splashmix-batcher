@@ -299,4 +299,35 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
         #pretools.df2Excel(dataframe, configuracion.filename)
-            
+
+def getMissing():
+    
+
+    filename = configuracion.filename
+
+    dataframe = pd.read_excel('results_excel/' + filename)
+
+    print("Tamaño del dataframe: ", len(dataframe))
+    time.sleep(1)
+
+    # Filter rows where 'Download Status' is 'Success' and 'Diffusion Status' is empty
+    df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
+    #df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
+
+    # Print the filtered DataFrame
+    print(df_images_ok)
+    print(len(df_images_ok))
+
+
+    # Filter rows where 'Diffusion Status' is NaN and print them
+    nan_df = df_images_ok[df_images_ok['Diffusion Status'].isna()]
+    print(nan_df)
+    print(len(nan_df))
+
+    columna_imagenes = nan_df['File'].to_list()
+
+    # Print the columna_imagenes list
+    print(columna_imagenes)
+    print(len(columna_imagenes))
+
+    return columna_imagenes

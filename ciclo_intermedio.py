@@ -39,7 +39,10 @@ dataframe = pd.read_excel('results_excel/' + filename)
 #Future: Corregir para que empiece exacto.
 #Debes de poner en inicial LA ULTIMA QUE SI SE HIZO... si quieres inicial va así: inicial="IsaRomo-t1.jpg"
 #FUTURE: Que samples venga de configuración para evitar discrepancias entre preProcess y fullProcess.
-postools.fullProcess(sesion, dataframe, samples=2)
+#IMPORTANTE: Una alternativa a empezar desde un archivo en particular, es correr mi función missing...
+#... que generará una columna de imagenes de todas aquellas que no han sido procesadas (dejando fuera a las complete
+#... y a las que tuvieron errores.)
+postools.fullProcess(sesion, dataframe, samples=2, inicial='KarenGillian-t2.webp')
 #FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
 
 #Finaliza Excel después de preproducción.
