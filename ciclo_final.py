@@ -1,7 +1,9 @@
 import pretools, postools, time, configuracion
 
 #CICLO FINAL: ALTA EN SERVER
-excel = configuracion.filename
+excel = "results_excel\\" + configuracion.filename
+print("La ruta correcta del excel es: ", excel)
+time.sleep(8)
 base_url = configuracion.base_url
 sesion = configuracion.sesion
 directorio_remoto = base_url + sesion

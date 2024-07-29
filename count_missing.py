@@ -5,7 +5,7 @@ import pandas as pd
 
 filename = configuracion.filename
 
-dataframe = pd.read_excel('results_excel/' + 'firstBatch.xlsx')
+dataframe = pd.read_excel('results_excel/' + 'girlsPositions.xlsx')
 
 print("Tamaño del dataframe: ", len(dataframe))
 time.sleep(5)
@@ -18,9 +18,12 @@ df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
 print(df_images_ok)
 print(len(df_images_ok))
 
+#concurrent.futures._base.CancelledError
 
 # Filter rows where 'Diffusion Status' is NaN and print them
-nan_df = df_images_ok[df_images_ok['Diffusion Status'].isna()]
+#nan_df = df_images_ok[df_images_ok['Diffusion Status'].isna()]
+#nan_df = df_images_ok[df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError' & df_images_ok['Diffusion Status'].isna()]
+nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
 print(nan_df)
 print(len(nan_df))
 

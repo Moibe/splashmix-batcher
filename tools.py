@@ -300,8 +300,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
         #pretools.df2Excel(dataframe, configuracion.filename)
 
-def getMissing():
-    
+def getMissing():    
 
     filename = configuracion.filename
 
@@ -309,7 +308,7 @@ def getMissing():
 
     print("Tamaño del dataframe: ", len(dataframe))
     time.sleep(1)
-
+    
     # Filter rows where 'Download Status' is 'Success' and 'Diffusion Status' is empty
     df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
     #df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
@@ -318,11 +317,10 @@ def getMissing():
     print(df_images_ok)
     print(len(df_images_ok))
 
-
-    # Filter rows where 'Diffusion Status' is NaN and print them
-    nan_df = df_images_ok[df_images_ok['Diffusion Status'].isna()]
+    nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
-    print(len(nan_df))
+    print(f"Faltan por hacer: {len(nan_df)} imagenes...")
+    time.sleep(4)
 
     columna_imagenes = nan_df['File'].to_list()
 
