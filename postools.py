@@ -50,13 +50,42 @@ def preparaSamples(filename, samples):
         indice = obtenIndexRow(dataframe, 'Name', imagen)
         dataframe.loc[indice, 'Take'] = 1
         dataframe.loc[indice, 'File'] = nombre + "-" + "t" + str(1) + "." + extension
+        #FUTURE: Aquí causa el error de type de pandas, corrigelo antes de que quede deprecado.
         
+        #AQUÍ VA IR LO QUE TENIAMOS DENTRO DEL FOR:
+        if configuracion.source_list is True:
+            lista = ["", imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
+            a = 3 #Aquí sustituira el índice 3 take_placeholder
+            b = 4 
+        else:         
+            #Para imagenes de directorio.
+            lista = [imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
+            a = 4 #Aquí sustituira el índice 4 take_placeholder
+            b = 5         
+
+
         #Y luego crea tantas rows adicionales como samples fuera a haber.
         for i in range(samples - 1): 
+
+            print("Entré al for y ésto es la lista: ", lista)
+            time.sleep(1)
+                        
+            # Replace the element at the index with the sustituto variable
+            lista[a] = i + 2
+            print("Si sustituí el take_placeholder, y ahora la lista luce así: ", lista)
+            time.sleep(1)
+
             #Empieza desde el 2 porque ya hizo la 1.
             filename = nombre + "-" + "t" + str(i+2) + "." + extension
-            #FUTURE, que el chequeo de configuracion.source_list se haga aquí y no cada vez dentro de crea row.
-            creaRow(dataframe, imagen, i + 2, filename)
+            
+            # Replace the element at the index with the sustituto variable
+            lista[b] = filename
+            print("Y si logré sustituirlo en la lista, la lista con éste segundo cambio luce así: ", lista)
+            time.sleep(1)
+
+            print("La lista quedó como: ", lista)
+            
+            creaRow(dataframe, imagen, i + 2, filename, lista)
     
     #Reordeno alfabéticamente.
     dataframe = dataframe.sort_values(['Name','Take'])
@@ -412,7 +441,7 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
     pretools.df2Excel(dataframe, configuracion.filename)
 
 
-def creaRow(dataframe, imagen, take, filename): 
+def creaRow(dataframe, imagen, take, filename, lista): 
 
     #Importante, verifica si creaRow solo participa en la creación de samples.   
     
@@ -421,13 +450,9 @@ def creaRow(dataframe, imagen, take, filename):
     #Future, haz prueba con más samples.
 
     # print("Configuración source list es: ", configuracion.source_list)
+        
+    dataframe.loc[len(dataframe)] = lista  #adding a row
     
-    if configuracion.source_list is True:
-        dataframe.loc[len(dataframe)] = ["", imagen, 'Success', take, filename, ""]  #adding a row
-    else:         
-        #Para imagenes de directorio.
-        dataframe.loc[len(dataframe)] = [imagen, 'Success', take, filename, ""]  #adding a row
-
 
 def obtenIndexRow(dataframe, deColumna, indicador):
 

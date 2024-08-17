@@ -116,6 +116,8 @@ def descargaImagenes(sesion, dataframe):
         dataframe.loc[i, 'Name'] = image_id
 
         # Attempt to download the image
+        #FUTURE: Si ya existe la imagen en el directorio (por ejemplo si ya se habían bajado en una prueba anterior)...
+        #... que no vaya a internet y la vuelva a bajar, que se salte eso.
         try:
             response = requests.get(foto_url)
             if response.status_code == 200:

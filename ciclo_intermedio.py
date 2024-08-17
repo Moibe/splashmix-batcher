@@ -23,7 +23,7 @@ dataframe = postools.preparaSamples(configuracion.filename, 4)
 #dataframe = pd.read_excel(filename)
 #Auxiliar para archivo excel de resultados.
 #La ruta sirve con diagonal normal / o con doble diagonal \\
-dataframe = pd.read_excel('results_excel/' + filename)
+#dataframe = pd.read_excel('results_excel/' + filename)
 
 #Hacer el Stable Diffusion.
 #Future: Las características importantes deberían pasarse desde aquí... (que objeto, etc.)
