@@ -89,7 +89,8 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   print("La cantidad de resultados son: ", cuantos)
 
   try:
-        
+        print("Inicia ciclo de repaso de cada imagen...")
+        excepcion = "NO"
         for imagen in resultados:
             
             print(f"Ahora estámos en la imagen número {contador} de {cuantos}.")
@@ -141,15 +142,19 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
         mensaje = f"OJO: Error al subir un archivo: {e}"
         print(mensaje)
         print("XXXXXXXX")
-        print("XXXXXXXX")
+        excepcion = "SI hubo excepción"
+        print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
+        pretools.df2Excel(dataframe, configuracion.filename)
         
-        return f"OJO: Error al subir un archivo: {e}"
+        #return f"OJO: Error al subir un archivo: {e}"
 
   except KeyboardInterrupt:
       print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
       pretools.df2Excel(dataframe, configuracion.filename)
+      #FUTURE: Que el ciclo de subida final reinicie desde donde se quedó.
 
   finally: 
+      print("Entré al finally del ciclo que repasa cada imagen...", excepcion)
       contador += 1
   
 def cierraConexion(ssh, sftp ):

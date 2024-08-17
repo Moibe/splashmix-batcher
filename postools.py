@@ -504,6 +504,7 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
 
 def subirTodo(excel, sesion, directorio_remoto):
 
+
     print("Entramos a subir todo, la sesión es: ", sesion)
 
     #Primero extraemos el dataframe:
@@ -526,6 +527,7 @@ def subirTodo(excel, sesion, directorio_remoto):
     
     #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
     resultado = servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
+    print("Salí de sube...")
     #Checar si aquí tendría que regresar el dataframe para tener sus modificaciones.
     print(resultado)
 
