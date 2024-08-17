@@ -21,4 +21,5 @@ time.sleep(4)
 dataframe = postools.subirTodo(excel, sesion, directorio_remoto)
 
 #Finaliza excel después de postproducción.
+print("Si llegó al final, imprimiendo excel...")
 pretools.df2Excel(dataframe, excel)

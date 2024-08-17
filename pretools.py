@@ -181,6 +181,8 @@ def directoriador(directorio):
 
 def df2Excel(dataframe, filename):
 
+    print("182: Entré al excel a guardar...")
+
     """
     Guarda el Dataframe final en el archivo de excel original.
 

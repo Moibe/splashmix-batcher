@@ -526,11 +526,9 @@ def subirTodo(excel, sesion, directorio_remoto):
     carpeta_local = 'imagenes\\resultados\\' + sesion + '-results'
     
     #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
-    resultado = servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
+    servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
     print("Salí de sube...")
-    #Checar si aquí tendría que regresar el dataframe para tener sus modificaciones.
-    print(resultado)
-
+    
     servidor.cierraConexion(ssh, sftp)
 
     return dataframe

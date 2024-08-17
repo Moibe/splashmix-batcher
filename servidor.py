@@ -77,6 +77,8 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   # Subir los resultados al servidor remoto
   print("Vamos a repasar los archivos de la carpeta local que se encuentra en: ", carpeta_local)
   resultados = os.listdir(carpeta_local)
+  print("IMPORTANTE: El type de resultados (la lista de imagenes con las que vamos a trabajar es:)", type(resultados))
+  time.sleep(60)
   print(resultados)
   
   #FUTURE: Hoy en día vuelve a subir todo, pero cuando hablemos de miles de imagenes por sesión, quizá si sería mejor empezar desde donde nos quedamos. 
@@ -154,10 +156,10 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
       #FUTURE: Que el ciclo de subida final reinicie desde donde se quedó.
 
   finally: 
-      print("Entré al finally del ciclo que repasa cada imagen...", excepcion)
+      print("Entré al finally del ciclo que repasa cada imagen, solo se llega aquí si hubo excepción...", excepcion)
       contador += 1
   
-def cierraConexion(ssh, sftp ):
+def cierraConexion(ssh, sftp):
 
   """
   Sube una carpeta local completa a una carpeta remota.
