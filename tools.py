@@ -301,18 +301,44 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
 def getNotLoaded(dataframe):
 
     print("Estamos en la función getNotLoaded()...")
-    print("Éste es el dataframe con el que vamos a trabajar...")
-    time.sleep(1)
-
-    print(dataframe)
-    time.sleep(1)
+    # print("Éste es el dataframe con el que vamos a trabajar...")
+    # print(dataframe)
+    # time.sleep(10)
+    print("EL tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
+    time.sleep(9)
     
-    print("Calculando dataframe filtrado ya de solo los completes y los que no tienen url.")
+    print("Calculando dataframe filtrado ya de solo los Completed.")
+    time.sleep(10)
     df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
+    # print("Éste es el dataframe que tiene todos los completados de Diffusion Status:")
+    # print(df_images_ok)
+    print("El tamaño del dataframe df_images_ok es: ", len(df_images_ok))
+    time.sleep(9)
+
+    print("Ahora basado en ese filtraremos de nuevo...")
     df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
+    # print("Y nuestro dataframe final será: ")
+    # print(df_images_toUpload)    
+    print("Y su tamaño es de df_images_toUpload es: ", len(df_images_toUpload) )
+    time.sleep(9)
+
+    print("Si en camvbio filtraramos directo el dataframe, el resultado sería:")
+    df_images_toUpload_direct = df_images_ok[(dataframe['URL'].isnull())]
+    # print("Éste es el resultado directo: ")
+    # print(df_images_toUpload_direct)
+    print("Y éste es su tamaño:", len(df_images_toUpload_direct))
+    time.sleep(9)
+
+    print("Si finalmente al revés:")
+    df_images_toUpload_direct2 = dataframe[(df_images_ok['URL'].isnull())]
+    # print("Éste es el resultado directo: ")
+    # print(df_images_toUpload_direct)
+    print("Y éste es su tamaño:", len(df_images_toUpload_direct2))
+    time.sleep(9)
+
 
     print("EL tamaño del dataframe es: ", len(df_images_toUpload))
-    time.sleep(3)
+    time.sleep(18)
 
 
     lista_de_files = df_images_ok['File'].tolist()
