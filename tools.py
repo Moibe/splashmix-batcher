@@ -295,53 +295,24 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
-        #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
-        #pretools.df2Excel(dataframe, configuracion.filename)
-
+        
 def getNotLoaded(dataframe):
 
     print("Estamos en la función getNotLoaded()...")
-    # print("Éste es el dataframe con el que vamos a trabajar...")
-    # print(dataframe)
-    # time.sleep(10)
     print("EL tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
-    time.sleep(9)
+    time.sleep(3)  
     
-    print("Calculando dataframe filtrado ya de solo los Completed.")
-    time.sleep(10)
     df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
-    # print("Éste es el dataframe que tiene todos los completados de Diffusion Status:")
-    # print(df_images_ok)
     print("El tamaño del dataframe df_images_ok es: ", len(df_images_ok))
-    time.sleep(9)
+    time.sleep(3)
 
     print("Ahora basado en ese filtraremos de nuevo...")
     df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
-    # print("Y nuestro dataframe final será: ")
-    # print(df_images_toUpload)    
     print("Y su tamaño es de df_images_toUpload es: ", len(df_images_toUpload) )
-    time.sleep(9)
+    time.sleep(3)
 
-    print("Si en camvbio filtraramos directo el dataframe, el resultado sería:")
-    df_images_toUpload_direct = df_images_ok[(dataframe['URL'].isnull())]
-    # print("Éste es el resultado directo: ")
-    # print(df_images_toUpload_direct)
-    print("Y éste es su tamaño:", len(df_images_toUpload_direct))
-    time.sleep(9)
-
-    print("Si finalmente al revés:")
-    df_images_toUpload_direct2 = dataframe[(df_images_ok['URL'].isnull())]
-    # print("Éste es el resultado directo: ")
-    # print(df_images_toUpload_direct)
-    print("Y éste es su tamaño:", len(df_images_toUpload_direct2))
-    time.sleep(9)
-
-
-    print("EL tamaño del dataframe es: ", len(df_images_toUpload))
-    time.sleep(18)
-
-
-    lista_de_files = df_images_ok['File'].tolist()
+    lista_de_files = df_images_toUpload['File'].tolist()
+    print("El tamaño de la lista fina a imprimir es:", len(lista_de_files))
 
     return lista_de_files
 

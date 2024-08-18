@@ -84,11 +84,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   #AHORA NECESITAMOS QUE LA LISTA SALGA DELE EXCEL..
   print("Ahora vamos a obtener los resultados via la nueva función getNotLoaded()...")
   resultados = tools.getNotLoaded(dataframe)
-  
-  print("Imprimiendo los nuevos resultados:")
-  print(resultados)
-  time.sleep(1)
-  
+    
   #FUTURE: Hoy en día vuelve a subir todo, pero cuando hablemos de miles de imagenes por sesión, quizá si sería mejor empezar desde donde nos quedamos. 
   #Para ello lo que tenemos que hacer es contrastar la lista de imagenes (resultados) y quitar de la lista aquellas que se encuentren en una columna obtenida con la función:
   #preparaColumnaImagenes()
