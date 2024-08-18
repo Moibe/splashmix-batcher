@@ -208,9 +208,10 @@ def df2Excel(dataframe, filename):
     print("Esto es la ruta actual: ", ruta_actual)
 
     ruta_excel = os.path.join(ruta_actual, "results_excel")
+    print("Esto es la ruta excel: ", ruta_excel)
 
     # Combina la ruta actual con el nombre del archivo para obtener la ruta relativa
-    ruta_archivo = os.path.join(ruta_excel, filename )
+    ruta_archivo = os.path.join(ruta_excel, filename)
     print("Ésto es la ruta archivo: ", ruta_archivo)
 
     # Guarda el DataFrame con la nueva columna en el archivo Excel

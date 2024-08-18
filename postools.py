@@ -497,9 +497,7 @@ def subirTodo(excel, sesion, directorio_remoto):
 
     #Primero extraemos el dataframe:
     dataframe = pd.read_excel(excel)  
-    print("Leímos el excel y el dataframe queda:")
-    print(dataframe)  
-
+    
     #Conexión al servidor.
     ssh, sftp = servidor.conecta()
         

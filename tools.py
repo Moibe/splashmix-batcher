@@ -308,10 +308,10 @@ def getNotLoaded(dataframe):
     time.sleep(1)
     
     print("Calculando dataframe filtrado ya de solo los completes y los que no tienen url.")
-    df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')  & (dataframe['URL'].isnull())]
-    #df_images_ok = dataframe[(dataframe['URL'].isnull())]
+    df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
+    df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
 
-    print("EL tamaño del dataframe es: ", len(df_images_ok))
+    print("EL tamaño del dataframe es: ", len(df_images_toUpload))
     time.sleep(3)
 
 
@@ -339,8 +339,7 @@ def getMissing():
     nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
     print(f"Faltan por hacer: {len(nan_df)} imagenes...")
-    time.sleep(4)
-
+    
     columna_imagenes = nan_df['File'].to_list()
 
     # Print the columna_imagenes list

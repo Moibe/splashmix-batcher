@@ -20,4 +20,4 @@ dataframe = postools.subirTodo(excel, sesion, directorio_remoto)
 
 #Finaliza excel después de postproducción.
 print("Si llegó al final, imprimiendo excel, donde excel es: ", configuracion.filename)
-pretools.df2Excel(dataframe, excel)
+pretools.df2Excel(dataframe, configuracion.filename)

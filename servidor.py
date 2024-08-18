@@ -83,7 +83,6 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   
   #AHORA NECESITAMOS QUE LA LISTA SALGA DELE EXCEL..
   print("Ahora vamos a obtener los resultados via la nueva función getNotLoaded()...")
-  time.sleep(1)
   resultados = tools.getNotLoaded(dataframe)
   
   print("Imprimiendo los nuevos resultados:")
