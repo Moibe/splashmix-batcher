@@ -116,9 +116,7 @@ def preparaColumnaImagenes(dataframe, inicial):
                  print("siguiente")
                  if imagen == "C4E03AQH2FsbLl6arEw-t2.png":
                       print("Se encontró el resultado final por fin.")
-                     
-                      print("continuo182...")
-                        
+                                             
             return columna_imagenes
 
         except KeyboardInterrupt:
@@ -299,6 +297,27 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
         #pretools.df2Excel(dataframe, configuracion.filename)
+
+def getNotLoaded(dataframe):
+
+    print("Estamos en la función getNotLoaded()...")
+    print("Éste es el dataframe con el que vamos a trabajar...")
+    time.sleep(1)
+
+    print(dataframe)
+    time.sleep(1)
+    
+    print("Calculando dataframe filtrado ya de solo los completes y los que no tienen url.")
+    df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')  & (dataframe['URL'].isnull())]
+    #df_images_ok = dataframe[(dataframe['URL'].isnull())]
+
+    print("EL tamaño del dataframe es: ", len(df_images_ok))
+    time.sleep(3)
+
+
+    lista_de_files = df_images_ok['File'].tolist()
+
+    return lista_de_files
 
 def getMissing():    
 

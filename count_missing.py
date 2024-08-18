@@ -7,9 +7,6 @@ filename = configuracion.filename
 
 dataframe = pd.read_excel('results_excel/' + 'girlsPositions.xlsx')
 
-print("Tamaño del dataframe: ", len(dataframe))
-time.sleep(5)
-
 # Filter rows where 'Download Status' is 'Success' and 'Diffusion Status' is empty
 df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
 #df_images_ok = dataframe[dataframe['Download Status'] == 'Success']

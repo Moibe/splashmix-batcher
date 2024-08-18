@@ -66,15 +66,10 @@ def preparaSamples(filename, samples):
 
         #Y luego crea tantas rows adicionales como samples fuera a haber.
         for i in range(samples - 1): 
-
-            print("Entré al for y ésto es la lista: ", lista)
-            time.sleep(1)
-                        
+                       
             # Replace the element at the index with the sustituto variable
             lista[a] = i + 2
-            print("Si sustituí el take_placeholder, y ahora la lista luce así: ", lista)
-            time.sleep(1)
-
+            
             #Empieza desde el 2 porque ya hizo la 1.
             filename = nombre + "-" + "t" + str(i+2) + "." + extension
             
@@ -458,15 +453,11 @@ def obtenIndexRow(dataframe, deColumna, indicador):
 
     print("Estoy en obtenIndexRow...")
        
-    print(f"El nombre de la imagen buscada es: {indicador} ")
-    time.sleep(4)
     index = dataframe[dataframe[deColumna] == indicador].index
     print("Esto es index, es lo que voy a regresar: ", index)
     print("y ésto es el tipo de index: ", type(index))
 
     return index
-
-
 
 def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido): 
     """
@@ -480,7 +471,7 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     """    
     print("Estoy en actualizarow, después de haber subido la imagen y esperando actualizar.")
     print(f"El indicador es: {indicador}")  
-    time.sleep(2)  
+    time.sleep(1)  
         
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
     index = obtenIndexRow(dataframe, 'File', indicador)    
@@ -503,9 +494,6 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
            
 
 def subirTodo(excel, sesion, directorio_remoto):
-
-
-    print("Entramos a subir todo, la sesión es: ", sesion)
 
     #Primero extraemos el dataframe:
     dataframe = pd.read_excel(excel)  

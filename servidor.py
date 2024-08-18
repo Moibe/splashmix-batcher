@@ -1,5 +1,6 @@
 import os
 import time
+import tools
 import paramiko
 import configuracion 
 import pretools, postools
@@ -75,11 +76,19 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
       pass
   
   # Subir los resultados al servidor remoto
-  print("Vamos a repasar los archivos de la carpeta local que se encuentra en: ", carpeta_local)
-  resultados = os.listdir(carpeta_local)
-  print("IMPORTANTE: El type de resultados (la lista de imagenes con las que vamos a trabajar es:)", type(resultados))
-  time.sleep(60)
+  # print("Vamos a repasar los archivos de la carpeta local que se encuentra en: ", carpeta_local)
+  # resultados = os.listdir(carpeta_local)
+  # print("Ésto es la lista de resultados como la usabamos antes:")
+  # print(resultados)
+  
+  #AHORA NECESITAMOS QUE LA LISTA SALGA DELE EXCEL..
+  print("Ahora vamos a obtener los resultados via la nueva función getNotLoaded()...")
+  time.sleep(1)
+  resultados = tools.getNotLoaded(dataframe)
+  
+  print("Imprimiendo los nuevos resultados:")
   print(resultados)
+  time.sleep(1)
   
   #FUTURE: Hoy en día vuelve a subir todo, pero cuando hablemos de miles de imagenes por sesión, quizá si sería mejor empezar desde donde nos quedamos. 
   #Para ello lo que tenemos que hacer es contrastar la lista de imagenes (resultados) y quitar de la lista aquellas que se encuentren en una columna obtenida con la función:
@@ -144,14 +153,14 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
         mensaje = f"OJO: Error al subir un archivo: {e}"
         print(mensaje)
         print("XXXXXXXX")
-        excepcion = "SI hubo excepción"
+        excepcion = "SI hubo excepción."
         print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
         pretools.df2Excel(dataframe, configuracion.filename)
         
         #return f"OJO: Error al subir un archivo: {e}"
 
   except KeyboardInterrupt:
-      print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
+      print("KEYBOARD: Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.filename)
       pretools.df2Excel(dataframe, configuracion.filename)
       #FUTURE: Que el ciclo de subida final reinicie desde donde se quedó.
 
