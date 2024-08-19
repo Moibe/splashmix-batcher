@@ -6,6 +6,7 @@ import nycklar.nodes as nodes
 import os
 import pretools, postools
 import prompter
+import globales
 
 def obtenerArchivoOrigen(foto_path):
     """
@@ -121,6 +122,66 @@ def preparaColumnaImagenes(dataframe, inicial):
 
         except KeyboardInterrupt:
             print("Se interrumpió la creación de la columna")
+
+def obtenIndexRow(dataframe, deColumna, indicador):
+
+    print("Estoy en obtenIndexRow...")
+       
+    index = dataframe[dataframe[deColumna] == indicador].index
+    print("Esto es index, es lo que voy a regresar: ", index)
+    print("y ésto es el tipo de index: ", type(index))
+
+    return index
+
+def creaRow(dataframe, imagen, take, filename, lista): 
+
+    #Importante, verifica si creaRow solo participa en la creación de samples.   
+    
+    #Para imagenes de Sourcelist
+    #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4.
+    #Future, haz prueba con más samples.
+        
+    dataframe.loc[len(dataframe)] = lista  #adding a row
+
+def df2Excel(dataframe, filename):
+
+    print("182: Entré al excel a guardar...")
+
+    """
+    Guarda el Dataframe final en el archivo de excel original.
+
+    Parameters:
+    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+    filename
+
+    Returns:
+    bool: True si se guardó el archivo correctamente.
+    
+    """
+
+    #IMPORTANTE: df2Excel ya siempre considerará que:
+    # 1.- Está guardando el excel de resultados no el excel origen (que nunca se modificará.)
+    # 2.- Ese excel siempre estará en la carpeta results_excel 
+
+    #Future que si está abierto el excel no arruine el flujo y de tiempo para cerrarlo.
+
+    #IMPORTANTE: Agrega que si el archivo está abierto, de tiempo para corregir y no mande a error.
+     
+    # Obtiene la ruta actual del script (directorio raíz del proyecto)
+    ruta_actual = os.path.dirname(__file__)
+    print("Esto es la ruta actual: ", ruta_actual)
+
+    ruta_excel = os.path.join(ruta_actual, globales.excel_results_path)
+    print("Esto es la ruta excel: ", ruta_excel)
+
+    # Combina la ruta actual con el nombre del archivo para obtener la ruta relativa
+    ruta_archivo = os.path.join(ruta_excel, filename)
+    print("Ésto es la ruta archivo: ", ruta_archivo)
+
+    # Guarda el DataFrame con la nueva columna en el archivo Excel
+    dataframe.to_excel(ruta_archivo, index=False)
+
+    return True
 
 def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe): 
      #Try para stablediff...

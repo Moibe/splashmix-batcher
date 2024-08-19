@@ -157,8 +157,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   except KeyboardInterrupt:
       print("KEYBOARD: Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.filename)
       pretools.df2Excel(dataframe, configuracion.filename)
-      #FUTURE: Que el ciclo de subida final reinicie desde donde se quedó.
-
+      
   finally: 
       print("Entré al finally del ciclo que repasa cada imagen, solo se llega aquí si hubo excepción...", excepcion)
       contador += 1

@@ -9,13 +9,7 @@ foto_complete_url = base_url + sesion
 #Por ejemplo https://dominio.com/results/minitest
 filename = configuracion.filename
 
-#Crea los directorios necesarios.
-#postools.creaDirectorioResults(sesion)
 
-#Crea el dataframe necesario con el excel designado en configuración.
-#ÉSTA ES LA QUE CREA LOS SAMPLES!!
-#Y ASIGNA LOS ATRIBUTOS A CADA SAMPLE.
-dataframe = postools.preparaSamples(configuracion.filename, 4)
 
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
 

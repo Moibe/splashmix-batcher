@@ -12,84 +12,6 @@ from prompts import Prompt, Superhero, Hotgirl
 import prompter
 import tools
 
-
-def creaDirectorioResults(sesion):
-    """
-    Crea el directorio donde se recibirán los resultados en caso de no existir. El directorio llevará el nombre de la sesión + "results".
-
-    Parameters:
-    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
-
-    Returns:
-    bool: True si se guardó el archivo correctamente.
-
-    """
-    results_dir = os.path.join('imagenes', 'resultados', sesion + "-results" )   
-    
-    if not os.path.exists(results_dir):
-        os.makedirs(results_dir)
-
-def preparaSamples(filename, samples):
-
-    #Primero extraemos el dataframe:
-    dataframe = pd.read_excel('results_excel\\' + filename)    
-
-    #Después vemos cuales son Success:
-    #Filtra las filas donde 'Download Status' es igual a 'Success'
-    df_images_ok = dataframe[dataframe['Download Status'] == 'Success']    
-
-    # Crea una nueva columna 'columna_imagenes' a partir de la columna 'Nombre'
-    columna_imagenes = df_images_ok['Name']
-
-    #Crea las rows para sus samples
-    for imagen in columna_imagenes:
-        #Separa la imagen antes de crearla 4 veces (para no separar cada vez de esas 4)
-        nombre, extension = imagen.split(".")       
-
-        #Cuando encuentra la imagen llena los datos de la primera incidencia.
-        indice = obtenIndexRow(dataframe, 'Name', imagen)
-        dataframe.loc[indice, 'Take'] = 1
-        dataframe.loc[indice, 'File'] = nombre + "-" + "t" + str(1) + "." + extension
-        #FUTURE: Aquí causa el error de type de pandas, corrigelo antes de que quede deprecado.
-        
-        #AQUÍ VA IR LO QUE TENIAMOS DENTRO DEL FOR:
-        if configuracion.excel_list is True:
-            lista = ["", imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
-            a = 3 #Aquí sustituira el índice 3 take_placeholder
-            b = 4 
-        else:         
-            #Para imagenes de directorio.
-            lista = [imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
-            a = 4 #Aquí sustituira el índice 4 take_placeholder
-            b = 5         
-
-
-        #Y luego crea tantas rows adicionales como samples fuera a haber.
-        for i in range(samples - 1): 
-                       
-            # Replace the element at the index with the sustituto variable
-            lista[a] = i + 2
-            
-            #Empieza desde el 2 porque ya hizo la 1.
-            filename = nombre + "-" + "t" + str(i+2) + "." + extension
-            
-            # Replace the element at the index with the sustituto variable
-            lista[b] = filename
-            print("Y si logré sustituirlo en la lista, la lista con éste segundo cambio luce así: ", lista)
-            time.sleep(1)
-
-            print("La lista quedó como: ", lista)
-            
-            creaRow(dataframe, imagen, i + 2, filename, lista)
-    
-    #Reordeno alfabéticamente.
-    dataframe = dataframe.sort_values(['Name','Take'])
-
-    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
-    pretools.df2Excel(dataframe, configuracion.filename)
-      
-    return dataframe
-
 def preProcess(sesion, dataframe, inicial=None):
 
     #IMPORTANTE, Asigna los atributos a cada sample.
@@ -434,27 +356,6 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
 
     #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
     pretools.df2Excel(dataframe, configuracion.filename)
-
-
-def creaRow(dataframe, imagen, take, filename, lista): 
-
-    #Importante, verifica si creaRow solo participa en la creación de samples.   
-    
-    #Para imagenes de Sourcelist
-    #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4.
-    #Future, haz prueba con más samples.
-        
-    dataframe.loc[len(dataframe)] = lista  #adding a row
-
-def obtenIndexRow(dataframe, deColumna, indicador):
-
-    print("Estoy en obtenIndexRow...")
-       
-    index = dataframe[dataframe[deColumna] == indicador].index
-    print("Esto es index, es lo que voy a regresar: ", index)
-    print("y ésto es el tipo de index: ", type(index))
-
-    return index
 
 def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido): 
     """

@@ -4,6 +4,8 @@ import pandas as pd
 import time
 import configuracion
 from openpyxl import Workbook, load_workbook
+import globales
+import tools
 
 def creaDirectorioInicial(sesion): 
     """
@@ -37,8 +39,8 @@ def creaDataframe(archivo):
     dataframe:Regresa dataframe que se usará a través de los procesos.
 
     """
-     
-    df = pd.read_excel('source_excel\\' + archivo)
+    #FUTURE, la carpeta de los exceles que se reciba por configuración. 
+    df = pd.read_excel(globales.excel_source_path + archivo)
     
     #Importante: Crea las nuevas columnas que necesitará:
     #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
@@ -50,7 +52,7 @@ def creaDataframe(archivo):
 
     #Ve si afecta actualizar el excel antes de entregar el dataframe.
     #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
-    df2Excel(df, configuracion.filename)
+    tools.df2Excel(df, configuracion.filename)
     
     return df
 
@@ -94,7 +96,10 @@ def descargaImagenes(sesion, dataframe):
     """
 
     #Objeto que contiene la columna de urls con las fotos.
+    #Se asume que el excel recibido tendrá la columna SOurce con todas las url de las imagenes a descargar.
     columna_fotos = dataframe['Source']
+
+    #FUTURE, si es un set de imagenes que ya bajamos en el pasado poder evitar bajarlas de nuevo.
 
     # Recorre cada URL de foto en la columna
     for i, foto_url in enumerate(columna_fotos):
@@ -142,7 +147,7 @@ def directoriador(directorio):
     #FUTURE: Que source_excel y results_excel, estén en la misma carpeta.
 
     try:
-        excel = "results_excel\\" + directorio + ".xlsx"
+        excel = globales.excel_results_path + directorio + ".xlsx"
         #Las imagenes tuvieron que haber sido subidas a la ruta correcta previamente.
         directory_address = "imagenes/fuentes/" + directorio
         print("El excel que usaremos es: ", excel)
@@ -177,44 +182,99 @@ def directoriador(directorio):
 
     workbook.save(excel)
 
-          
-
-def df2Excel(dataframe, filename):
-
-    print("182: Entré al excel a guardar...")
-
+def creaDirectorioResults(sesion):
     """
-    Guarda el Dataframe final en el archivo de excel original.
+    Crea el directorio donde se recibirán los resultados en caso de no existir. El directorio llevará el nombre de la sesión + "results".
 
     Parameters:
     dataframe (dataframe): El dataframe en el que estuvimos trabajando.
-    filename
 
     Returns:
     bool: True si se guardó el archivo correctamente.
-    
+
     """
+    results_dir = os.path.join('imagenes', 'resultados', sesion + "-results" )   
+    
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
 
-    #IMPORTANTE: df2Excel ya siempre considerará que:
-    # 1.- Está guardando el excel de resultados no el excel origen (que nunca se modificará.)
-    # 2.- Ese excel siempre estará en la carpeta results_excel 
+def preparaSamples(filename, samples):
 
-    #Future que si está abierto el excel no arruine el flujo y de tiempo para cerrarlo.
+    #Ésta función prepara el espacio para la cantidad de samples que quieres crear.
+    #Creará una row adicional para cada sample que desees.
 
-    #IMPORTANTE: Agrega que si el archivo está abierto, de tiempo para corregir y no mande a error.
-     
-    # Obtiene la ruta actual del script (directorio raíz del proyecto)
-    ruta_actual = os.path.dirname(__file__)
-    print("Esto es la ruta actual: ", ruta_actual)
+    #Primero extraemos el dataframe:
+    dataframe = pd.read_excel(globales.excel_results_path + filename)    
 
-    ruta_excel = os.path.join(ruta_actual, "results_excel")
-    print("Esto es la ruta excel: ", ruta_excel)
+    #Después vemos cuales son Success:
+    #Filtra las filas donde 'Download Status' es igual a 'Success'
+    #FUTURE: Hacer una función filtradora donde solo se reciba el nombre de la columna que quieres filtrar y el texto.
+    df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
 
-    # Combina la ruta actual con el nombre del archivo para obtener la ruta relativa
-    ruta_archivo = os.path.join(ruta_excel, filename)
-    print("Ésto es la ruta archivo: ", ruta_archivo)
+    print("Ahora prepararé la columna bidimensional:")
+    df_imagenes_seleccionadas = df_images_ok[['Name', 'Source']]
+   
+    try:
 
-    # Guarda el DataFrame con la nueva columna en el archivo Excel
-    dataframe.to_excel(ruta_archivo, index=False)
+        #Crea las rows para sus samples
+        #for imagen in columna_imagenes:
+        for index, row in df_imagenes_seleccionadas.iterrows():
+            imagen = row['Name']
+            source = row['Source']
 
-    return True
+            #FUTURE: Agrega un contador para saber cuantas faltan. 
+            #FUTURE: Ponle un Keyboard Interrupt con guardado de excel también a éste ciclo.
+            
+            nombre, extension = imagen.split(".")       
+
+            #Cuando encuentra la imagen llena los datos de la primera incidencia.
+            indice = tools.obtenIndexRow(dataframe, 'Name', imagen)
+            dataframe.loc[indice, 'Take'] = 1
+            dataframe.loc[indice, 'File'] = nombre + "-" + "t" + str(1) + "." + extension
+            #FUTURE: Aquí causa el error de type de pandas, corrigelo antes de que quede deprecado.
+            
+            #AQUÍ VA IR LO QUE TENIAMOS DENTRO DEL FOR, que son el resto de los samples:
+            if configuracion.excel_list is True:
+                #En lugar de esas comillas vas a poner el source.
+                lista = [source, imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
+                #Designación de columnas a utilizar.
+                a = 3 #Aquí sustituira el índice 3 take_placeholder
+                b = 4 
+            else:         
+                #Para imagenes de directorio.
+                lista = [imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
+                #Designación de columnas a utilizar.
+                a = 4 #Aquí sustituira el índice 4 take_placeholder
+                b = 5
+
+            #Y luego crea tantas rows adicionales como samples fuera a haber.
+            for i in range(samples - 1): 
+                        
+                # Replace the element at the index with the sustituto variable
+                #Esto es el Take
+                lista[a] = i + 2
+
+                #Empieza desde el 2 porque ya hizo la 1.
+                #Esto es el File
+                filename = nombre + "-" + "t" + str(i+2) + "." + extension
+                
+                # Replace the element at the index with the sustituto variable
+                lista[b] = filename
+                
+                print("La lista quedó como: ", lista)
+                
+                tools.creaRow(dataframe, imagen, i + 2, filename, lista)
+
+    except KeyboardInterrupt:
+      print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.filename)
+      tools.df2Excel(dataframe, configuracion.filename)        
+    
+    #Reordeno alfabéticamente.
+    #FUTURE: Verificar si algo malo pasa si no se hace éste reordenamiento, porque por ejemplo el Keyboard Interrupt...
+    #... no lo contempla.
+    dataframe = dataframe.sort_values(['Name','Take'])
+
+    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
+    tools.df2Excel(dataframe, configuracion.filename)
+      
+    return dataframe
