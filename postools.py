@@ -53,7 +53,7 @@ def preparaSamples(filename, samples):
         #FUTURE: Aquí causa el error de type de pandas, corrigelo antes de que quede deprecado.
         
         #AQUÍ VA IR LO QUE TENIAMOS DENTRO DEL FOR:
-        if configuracion.source_list is True:
+        if configuracion.excel_list is True:
             lista = ["", imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
             a = 3 #Aquí sustituira el índice 3 take_placeholder
             b = 4 
@@ -443,11 +443,8 @@ def creaRow(dataframe, imagen, take, filename, lista):
     #Para imagenes de Sourcelist
     #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4.
     #Future, haz prueba con más samples.
-
-    # print("Configuración source list es: ", configuracion.source_list)
         
     dataframe.loc[len(dataframe)] = lista  #adding a row
-    
 
 def obtenIndexRow(dataframe, deColumna, indicador):
 

@@ -7,7 +7,7 @@ sesion = 'firstBatch'
 
 #Source list es false porque no viene de una lista de excel si no de un directorio con fotos.
 #Future: Cambiar por un concepto más entendible como source = excel, directory.
-source_list = True
+excel_list = True
 
 #Future: Y por ende el filename solo se calculará si la elección fue excel.
 filename = sesion + '.xlsx'

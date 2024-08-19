@@ -13,7 +13,7 @@ directorio = configuracion.sesion
 filename = configuracion.filename
 
 #Si se usa EXCEL.
-if configuracion.source_list == True:
+if configuracion.excel_list == True:
     #Si se usará un excel con urls, entonces creará un directorio para recibirlos.
     #Ésto solo crea el directorio de fotos source.
     pretools.creaDirectorioInicial(sesion)
