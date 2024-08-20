@@ -1,5 +1,5 @@
 import time
-import pretools
+import pretools, tools
 import configuracion
 
 #FUTURE: Todos los procesos, incluído ciclo inicial, intermedio y final deberían ir en una sola hoja?
@@ -14,7 +14,6 @@ filename = configuracion.filename
 
 print("Bienvenido, iniciaremos el proceso de cargado.")
 print(f"La sesión es: {sesion}.")
-time.sleep(1)
 
 #Si se usa EXCEL.
 if configuracion.excel_list == True:
@@ -29,7 +28,7 @@ if configuracion.excel_list == True:
     pretools.descargaImagenes(sesion, dataframe)
     
     #FUTURE, IMPORTANTE cuando todos los procesos tengan su df2Excel, ya no será necesario incluirlo al final.
-    pretools.df2Excel(dataframe, filename)
+    tools.df2Excel(dataframe, filename)
 
 #Si se usa BULK.
 else:
@@ -42,4 +41,4 @@ pretools.creaDirectorioResults(sesion)
 #Crea el dataframe necesario con el excel designado en configuración.
 #ÉSTA ES LA QUE CREA LOS SAMPLES!!
 #Y ASIGNA LOS ATRIBUTOS A CADA SAMPLE.
-dataframe = pretools.preparaSamples(configuracion.filename, 2)
+dataframe = pretools.preparaSamples(configuracion.filename, 4)

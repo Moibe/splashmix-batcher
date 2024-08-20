@@ -145,7 +145,7 @@ def creaRow(dataframe, imagen, take, filename, lista):
 
 def df2Excel(dataframe, filename):
 
-    print("182: Entré al excel a guardar...")
+    print("Entré al excel a guardar...")
 
     """
     Guarda el Dataframe final en el archivo de excel original.
@@ -361,16 +361,16 @@ def getNotLoaded(dataframe):
 
     print("Estamos en la función getNotLoaded()...")
     print("EL tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
-    time.sleep(3)  
+    time.sleep(1)  
     
     df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
     print("El tamaño del dataframe df_images_ok es: ", len(df_images_ok))
-    time.sleep(3)
+    time.sleep(1)
 
     print("Ahora basado en ese filtraremos de nuevo...")
     df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
     print("Y su tamaño es de df_images_toUpload es: ", len(df_images_toUpload) )
-    time.sleep(3)
+    time.sleep(1)
 
     lista_de_files = df_images_toUpload['File'].tolist()
     print("El tamaño de la lista fina a imprimir es:", len(lista_de_files))

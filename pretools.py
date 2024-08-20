@@ -211,19 +211,20 @@ def preparaSamples(filename, samples):
     #FUTURE: Hacer una función filtradora donde solo se reciba el nombre de la columna que quieres filtrar y el texto.
     df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
 
-    print("Ahora prepararé la columna bidimensional:")
     df_imagenes_seleccionadas = df_images_ok[['Name', 'Source']]
+    cantidad_sampleos = samples * len(df_imagenes_seleccionadas)
+    print("La cantidad de imagenes a trabajar será de : ", cantidad_sampleos)
+
+    contador = 1
    
     try:
 
         #Crea las rows para sus samples
-        #for imagen in columna_imagenes:
         for index, row in df_imagenes_seleccionadas.iterrows():
             imagen = row['Name']
             source = row['Source']
 
-            #FUTURE: Agrega un contador para saber cuantas faltan. 
-            #FUTURE: Ponle un Keyboard Interrupt con guardado de excel también a éste ciclo.
+            print(f"Procesadas {contador} de {cantidad_sampleos}.")
             
             nombre, extension = imagen.split(".")       
 
@@ -261,17 +262,17 @@ def preparaSamples(filename, samples):
                 # Replace the element at the index with the sustituto variable
                 lista[b] = filename
                 
-                print("La lista quedó como: ", lista)
-                
                 tools.creaRow(dataframe, imagen, i + 2, filename, lista)
 
+                contador = contador + 1
+    
     except KeyboardInterrupt:
       print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.filename)
+      dataframe = dataframe.sort_values(['Name','Take'])
       tools.df2Excel(dataframe, configuracion.filename)        
     
     #Reordeno alfabéticamente.
-    #FUTURE: Verificar si algo malo pasa si no se hace éste reordenamiento, porque por ejemplo el Keyboard Interrupt...
-    #... no lo contempla.
+    #El ordenamiento si es necesario, así es que también incluyelo en el Keyboard Interrupt.
     dataframe = dataframe.sort_values(['Name','Take'])
 
     #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
