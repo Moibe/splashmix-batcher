@@ -138,7 +138,7 @@ def creaRow(dataframe, imagen, take, filename, lista):
     #Importante, verifica si creaRow solo participa en la creación de samples.   
     
     #Para imagenes de Sourcelist
-    #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4.
+    #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4. Listo OK!!!!
     #Future, haz prueba con más samples.
         
     dataframe.loc[len(dataframe)] = lista  #adding a row

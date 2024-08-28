@@ -328,7 +328,7 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
         print("El resultado del SD fue exitoso, y su ruta total es/será: ", ruta_total)
         raiz_pc = os.getcwd()
         ruta_absoluta = os.path.join(raiz_pc, ruta_total)
-        print("La ruta absoluta es desde donde le podré dar click desde el excel...", ruta_absoluta)
+        print("Local path:", ruta_absoluta)
                 
         ruta_imagen_local = result[0] 
         print("La ruta de gradio en result[0] es: ", ruta_imagen_local)

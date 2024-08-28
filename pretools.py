@@ -44,6 +44,8 @@ def creaDataframe(archivo):
     
     #Importante: Crea las nuevas columnas que necesitará:
     #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
+    df['Source Path'] = ''
+    df['Source URL'] = ''
     df['Name'] = ''
     df['Download Status'] = ''
     df['Take'] = ''
@@ -52,7 +54,7 @@ def creaDataframe(archivo):
 
     #Ve si afecta actualizar el excel antes de entregar el dataframe.
     #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
-    tools.df2Excel(df, configuracion.filename)
+    tools.df2Excel(df, configuracion.sesion + '.xlsx')
     
     return df
 
@@ -79,7 +81,7 @@ def createColumns(dataframe, amount, diccionario_atributos):
     return dataframe
    
     
-def descargaImagenes(sesion, dataframe):
+def descargaImagenes(sesion):
 
     """
     Recorre cada imagen obteniendo su nombre y guardándolo en el dataframe.
@@ -95,11 +97,32 @@ def descargaImagenes(sesion, dataframe):
     dataframe:Regresa dataframe que se usará a través de los procesos.
     """
 
-    #Objeto que contiene la columna de urls con las fotos.
-    #Se asume que el excel recibido tendrá la columna SOurce con todas las url de las imagenes a descargar.
-    columna_fotos = dataframe['Source']
+    if os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
+        #Primero extraemos el dataframe:
+        dataframe = pd.read_excel(globales.excel_results_path + configuracion.sesion + '.xlsx')
+    else:
+        #Crea el dataframe donde se registrarán los atributos y las difusiones con los campos necesarios.
+        dataframe = creaDataframe(configuracion.sesion + '.xlsx')
+              
 
-    #FUTURE, si es un set de imagenes que ya bajamos en el pasado poder evitar bajarlas de nuevo.
+    print("Imprimiremos el dataframe...")
+    print(dataframe)
+   
+
+    # Filtra las filas donde 'Download Status' es igual a 'Success'
+    por_procesar = dataframe[dataframe['Download Status'].isna()]
+    print(f"Por procesar tiene {len(por_procesar)} elementos.")
+    
+    # Crea un dataset 'columna_imagenes' a partir de la columna 'Nombre'
+    columna_fotos = por_procesar['Source']
+    print("Imprime la columna que mide: ", len(columna_fotos))
+    print(columna_fotos)
+    
+    #Objeto que contiene la columna de urls con las fotos.
+    #Se asume que el excel recibido tendrá la columna Source con todas las url de las imagenes a descargar.
+    #columna_fotos = dataframe['Source']
+
+    #FUTURE, si es un set de imagenes que ya bajamos en el pasado poder evitar bajarlas de nuevo. LISTO OK!!
 
     # Recorre cada URL de foto en la columna
     for i, foto_url in enumerate(columna_fotos):
@@ -129,8 +152,22 @@ def descargaImagenes(sesion, dataframe):
                 with open(f'imagenes/fuentes/{sesion}/{image_id}', 'wb') as f:
                     f.write(response.content)
                 download_status = 'Success'
-                print(f"Image '{image_id}' downloaded successfully.")
+                print(f"Image '{image_id}' downloaded successfully. Índice: {i} de {len(columna_fotos)}.")
+                
+                
+                ruta_total = f"imagenes\\fuentes\\{sesion}\\{image_id}"
+                print("Pretools: El resultado del SD fue exitoso, y su ruta total es/será: ", ruta_total)
+                raiz_pc = os.getcwd()
+                ruta_absoluta = os.path.join(raiz_pc, ruta_total)
+                print("La ruta absoluta es desde donde le podré dar click desde el excel...", ruta_absoluta)
+                
+                dataframe.loc[i, 'Source Path'] = ruta_absoluta
                 dataframe.loc[i, 'Download Status'] = download_status
+
+                #Guardaremos en excel cada 100 imagenes.
+                if i % 100 == 0:
+                    tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+                    print("100 más, guardado...")
                 
             else:
                 message = f"Error downloading image: {foto_url} (Status code: {response.status_code})"
@@ -139,6 +176,10 @@ def descargaImagenes(sesion, dataframe):
             download_status = f"Error: {response.status_code}"
             dataframe.loc[i, 'Download Status'] = download_status
             print(f"Error downloading image: {foto_url} - {e}")
+
+        except KeyboardInterrupt:
+            print("KEYBOARD 182: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
+            tools.df2Excel(dataframe, configuracion.sesion + '.xlsx') 
 
 def directoriador(directorio):
 
@@ -204,18 +245,19 @@ def preparaSamples(filename, samples):
     #Creará una row adicional para cada sample que desees.
 
     #Primero extraemos el dataframe:
-    dataframe = pd.read_excel(globales.excel_results_path + filename)    
-
-    #Después vemos cuales son Success:
+    dataframe = pd.read_excel(globales.excel_results_path + filename) 
+    print("La cantidad de rows en el dataframe son: ", len(dataframe))   
+    
     #Filtra las filas donde 'Download Status' es igual a 'Success'
     #FUTURE: Hacer una función filtradora donde solo se reciba el nombre de la columna que quieres filtrar y el texto.
     df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
-
+    print("La cantidad de imagenes Success son: ", len(df_images_ok))
+    
     df_imagenes_seleccionadas = df_images_ok[['Name', 'Source']]
     cantidad_sampleos = samples * len(df_imagenes_seleccionadas)
     print("La cantidad de imagenes a trabajar será de : ", cantidad_sampleos)
-
-    contador = 1
+    
+    contador = 0
    
     try:
 
@@ -223,6 +265,7 @@ def preparaSamples(filename, samples):
         for index, row in df_imagenes_seleccionadas.iterrows():
             imagen = row['Name']
             source = row['Source']
+            #FUTURE: Agregar a las repeticiones también la columna de Source Path.
 
             print(f"Procesadas {contador} de {cantidad_sampleos}.")
             
@@ -237,16 +280,18 @@ def preparaSamples(filename, samples):
             #AQUÍ VA IR LO QUE TENIAMOS DENTRO DEL FOR, que son el resto de los samples:
             if configuracion.excel_list is True:
                 #En lugar de esas comillas vas a poner el source.
-                lista = [source, imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
+                #En excel: [Source, Source Path, Source URL, Name, Download Status, Take, File, Diffusion Status]
+                lista = [source, "", "", imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
                 #Designación de columnas a utilizar.
-                a = 3 #Aquí sustituira el índice 3 take_placeholder
-                b = 4 
+                a = 5 #Aquí sustituira el índice 3 take_placeholder
+                b = 6 
             else:         
                 #Para imagenes de directorio.
+                #FUTURE: Definir si agregaras campos de path local y url en modo directoriador.
                 lista = [imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
                 #Designación de columnas a utilizar.
-                a = 4 #Aquí sustituira el índice 4 take_placeholder
-                b = 5
+                a = 6 #Aquí sustituira el índice 4 take_placeholder
+                b = 7
 
             #Y luego crea tantas rows adicionales como samples fuera a haber.
             for i in range(samples - 1): 
@@ -264,18 +309,17 @@ def preparaSamples(filename, samples):
                 
                 tools.creaRow(dataframe, imagen, i + 2, filename, lista)
 
-                contador = contador + 1
+            contador = contador + 4
     
     except KeyboardInterrupt:
       print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.filename)
       dataframe = dataframe.sort_values(['Name','Take'])
-      tools.df2Excel(dataframe, configuracion.filename)        
+      tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')        
     
     #Reordeno alfabéticamente.
     #El ordenamiento si es necesario, así es que también incluyelo en el Keyboard Interrupt.
     dataframe = dataframe.sort_values(['Name','Take'])
 
-    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
-    tools.df2Excel(dataframe, configuracion.filename)
+    tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
       
     return dataframe
