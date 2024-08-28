@@ -22,6 +22,10 @@ if configuracion.excel_list == True:
     
     #Si se usará un excel con urls, entonces creará un directorio para recibirlos.
     pretools.creaDirectorioInicial(sesion)    
+
+    #Crea el excel con sus campos respectivos e importante, la última adición:
+    #primero creo aqió la columna con los nombres, para que sea más fácil de ubicar al descargar imagenes y reiniciar el proceso.
+    #pretools.creaExcel(filename)
     
     #Descarga las imagenes source indicadas en el excel(dataframe) y las baja al directorio en disco.
     #Ya no usamos el dataframe creado arriba, descargamos el nuevo archivo que está en results.

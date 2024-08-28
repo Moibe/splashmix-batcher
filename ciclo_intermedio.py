@@ -7,17 +7,9 @@ base_url = configuracion.base_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
 #Por ejemplo https://dominio.com/results/minitest
-filename = configuracion.filename
-
-
+filename = configuracion.sesion + '.xlsx'
 
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
-
-#Útil: Auxiliar para obtener dataframe: (como cuando no quieres correr prepararDataFrame de nuevo.)
-#dataframe = pd.read_excel(filename)
-#Auxiliar para archivo excel de resultados.
-#La ruta sirve con diagonal normal / o con doble diagonal \\
-#dataframe = pd.read_excel('results_excel/' + filename)
 
 #Hacer el Stable Diffusion.
 #Future: Las características importantes deberían pasarse desde aquí... (que objeto, etc.)
@@ -26,7 +18,7 @@ filename = configuracion.filename
 #Preprocess es la que llena los ATRIBUTOS!!!!
 #inicial="primejb_23104-t2.jpg" cuando quieras empezar desde uno en particular.
 #FUTURE: Que preProcess haga su propia extracción del excel.
-#postools.preProcess(sesion, dataframe)
+postools.preProcess(sesion)
 
 #FULL ES LA QUE HACE EL STABLE DIFF
 #Future: Corregir para que empiece exacto.

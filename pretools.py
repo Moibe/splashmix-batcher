@@ -27,7 +27,7 @@ def creaDirectorioInicial(sesion):
         os.makedirs(target_dir)
     
 
-def creaDataframe(archivo):
+def creaExcel(filename):
     """
     Lee el archivo Excel en un DataFrame (asumiendo que está en la raíz del proyecto) y
     crea las columnas nuevas que necesitará.
@@ -39,8 +39,13 @@ def creaDataframe(archivo):
     dataframe:Regresa dataframe que se usará a través de los procesos.
 
     """
+
+    print("Entré a crearDataframe...")
+    
+    #Future, poner guardado por interrupción también en creaExcel.
+
     #FUTURE, la carpeta de los exceles que se reciba por configuración. 
-    df = pd.read_excel(globales.excel_source_path + archivo)
+    df = pd.read_excel(globales.excel_source_path + filename)
     
     #Importante: Crea las nuevas columnas que necesitará:
     #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
@@ -54,8 +59,47 @@ def creaDataframe(archivo):
 
     #Ve si afecta actualizar el excel antes de entregar el dataframe.
     #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
+    print("Primer guardado de excel...")
     tools.df2Excel(df, configuracion.sesion + '.xlsx')
+
+    columna = df['Source']
+    print("El tamaño de la columna es:", len(columna))
+    print("Imprimiendo columna182: ...")
+    print(columna)
     
+    # Recorre cada URL de foto en la columna
+    for i, foto_url in enumerate(columna):
+
+        print(f"Estoy en el for indice: {i + 1} de {len(columna)} ")
+    
+        #FUTURE, el nombrado hazlo función, porque será diferente para otros clientes.
+        # NOMBRANDO EL ARCHIVO
+        # Define un indentificador único.
+        # Esto será diferente para cada tipo de URL que se te envíe. 
+        # Trata de generalizar en el futuro.
+        filename = os.path.dirname(foto_url)
+        partes = filename.split('image/')
+        siguiente = partes[1].split('/')
+        #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
+        
+        nombre = siguiente[0].replace("-", "")
+        
+        image_id = f"{nombre}.png"
+        print("El nombre de la imagen es: ", image_id)
+
+        #Actualiza la columna 'Name' con el nombre del archivo.
+        df.loc[i, 'Name'] = image_id
+
+        print("Imagen guardada en el dataframe...")
+
+        #Guardaremos en excel cada 100 imagenes.
+        if i % 200 == 0:
+            tools.df2Excel(df, configuracion.sesion + '.xlsx')
+            print("200 más, guardado...")
+
+    
+    print("Último guardado de excel...")
+    tools.df2Excel(df, configuracion.sesion + '.xlsx')
     return df
 
 #mejor le pasas el objeto completo llamado creación y que de ahí lea cada uno de sus atributos.
@@ -100,86 +144,105 @@ def descargaImagenes(sesion):
     if os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
         #Primero extraemos el dataframe:
         dataframe = pd.read_excel(globales.excel_results_path + configuracion.sesion + '.xlsx')
+        print("Ya existía e Imprimiremos el dataframe...")
+        print(dataframe)
+        
+        #Si ya existía traera Nan en los vacios.
+        print("El archivo ya existe y estoy checando sus Nans en Download Status.")
+        # Filtra las filas donde 'Download Status' es igual a 'Success'
+        por_procesar = dataframe[dataframe['Download Status'].isna()]
+        print("182: Por procesar quedó así:")
+        print(por_procesar)
+        
+
     else:
         #Crea el dataframe donde se registrarán los atributos y las difusiones con los campos necesarios.
-        dataframe = creaDataframe(configuracion.sesion + '.xlsx')
+        dataframe = creaExcel(configuracion.sesion + '.xlsx')
+        #Si no existía traera ' '.
+        print("Cuando no existía lo creo y éste es el dataframe: ")
+        print(dataframe)
+        time.sleep(6)
+        por_procesar = dataframe[dataframe['Download Status'] == '']
+        print("182: Por procesar quedó así:")
+        print(por_procesar)
+        
               
-
-    print("Imprimiremos el dataframe...")
-    print(dataframe)
-   
-
-    # Filtra las filas donde 'Download Status' es igual a 'Success'
-    por_procesar = dataframe[dataframe['Download Status'].isna()]
-    print(f"Por procesar tiene {len(por_procesar)} elementos.")
+    cantidad_faltante = len(por_procesar)
+    print(f"Por procesar tiene {cantidad_faltante} elementos.")
     
     # Crea un dataset 'columna_imagenes' a partir de la columna 'Nombre'
-    columna_fotos = por_procesar['Source']
+    columna_fotos = por_procesar[['Source', 'Name']]
+    #df_imagenes_seleccionadas = df_images_ok[['Name', 'Source']]
     print("Imprime la columna que mide: ", len(columna_fotos))
     print(columna_fotos)
     
-    #Objeto que contiene la columna de urls con las fotos.
-    #Se asume que el excel recibido tendrá la columna Source con todas las url de las imagenes a descargar.
-    #columna_fotos = dataframe['Source']
+    for index, row in columna_fotos.iterrows():
+           
+        Source = row['Source']
+        Name = row['Name']
 
-    #FUTURE, si es un set de imagenes que ya bajamos en el pasado poder evitar bajarlas de nuevo. LISTO OK!!
-
-    # Recorre cada URL de foto en la columna
-    for i, foto_url in enumerate(columna_fotos):
-    
+        # Recorre cada URL de foto en la columna
+        
         # NOMBRANDO EL ARCHIVO
         # Define un indentificador único.
         # Esto será diferente para cada tipo de URL que se te envíe. 
         # Trata de generalizar en el futuro.
-        filename = os.path.dirname(foto_url)
-        partes = filename.split('image/')
-        siguiente = partes[1].split('/')
-        #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
+        # filename = os.path.dirname(Name)
+        # partes = filename.split('image/')
+        # siguiente = partes[1].split('/')
+        # #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
         
-        nombre = siguiente[0].replace("-", "")
+        # nombre = siguiente[0].replace("-", "")
         
-        image_id = f"{nombre}.png"
+        # image_id = f"{nombre}.png"
 
-        #Actualiza la columna 'Name' con el nombre del archivo.
-        dataframe.loc[i, 'Name'] = image_id
+        # #Actualiza la columna 'Name' con el nombre del archivo.
+        # dataframe.loc[index + cantidad_faltante, 'Name'] = image_id
+
+        
 
         # Attempt to download the image
         #FUTURE: Si ya existe la imagen en el directorio (por ejemplo si ya se habían bajado en una prueba anterior)...
         #... que no vaya a internet y la vuelva a bajar, que se salte eso.
         try:
-            response = requests.get(foto_url)
+            response = requests.get(Source)
             if response.status_code == 200:
-                with open(f'imagenes/fuentes/{sesion}/{image_id}', 'wb') as f:
+                with open(f'imagenes/fuentes/{sesion}/{Name}', 'wb') as f:
                     f.write(response.content)
                 download_status = 'Success'
-                print(f"Image '{image_id}' downloaded successfully. Índice: {i} de {len(columna_fotos)}.")
+                print(f"Image '{Name}' downloaded successfully. Índice: {index} de {len(columna_fotos)}.")
                 
                 
-                ruta_total = f"imagenes\\fuentes\\{sesion}\\{image_id}"
+                ruta_total = f"imagenes\\fuentes\\{sesion}\\{Name}"
                 print("Pretools: El resultado del SD fue exitoso, y su ruta total es/será: ", ruta_total)
                 raiz_pc = os.getcwd()
                 ruta_absoluta = os.path.join(raiz_pc, ruta_total)
                 print("La ruta absoluta es desde donde le podré dar click desde el excel...", ruta_absoluta)
                 
-                dataframe.loc[i, 'Source Path'] = ruta_absoluta
-                dataframe.loc[i, 'Download Status'] = download_status
+                dataframe.loc[index, 'Source Path'] = ruta_absoluta
+                dataframe.loc[index, 'Download Status'] = download_status
+
+                print("Listo, imagen guardada...")
+                time.sleep(1)
 
                 #Guardaremos en excel cada 100 imagenes.
-                if i % 100 == 0:
+                if index % 100 == 0:
                     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
                     print("100 más, guardado...")
                 
             else:
-                message = f"Error downloading image: {foto_url} (Status code: {response.status_code})"
+                message = f"Error downloading image: {Source} (Status code: {response.status_code})"
                 raise Exception(message)
         except Exception as e:
             download_status = f"Error: {response.status_code}"
-            dataframe.loc[i, 'Download Status'] = download_status
-            print(f"Error downloading image: {foto_url} - {e}")
+            dataframe.loc[index, 'Download Status'] = download_status
+            print(f"Error downloading image: {Source} - {e}")
 
         except KeyboardInterrupt:
             print("KEYBOARD 182: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
-            tools.df2Excel(dataframe, configuracion.sesion + '.xlsx') 
+            tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+        #Guarda excel de nuevo al acabar el for:
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx') 
 
 def directoriador(directorio):
 
@@ -250,6 +313,7 @@ def preparaSamples(filename, samples):
     
     #Filtra las filas donde 'Download Status' es igual a 'Success'
     #FUTURE: Hacer una función filtradora donde solo se reciba el nombre de la columna que quieres filtrar y el texto.
+    #Para que pueda ser reutilizada en más lugares.
     df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
     print("La cantidad de imagenes Success son: ", len(df_images_ok))
     

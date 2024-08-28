@@ -6,4 +6,4 @@ import pretools
 #ÉSTA ES LA QUE CREA LOS SAMPLES!!
 #Y ASIGNA LOS ATRIBUTOS A CADA SAMPLE.
 
-dataframe = pretools.preparaSamples(configuracion.sesion + '.xlsx', 1)
+pretools.preparaSamples(configuracion.sesion + '.xlsx', 1)

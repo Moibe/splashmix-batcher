@@ -12,7 +12,13 @@ from prompts import Prompt, Superhero, Hotgirl
 import prompter
 import tools
 
-def preProcess(sesion, dataframe, inicial=None):
+def preProcess(sesion, inicial=None):
+
+    #Útil: Auxiliar para obtener dataframe: (como cuando no quieres correr prepararDataFrame de nuevo.)
+    #dataframe = pd.read_excel(filename)
+    #Auxiliar para archivo excel de resultados.
+    #La ruta sirve con diagonal normal / o con doble diagonal \\
+    dataframe = pd.read_excel('results_excel/' + sesion + '.xlsx')
 
     #IMPORTANTE, Asigna los atributos a cada sample.
     
@@ -372,7 +378,7 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     time.sleep(1)  
         
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
-    index = obtenIndexRow(dataframe, 'File', indicador)    
+    index = tools.obtenIndexRow(dataframe, 'File', indicador)    
         
     # If the value exists, get the corresponding cell value
     if not index.empty:
