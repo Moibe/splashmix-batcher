@@ -1,9 +1,9 @@
-import pretools, postools, configuracion, time
+import pretools, postools, configuracion, time, globales
 import pandas as pd
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
 
-base_url = configuracion.base_url
+base_url = globales.base_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
 #Por ejemplo https://dominio.com/results/minitest

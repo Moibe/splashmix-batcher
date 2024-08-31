@@ -405,3 +405,24 @@ def getMissing():
     print(len(columna_imagenes))
 
     return columna_imagenes
+
+def generaIDImagen(foto_url):
+    #Será diferente para cada source.
+    #Éste es para imagenes de linkedin obtenidas vía Clay.
+
+    # NOMBRANDO EL ARCHIVO
+    # Define un indentificador único.
+    # Esto será diferente para cada tipo de URL que se te envíe. 
+    # Trata de generalizar en el futuro.
+    filename = os.path.dirname(foto_url)
+    partes = filename.split('image/')
+    siguiente = partes[1].split('/')
+    #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
+    
+    nombre = siguiente[0].replace("-", "")
+    
+    image_id = f"{nombre}.png"
+    print("El nombre de la imagen es: ", image_id)
+
+    return image_id
+

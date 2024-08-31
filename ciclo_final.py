@@ -1,10 +1,10 @@
-import pretools, postools, time, configuracion
+import pretools, postools, time, configuracion, globales
 
 #CICLO FINAL: ALTA EN SERVER
 excel = "results_excel\\" + configuracion.sesion + '.xlsx'
 print("La ruta correcta del excel es: ", excel)
 
-base_url = configuracion.base_url
+base_url = globales.base_url
 print("Baseurl es: ", base_url)
 
 sesion = configuracion.sesion

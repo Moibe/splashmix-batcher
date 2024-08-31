@@ -39,94 +39,75 @@ def creaExcel(filename):
     dataframe:Regresa dataframe que se usará a través de los procesos.
 
     """
-
-    print("Entré a crearDataframe...")
-    
+   
     #Future, poner guardado por interrupción también en creaExcel.
-
-    #FUTURE, la carpeta de los exceles que se reciba por configuración. 
-    df = pd.read_excel(globales.excel_source_path + filename)
     
-    #Importante: Crea las nuevas columnas que necesitará:
-    #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
-    df['Source Path'] = ''
-    df['Source URL'] = ''
-    df['Name'] = ''
-    df['Download Status'] = ''
-    df['Take'] = ''
-    df['File'] = ''
-    df['Diffusion Status'] = ''
+    #Lee el archivo de excel origen...
+    dataframe = pd.read_excel(globales.excel_source_path + filename)
+    #ESTRUCTURA INICIAL
 
-    #Ve si afecta actualizar el excel antes de entregar el dataframe.
-    #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
-    print("Primer guardado de excel...")
-    tools.df2Excel(df, configuracion.sesion + '.xlsx')
+    #La estructura inicial solo se hará si no existe el arhivo, si no, de lo contrario estaría borrando lo que ya...
+    #se hizo.
 
-    columna = df['Source']
+    #Define si ya existe el archivo de excel o se está completando un proceso previamente iniciado.
+    if not os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
+
+        #Si no existe, entonces si hacemos toda la estructura inicial.
+        #Importante: Crea las nuevas columnas que necesitará:
+        #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
+        dataframe['Source Path'] = ''
+        dataframe['Source URL'] = ''
+        dataframe['Name'] = ''
+        dataframe['Download Status'] = ''
+        dataframe['Take'] = ''
+        dataframe['File'] = ''
+        dataframe['Diffusion Status'] = ''
+
+        #Ve si afecta actualizar el excel antes de entregar el dataframe.
+        #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
+        print("Guardando la estructura inicial del archivo de excel.")
+        time.sleep(1)
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+
+    
+    #Y exista o se haya creado apenas, hará la creación de los IDs.
+    #Ésto ya tiene control para empezar desde donde ibamos.
+
+    #CREACIÓN DE IDs DE ARCHIVOS.
+    columna = dataframe['Source']
     print("El tamaño de la columna es:", len(columna))
-    print("Imprimiendo columna182: ...")
+    print("Imprimiendo columna:")
+    time.sleep(2)
     print(columna)
+    time.sleep(3)
     
+    #Ciclo de todas las fotos por registrar.
     # Recorre cada URL de foto en la columna
     for i, foto_url in enumerate(columna):
 
         print(f"Estoy en el for indice: {i + 1} de {len(columna)} ")
     
-        #FUTURE, el nombrado hazlo función, porque será diferente para otros clientes.
-        # NOMBRANDO EL ARCHIVO
-        # Define un indentificador único.
-        # Esto será diferente para cada tipo de URL que se te envíe. 
-        # Trata de generalizar en el futuro.
-        filename = os.path.dirname(foto_url)
-        partes = filename.split('image/')
-        siguiente = partes[1].split('/')
-        #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
-        
-        nombre = siguiente[0].replace("-", "")
-        
-        image_id = f"{nombre}.png"
-        print("El nombre de la imagen es: ", image_id)
+        image_id = tools.generaIDImagen(foto_url)
 
         #Actualiza la columna 'Name' con el nombre del archivo.
-        df.loc[i, 'Name'] = image_id
-
+        dataframe.loc[i, 'Name'] = image_id
         print("Imagen guardada en el dataframe...")
 
         #Guardaremos en excel cada 100 imagenes.
+        #Future: Que la frecuencia de guardado se defina en globales.
         if i % 200 == 0:
-            tools.df2Excel(df, configuracion.sesion + '.xlsx')
-            print("200 más, guardado...")
+            tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+            print("200 imagenes más guardadas.")
+            time.sleep(3)
 
+        
+    print("Terminó el ciclo que recorre las URLs, último guardado de excel...")
+    tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
     
-    print("Último guardado de excel...")
-    tools.df2Excel(df, configuracion.sesion + '.xlsx')
-    return df
-
-#mejor le pasas el objeto completo llamado creación y que de ahí lea cada uno de sus atributos.
-def createColumns(dataframe, amount, diccionario_atributos):
-
-    # Set of column names to repeat
-    #column_names = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
-    column_names = list(diccionario_atributos)
-    # Create a list of desired column order
-    #desired_order = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
-    desired_order = ['DiffusionStatus'] + [name for name in column_names if name != 'DiffusionStatus'] + ['URL']
-
-    # Sort column names based on desired order and repeat
-    column_groups = [[f"{name}{i + 1}" for name in group] for i in range(amount) for group in zip(*sorted(zip(desired_order, column_names)))]
-    
-    
-    # Flatten the nested list into a single list
-    dynamic_columns = [item for sublist in column_groups for item in sublist]
-
-    # Add dynamic columns to the DataFrame
-    dataframe[dynamic_columns] = ''
-
     return dataframe
-   
     
 def descargaImagenes(sesion):
-
+    #Future: Estandariza todos los pydocs de cada función.
     """
     Recorre cada imagen obteniendo su nombre y guardándolo en el dataframe.
     Posteriormente obteniendo cada una de esas imagenes.
@@ -141,6 +122,7 @@ def descargaImagenes(sesion):
     dataframe:Regresa dataframe que se usará a través de los procesos.
     """
 
+    #Define si ya existe el archivo de excel o se está completando un proceso previamente iniciado.
     if os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
         #Primero extraemos el dataframe:
         dataframe = pd.read_excel(globales.excel_results_path + configuracion.sesion + '.xlsx')
@@ -151,22 +133,23 @@ def descargaImagenes(sesion):
         print("El archivo ya existe y estoy checando sus Nans en Download Status.")
         # Filtra las filas donde 'Download Status' es igual a 'Success'
         por_procesar = dataframe[dataframe['Download Status'].isna()]
-        print("182: Por procesar quedó así:")
+        print("Por procesar quedó así:")
+        time.sleep(2)
         print(por_procesar)
-        
-
+        time.sleep(3)
+   
     else:
         #Crea el dataframe donde se registrarán los atributos y las difusiones con los campos necesarios.
         dataframe = creaExcel(configuracion.sesion + '.xlsx')
         #Si no existía traera ' '.
         print("Cuando no existía lo creo y éste es el dataframe: ")
         print(dataframe)
-        time.sleep(6)
         por_procesar = dataframe[dataframe['Download Status'] == '']
-        print("182: Por procesar quedó así:")
+        print("Por procesar quedó así:")
+        time.sleep(2)
         print(por_procesar)
-        
-              
+        time.sleep(3)
+                      
     cantidad_faltante = len(por_procesar)
     print(f"Por procesar tiene {cantidad_faltante} elementos.")
     
@@ -175,35 +158,15 @@ def descargaImagenes(sesion):
     #df_imagenes_seleccionadas = df_images_ok[['Name', 'Source']]
     print("Imprime la columna que mide: ", len(columna_fotos))
     print(columna_fotos)
+
+    contador = 1
     
     for index, row in columna_fotos.iterrows():
            
         Source = row['Source']
         Name = row['Name']
 
-        # Recorre cada URL de foto en la columna
-        
-        # NOMBRANDO EL ARCHIVO
-        # Define un indentificador único.
-        # Esto será diferente para cada tipo de URL que se te envíe. 
-        # Trata de generalizar en el futuro.
-        # filename = os.path.dirname(Name)
-        # partes = filename.split('image/')
-        # siguiente = partes[1].split('/')
-        # #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
-        
-        # nombre = siguiente[0].replace("-", "")
-        
-        # image_id = f"{nombre}.png"
-
-        # #Actualiza la columna 'Name' con el nombre del archivo.
-        # dataframe.loc[index + cantidad_faltante, 'Name'] = image_id
-
-        
-
-        # Attempt to download the image
-        #FUTURE: Si ya existe la imagen en el directorio (por ejemplo si ya se habían bajado en una prueba anterior)...
-        #... que no vaya a internet y la vuelva a bajar, que se salte eso.
+        #Attempt to download the image
         try:
             response = requests.get(Source)
             if response.status_code == 200:
@@ -225,21 +188,27 @@ def descargaImagenes(sesion):
                 print("Listo, imagen guardada...")
                 time.sleep(1)
 
+                contador +=  1
+
                 #Guardaremos en excel cada 100 imagenes.
+                #FUTURE: Definir la frecuencia de guardado en globales.
                 if index % 100 == 0:
                     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-                    print("100 más, guardado...")
+                    print("100 imágenes más guardadas.")
+                    time.sleep(2)
                 
             else:
                 message = f"Error downloading image: {Source} (Status code: {response.status_code})"
                 raise Exception(message)
+                contador +=  1
+
         except Exception as e:
             download_status = f"Error: {response.status_code}"
             dataframe.loc[index, 'Download Status'] = download_status
             print(f"Error downloading image: {Source} - {e}")
 
         except KeyboardInterrupt:
-            print("KEYBOARD 182: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
+            print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
             tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
         #Guarda excel de nuevo al acabar el for:
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx') 
@@ -257,14 +226,14 @@ def directoriador(directorio):
         print("El excel que usaremos es: ", excel)
         print("La ruta completa es: ", directory_address)
         
+        #Future: Ve si lo estandarizas para que ésto también sea creado con pandas.
         workbook = load_workbook(excel)
 
     except FileNotFoundError:
+        #Future: ¿Que hace ésto, crear un excel nuevo?
         workbook = Workbook()
-
-    worksheet = workbook.active
-
     
+    worksheet = workbook.active    
     worksheet.cell(row=1, column=1).value = "Name"
     worksheet.cell(row=1, column=2).value = "Download Status"
     worksheet.cell(row=1, column=3).value = "Take"
@@ -274,15 +243,14 @@ def directoriador(directorio):
     row = 2  # Comenzar desde la fila 2 (después del encabezado)
 
     for filename in os.listdir(directory_address):
-        #if filename.endswith(".jpg") or filename.endswith(".png"):
-            
-            # Agregar nombre de archivo en la primera columna
-            worksheet.cell(row=row, column=1).value = filename
+        
+        # Agregar nombre de archivo en la primera columna
+        worksheet.cell(row=row, column=1).value = filename
 
-            # Agregar "Success" en la segunda columna
-            worksheet.cell(row=row, column=2).value = "Success"
+        # Agregar "Success" en la segunda columna
+        worksheet.cell(row=row, column=2).value = "Success"
 
-            row += 1
+        row += 1
 
     workbook.save(excel)
 
@@ -297,10 +265,34 @@ def creaDirectorioResults(sesion):
     bool: True si se guardó el archivo correctamente.
 
     """
+    #Future: Que la ruta venga de globales.
     results_dir = os.path.join('imagenes', 'resultados', sesion + "-results" )   
     
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
+
+#Mejor le pasas el objeto completo llamado creación y que de ahí lea cada uno de sus atributos.
+def createColumns(dataframe, amount, diccionario_atributos):
+    #Future: Revisa si ésta ya está obsoleta.
+
+    # Set of column names to repeat
+    #column_names = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+    column_names = list(diccionario_atributos)
+    # Create a list of desired column order
+    #desired_order = ['DiffusionStatus', 'Take', 'Shot', 'Style', 'Hero', 'URL']
+    desired_order = ['DiffusionStatus'] + [name for name in column_names if name != 'DiffusionStatus'] + ['URL']
+
+    # Sort column names based on desired order and repeat
+    column_groups = [[f"{name}{i + 1}" for name in group] for i in range(amount) for group in zip(*sorted(zip(desired_order, column_names)))]
+    
+    
+    # Flatten the nested list into a single list
+    dynamic_columns = [item for sublist in column_groups for item in sublist]
+
+    # Add dynamic columns to the DataFrame
+    dataframe[dynamic_columns] = ''
+
+    return dataframe
 
 def preparaSamples(filename, samples):
 
