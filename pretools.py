@@ -42,15 +42,18 @@ def creaExcel(filename):
    
     #Future, poner guardado por interrupción también en creaExcel.
     
-    #Lee el archivo de excel origen...
-    dataframe = pd.read_excel(globales.excel_source_path + filename)
     #ESTRUCTURA INICIAL
-
     #La estructura inicial solo se hará si no existe el arhivo, si no, de lo contrario estaría borrando lo que ya...
     #se hizo.
 
     #Define si ya existe el archivo de excel o se está completando un proceso previamente iniciado.
     if not os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
+
+        print("NO EXISTE EL ARCHIVO...")
+        time.sleep(3)
+
+        #Lee el archivo de excel origen...
+        dataframe = pd.read_excel(globales.excel_source_path + filename)        
 
         #Si no existe, entonces si hacemos toda la estructura inicial.
         #Importante: Crea las nuevas columnas que necesitará:
@@ -70,36 +73,99 @@ def creaExcel(filename):
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
 
     
-    #Y exista o se haya creado apenas, hará la creación de los IDs.
+    #Y exista o se haya creado apenas, adquiriremos el dataframe de results! y hará la creación de los IDs.
     #Ésto ya tiene control para empezar desde donde ibamos.
 
+    dataframe = pd.read_excel(globales.excel_results_path + filename) 
+
     #CREACIÓN DE IDs DE ARCHIVOS.
-    columna = dataframe['Source']
+    print("Estamos en la creación de names, y antes de empezar, veré como quedó el dataframe...")
+    time.sleep(3)
+    print(dataframe)
+    time.sleep(1)
+    #SI TIENEN NANS
+
+    lote_total = len(dataframe)
+
+    print("El tamaño total del lote es: ", lote_total)
+    
+    #Future: Para llenar solo los que no existen necesitas filtrar la columna source con los NAN.
+   
+
+    por_procesar = dataframe[dataframe['Name'].isna()]
+    print("Estas son nuestras columnas filtradas por procesar:")
+    time.sleep(2)
+    print(por_procesar)
+    time.sleep(1)
+
+    lote_procesar = len(por_procesar)
+
+    print("Nos faltan por nombrar: ", lote_procesar)
+
+    #El nuevo indicé marcará cuanto sumar al indice para que ponga las celdas en el lugar correcto.
+    #Basado en donde empezó.
+    nu_index = lote_total - lote_procesar
+
+    #Está bien que haya proceso de reiniciar donde ibamos, porque no solo es que sean lotes muy largos, pero ...
+    #el proceso para extraer su nombre podría ser complicado.
+
+    print(f"Por lo tanto llevamos {nu_index} imagenes nombradas.")
+
+    columna = por_procesar['Source']
+    print("Y ésta es nuestra columna filtrada:")
+    time.sleep(3)
+    print(columna)
+    time.sleep(3)
+
     print("El tamaño de la columna es:", len(columna))
     print("Imprimiendo columna:")
     time.sleep(2)
     print(columna)
-    time.sleep(3)
-    
+    time.sleep(2)
+
+    #IMPORTANTE: Si obtiene correctamente la columna, pero la i no funcionará ahora, necesitas indexRow...
+    #Considera que ese proceso podría ser más lento y que en verdad convenga más crear otra vez todos los ids.
+           
     #Ciclo de todas las fotos por registrar.
     # Recorre cada URL de foto en la columna
-    for i, foto_url in enumerate(columna):
 
-        print(f"Estoy en el for indice: {i + 1} de {len(columna)} ")
-    
-        image_id = tools.generaIDImagen(foto_url)
+    try: 
+        for i, foto_url in enumerate(columna):
+            
 
-        #Actualiza la columna 'Name' con el nombre del archivo.
-        dataframe.loc[i, 'Name'] = image_id
-        print("Imagen guardada en el dataframe...")
+            print(f"Estoy en el for indice: {i + 1} de {len(columna)} ")
+        
+            image_id = tools.generaIDImagen(foto_url)
 
-        #Guardaremos en excel cada 100 imagenes.
-        #Future: Que la frecuencia de guardado se defina en globales.
-        if i % 200 == 0:
+            print("Éste es el image id del q sacaremos el index row: ", image_id)
+
+            #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
+            #index = tools.obtenIndexRow(dataframe, 'Name', image_id) 
+        
+            
+            #Nótese que imdex e i son distintos, donde index será la posición en done debe ubicar la imagen.
+            # Future: checar si por ende i quedó irrelevante.  
+
+            #Actualiza la columna 'Name' con el nombre del archivo.
+            #Cambia a escribe columna
+            dataframe.loc[i + nu_index, 'Name'] = image_id
+            print("Imagen guardada en el dataframe...")
+            time.sleep(1)
+
+            #Guardaremos en excel cada 100 imagenes.
+            #Future: Que la frecuencia de guardado se defina en globales.
+            #Futue: Hay un bug que hace que ésto se ejecute al principio del recorrido, antes de llegar a los 200, corrige o cambia texto.
+            if i % 200 == 0:
+                tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+                print("Se guardará el excel cada 200 imagenes.")
+                time.sleep(2)
+    except Exception as e:
+            print(f"Excepción: - {e}, guardaremos el excel hasta donde va.")
             tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-            print("200 imagenes más guardadas.")
-            time.sleep(3)
 
+    except KeyboardInterrupt:
+        print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
         
     print("Terminó el ciclo que recorre las URLs, último guardado de excel...")
     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
@@ -126,11 +192,11 @@ def descargaImagenes(sesion):
     if os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
         #Primero extraemos el dataframe:
         dataframe = pd.read_excel(globales.excel_results_path + configuracion.sesion + '.xlsx')
-        print("Ya existía e Imprimiremos el dataframe...")
+        print("Existe un archivo para éste lote e imprimiremos su dataframe...")
         print(dataframe)
         
         #Si ya existía traera Nan en los vacios.
-        print("El archivo ya existe y estoy checando sus Nans en Download Status.")
+        print("El archivo ya existía y estoy checando sus Nans en Download Status.")
         # Filtra las filas donde 'Download Status' es igual a 'Success'
         por_procesar = dataframe[dataframe['Download Status'].isna()]
         print("Por procesar quedó así:")
@@ -142,7 +208,7 @@ def descargaImagenes(sesion):
         #Crea el dataframe donde se registrarán los atributos y las difusiones con los campos necesarios.
         dataframe = creaExcel(configuracion.sesion + '.xlsx')
         #Si no existía traera ' '.
-        print("Cuando no existía lo creo y éste es el dataframe: ")
+        print("Se creó el archivo de excel necesario y éste es su dataframe: ")
         print(dataframe)
         por_procesar = dataframe[dataframe['Download Status'] == '']
         print("Por procesar quedó así:")
@@ -187,8 +253,7 @@ def descargaImagenes(sesion):
 
                 print("Listo, imagen guardada...")
                 time.sleep(1)
-
-                contador +=  1
+                contador += 1
 
                 #Guardaremos en excel cada 100 imagenes.
                 #FUTURE: Definir la frecuencia de guardado en globales.
@@ -199,8 +264,9 @@ def descargaImagenes(sesion):
                 
             else:
                 message = f"Error downloading image: {Source} (Status code: {response.status_code})"
-                raise Exception(message)
                 contador +=  1
+                raise Exception(message)
+                
 
         except Exception as e:
             download_status = f"Error: {response.status_code}"

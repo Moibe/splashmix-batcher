@@ -1,5 +1,5 @@
 import time
-import pretools, tools
+import pretools
 import configuracion
 
 #FUTURE: Todos los procesos, incluído ciclo inicial, intermedio y final deberían ir en una sola hoja o api?
@@ -33,6 +33,8 @@ if configuracion.excel_list == True:
     #Descarga las imagenes source indicadas en el excel(dataframe) y las baja al directorio en disco.
     #Ya no usamos el dataframe creado arriba, descargamos el nuevo archivo que está en results.
     #Porque si no siempre estaría iniciando desde cero.
+    print("A continuación descargaremos las imagenes del lote...")
+    respuesta = input("Presiona cualquier tecla para continuar: ")
     pretools.descargaImagenes(sesion)
 #Si se usa BULK.
 else:
