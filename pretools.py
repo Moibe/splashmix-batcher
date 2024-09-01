@@ -90,39 +90,37 @@ def creaExcel(filename):
     #Future: Para llenar solo los que no existen necesitas filtrar la columna source con los NAN.
     #Future: Dale más exactitud a los conteos de lotes.
 
-    por_procesar = dataframe[dataframe['Name'].isna()]
-    lote_procesar = len(por_procesar)
-    print("Nos faltan por nombrar: ", lote_procesar)
-
-    #El nuevo indicé marcará cuanto sumar al indice para que ponga las celdas en el lugar correcto.
-    #Basado en donde empezó.
-    nu_index = lote_total - lote_procesar
-
-    #Está bien que haya proceso de reiniciar donde ibamos, porque no solo es que sean lotes muy largos, pero ...
-    #el proceso para extraer su nombre podría ser complicado.
-
-    print(f"Por lo tanto llevamos {nu_index} imagenes nombradas.")
-    time.sleep(5)
-
-    columna = por_procesar['Source']
-        
-    print("El tamaño de la columna es:", len(columna))
-    print("Imprimiendo columna:")
-    time.sleep(2)
-    
-
-    #IMPORTANTE: Si obtiene correctamente la columna, pero la i no funcionará ahora, necesitas indexRow...
-    #Considera que ese proceso podría ser más lento y que en verdad convenga más crear otra vez todos los ids.
-           
-    #Ciclo de todas las fotos por registrar.
-    # Recorre cada URL de foto en la columna
-
     y = 0
+    lote_procesar = 1
 
     while y < lote_procesar:
 
-        print("Entrando otra vez al while...")
-        time.sleep(8)
+        #Future: El while si reanuda, pero para volver a hacer ese ciclo, modificarlo o quitarlo. 
+
+        print("Entrando al while...")
+        time.sleep(1)
+
+        por_procesar = dataframe[dataframe['Name'].isna()]
+        lote_procesar = len(por_procesar)
+        
+        print("Nos faltan por nombrar: ", lote_procesar)
+
+        #El nuevo indicé marcará cuanto sumar al indice para que ponga las celdas en el lugar correcto.
+        #Basado en donde empezó.
+        nu_index = lote_total - lote_procesar
+
+        #Está bien que haya proceso de reiniciar donde ibamos, porque no solo es que sean lotes muy largos, pero ...
+        #el proceso para extraer su nombre podría ser complicado.
+
+        print(f"Por lo tanto llevamos {nu_index} imagenes nombradas.")
+        time.sleep(1)
+
+        columna = por_procesar['Source']
+            
+        print("El tamaño de la columna es:", len(columna))
+        
+        #IMPORTANTE: Si obtiene correctamente la columna, pero la i no funcionará ahora, necesitas indexRow...
+        #Considera que ese proceso podría ser más lento y que en verdad convenga más crear otra vez todos los ids.
 
         try: 
             for i, foto_url in enumerate(columna):
@@ -145,12 +143,12 @@ def creaExcel(filename):
                 print("Imagen guardada en el dataframe...")
                 print(f"Estoy en el for indice: {i + 1} de {len(columna)}.")
                 print(f"En la row {i + nu_index} del gran total de {lote_total}.")
-                time.sleep(1)
+                #time.sleep(1)
 
                 #Guardaremos en excel cada 100 imagenes.
                 #Future: Que la frecuencia de guardado se defina en globales.
                 #Futue: Hay un bug que hace que ésto se ejecute al principio del recorrido, antes de llegar a los 200, corrige o cambia texto.
-                if i % 200 == 0:
+                if i % 100 == 0:
                     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
                     print("Se guardará el excel cada 200 imagenes.")
                     time.sleep(1)
@@ -159,7 +157,8 @@ def creaExcel(filename):
                 print("Es probable que el archivo de excel esté abierto, cierralo antes de proceder y oprime una tecla.")
                 print("En la excepción aun existe la i?")
                 print(i)
-                time.sleep(1)
+                y = i
+                #time.sleep(1)
                 input("Presiona cualquier tecla para continuar: ")
                 print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
                 tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
