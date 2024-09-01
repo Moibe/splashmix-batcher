@@ -143,12 +143,14 @@ def creaExcel(filename):
                 print("Imagen guardada en el dataframe...")
                 print(f"Estoy en el for indice: {i + 1} de {len(columna)}.")
                 print(f"En la row {i + nu_index} del gran total de {lote_total}.")
-                #time.sleep(1)
+                #Importante: Si sabes que lo puedes hacer de una vez, puedes quitarle ese sleep para que lo haga superrápido.
+                #Si en cambio sabes que habrá interrupciones, dejalo así, porque le das tiempo a si poder guardar el excel.
+                time.sleep(1)
 
                 #Guardaremos en excel cada 100 imagenes.
                 #Future: Que la frecuencia de guardado se defina en globales.
                 #Futue: Hay un bug que hace que ésto se ejecute al principio del recorrido, antes de llegar a los 200, corrige o cambia texto.
-                if i % 100 == 0:
+                if i % 200 == 0:
                     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
                     print("Se guardará el excel cada 200 imagenes.")
                     time.sleep(1)
@@ -158,7 +160,7 @@ def creaExcel(filename):
                 print("En la excepción aun existe la i?")
                 print(i)
                 y = i
-                #time.sleep(1)
+                time.sleep(1)
                 input("Presiona cualquier tecla para continuar: ")
                 print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
                 tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
