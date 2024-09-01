@@ -80,8 +80,6 @@ def creaExcel(filename):
 
     #CREACIÓN DE IDs DE ARCHIVOS.
     print("Estamos en la creación de names, y antes de empezar, veré como quedó el dataframe...")
-    time.sleep(3)
-    print(dataframe)
     time.sleep(1)
     #SI TIENEN NANS
 
@@ -90,16 +88,10 @@ def creaExcel(filename):
     print("El tamaño total del lote es: ", lote_total)
     
     #Future: Para llenar solo los que no existen necesitas filtrar la columna source con los NAN.
-   
+    #Future: Dale más exactitud a los conteos de lotes.
 
     por_procesar = dataframe[dataframe['Name'].isna()]
-    print("Estas son nuestras columnas filtradas por procesar:")
-    time.sleep(2)
-    print(por_procesar)
-    time.sleep(1)
-
     lote_procesar = len(por_procesar)
-
     print("Nos faltan por nombrar: ", lote_procesar)
 
     #El nuevo indicé marcará cuanto sumar al indice para que ponga las celdas en el lugar correcto.
@@ -110,18 +102,14 @@ def creaExcel(filename):
     #el proceso para extraer su nombre podría ser complicado.
 
     print(f"Por lo tanto llevamos {nu_index} imagenes nombradas.")
+    time.sleep(5)
 
     columna = por_procesar['Source']
-    print("Y ésta es nuestra columna filtrada:")
-    time.sleep(3)
-    print(columna)
-    time.sleep(3)
-
+        
     print("El tamaño de la columna es:", len(columna))
     print("Imprimiendo columna:")
     time.sleep(2)
-    print(columna)
-    time.sleep(2)
+    
 
     #IMPORTANTE: Si obtiene correctamente la columna, pero la i no funcionará ahora, necesitas indexRow...
     #Considera que ese proceso podría ser más lento y que en verdad convenga más crear otra vez todos los ids.
@@ -129,43 +117,59 @@ def creaExcel(filename):
     #Ciclo de todas las fotos por registrar.
     # Recorre cada URL de foto en la columna
 
-    try: 
-        for i, foto_url in enumerate(columna):
+    y = 0
+
+    while y < lote_procesar:
+
+        print("Entrando otra vez al while...")
+        time.sleep(8)
+
+        try: 
+            for i, foto_url in enumerate(columna):
+
+                y = i
             
+                image_id = tools.generaIDImagen(foto_url)
 
-            print(f"Estoy en el for indice: {i + 1} de {len(columna)} ")
-        
-            image_id = tools.generaIDImagen(foto_url)
+                print("Éste es el image id del q sacaremos el index row: ", image_id)
 
-            print("Éste es el image id del q sacaremos el index row: ", image_id)
+                #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
+                #index = tools.obtenIndexRow(dataframe, 'Name', image_id)        
+                
+                #Nótese que imdex e i son distintos, donde index será la posición en done debe ubicar la imagen.
+                # Future: checar si por ende i quedó irrelevante.  
 
-            #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
-            #index = tools.obtenIndexRow(dataframe, 'Name', image_id) 
-        
-            
-            #Nótese que imdex e i son distintos, donde index será la posición en done debe ubicar la imagen.
-            # Future: checar si por ende i quedó irrelevante.  
+                #Actualiza la columna 'Name' con el nombre del archivo.
+                #Cambia a escribe columna
+                dataframe.loc[i + nu_index, 'Name'] = image_id
+                print("Imagen guardada en el dataframe...")
+                print(f"Estoy en el for indice: {i + 1} de {len(columna)}.")
+                print(f"En la row {i + nu_index} del gran total de {lote_total}.")
+                time.sleep(1)
 
-            #Actualiza la columna 'Name' con el nombre del archivo.
-            #Cambia a escribe columna
-            dataframe.loc[i + nu_index, 'Name'] = image_id
-            print("Imagen guardada en el dataframe...")
-            time.sleep(1)
+                #Guardaremos en excel cada 100 imagenes.
+                #Future: Que la frecuencia de guardado se defina en globales.
+                #Futue: Hay un bug que hace que ésto se ejecute al principio del recorrido, antes de llegar a los 200, corrige o cambia texto.
+                if i % 200 == 0:
+                    tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+                    print("Se guardará el excel cada 200 imagenes.")
+                    time.sleep(1)
 
-            #Guardaremos en excel cada 100 imagenes.
-            #Future: Que la frecuencia de guardado se defina en globales.
-            #Futue: Hay un bug que hace que ésto se ejecute al principio del recorrido, antes de llegar a los 200, corrige o cambia texto.
-            if i % 200 == 0:
+        except Exception as e:
+                print("Es probable que el archivo de excel esté abierto, cierralo antes de proceder y oprime una tecla.")
+                print("En la excepción aun existe la i?")
+                print(i)
+                time.sleep(1)
+                input("Presiona cualquier tecla para continuar: ")
+                print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
                 tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-                print("Se guardará el excel cada 200 imagenes.")
-                time.sleep(2)
-    except Exception as e:
-            print(f"Excepción: - {e}, guardaremos el excel hasta donde va.")
-            tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
 
-    except KeyboardInterrupt:
-        print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
-        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+        except KeyboardInterrupt:
+            print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
+            #Como interrumpimos a proposito, no queremos que continúe el while.
+            y = y + lote_procesar + 1
+            print("Modifiqué y, y ahora vale: ", y)
+            tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
         
     print("Terminó el ciclo que recorre las URLs, último guardado de excel...")
     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
