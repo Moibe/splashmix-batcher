@@ -49,8 +49,8 @@ def creaExcel(filename):
     #Define si ya existe el archivo de excel o se está completando un proceso previamente iniciado.
     if not os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
 
-        print("NO EXISTE EL ARCHIVO...")
-        time.sleep(3)
+        print("El archivo de excel no existe, se creará en éste momento.")
+        time.sleep(2)
 
         #Lee el archivo de excel origen...
         dataframe = pd.read_excel(globales.excel_source_path + filename)        
@@ -79,27 +79,21 @@ def creaExcel(filename):
     dataframe = pd.read_excel(globales.excel_results_path + filename) 
 
     #CREACIÓN DE IDs DE ARCHIVOS.
-    print("Estamos en la creación de names, y antes de empezar, veré como quedó el dataframe...")
+    print("Estamos en la creación de los ids para cada imagen, y antes de empezar, veré como quedó el dataframe...")
     time.sleep(1)
-    #SI TIENEN NANS
+    
 
     lote_total = len(dataframe)
-
     print("El tamaño total del lote es: ", lote_total)
-    
-    #Future: Para llenar solo los que no existen necesitas filtrar la columna source con los NAN.
-    #Future: Dale más exactitud a los conteos de lotes.
 
     y = 0
     lote_procesar = 1
 
     while y < lote_procesar:
-
         #Future: El while si reanuda, pero para volver a hacer ese ciclo, modificarlo o quitarlo. 
 
         print("Entrando al while...")
-        time.sleep(1)
-
+        
         por_procesar = dataframe[dataframe['Name'].isna()]
         lote_procesar = len(por_procesar)
         
@@ -113,10 +107,8 @@ def creaExcel(filename):
         #el proceso para extraer su nombre podría ser complicado.
 
         print(f"Por lo tanto llevamos {nu_index} imagenes nombradas.")
-        time.sleep(1)
-
+        
         columna = por_procesar['Source']
-            
         print("El tamaño de la columna es:", len(columna))
         
         #IMPORTANTE: Si obtiene correctamente la columna, pero la i no funcionará ahora, necesitas indexRow...
@@ -126,39 +118,30 @@ def creaExcel(filename):
             for i, foto_url in enumerate(columna):
 
                 y = i
-            
                 image_id = tools.generaIDImagen(foto_url)
-
                 print("Éste es el image id del q sacaremos el index row: ", image_id)
-
-                #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
-                #index = tools.obtenIndexRow(dataframe, 'Name', image_id)        
-                
-                #Nótese que imdex e i son distintos, donde index será la posición en done debe ubicar la imagen.
-                # Future: checar si por ende i quedó irrelevante.  
+               
+                #Nótese que index e i son distintos, donde index será la posición en done debe ubicar la imagen.
+                #Future: checar si por ende i quedó irrelevante.  
 
                 #Actualiza la columna 'Name' con el nombre del archivo.
-                #Cambia a escribe columna
                 dataframe.loc[i + nu_index, 'Name'] = image_id
                 print("Imagen guardada en el dataframe...")
                 print(f"Estoy en el for indice: {i + 1} de {len(columna)}.")
                 print(f"En la row {i + nu_index} del gran total de {lote_total}.")
                 #Importante: Si sabes que lo puedes hacer de una vez, puedes quitarle ese sleep para que lo haga superrápido.
                 #Si en cambio sabes que habrá interrupciones, dejalo así, porque le das tiempo a si poder guardar el excel.
-                time.sleep(1)
-
-                #Guardaremos en excel cada 100 imagenes.
+                
+                #Guardaremos en excel cada 200 imagenes.
                 #Future: Que la frecuencia de guardado se defina en globales.
-                #Futue: Hay un bug que hace que ésto se ejecute al principio del recorrido, antes de llegar a los 200, corrige o cambia texto.
+                #Futue: Hay un bug que hace que ésto se ejecute al principio del recorrido, antes de llegar a los 200, corrige.
                 if i % 200 == 0:
                     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
                     print("Se guardará el excel cada 200 imagenes.")
-                    time.sleep(1)
-
+                    
         except Exception as e:
-                print("Es probable que el archivo de excel esté abierto, cierralo antes de proceder y oprime una tecla.")
-                print("En la excepción aun existe la i?")
-                print(i)
+                print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
+                print("i = ", i)
                 y = i
                 time.sleep(1)
                 input("Presiona cualquier tecla para continuar: ")
@@ -167,7 +150,7 @@ def creaExcel(filename):
 
         except KeyboardInterrupt:
             print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
-            #Como interrumpimos a proposito, no queremos que continúe el while.
+            #Como interrumpimos a proposito, no queremos que continúe el while, rebásalo.
             y = y + lote_procesar + 1
             print("Modifiqué y, y ahora vale: ", y)
             tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
