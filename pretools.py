@@ -176,6 +176,8 @@ def descargaImagenes(sesion):
     dataframe:Regresa dataframe que se usará a través de los procesos.
     """
 
+    #Future: Incluye el while de crear Excel aquí en descargaImagenes.
+
     #Define si ya existe el archivo de excel o se está completando un proceso previamente iniciado.
     if os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
         #Primero extraemos el dataframe:
@@ -185,24 +187,27 @@ def descargaImagenes(sesion):
         
         #Si ya existía traera Nan en los vacios.
         print("El archivo ya existía y estoy checando sus Nans en Download Status.")
+        time.sleep(3)
+
         # Filtra las filas donde 'Download Status' es igual a 'Success'
         por_procesar = dataframe[dataframe['Download Status'].isna()]
         print("Por procesar quedó así:")
-        time.sleep(2)
+        time.sleep(1)
         print(por_procesar)
-        time.sleep(3)
+        time.sleep(2)
    
     else:
         #Crea el dataframe donde se registrarán los atributos y las difusiones con los campos necesarios.
+        #Future: Si siempre creará el excel en éste punto, ve si sacas el punto B del 1.-CicloInicial.
         dataframe = creaExcel(configuracion.sesion + '.xlsx')
         #Si no existía traera ' '.
         print("Se creó el archivo de excel necesario y éste es su dataframe: ")
         print(dataframe)
         por_procesar = dataframe[dataframe['Download Status'] == '']
         print("Por procesar quedó así:")
-        time.sleep(2)
+        time.sleep(1)
         print(por_procesar)
-        time.sleep(3)
+        time.sleep(2)
                       
     cantidad_faltante = len(por_procesar)
     print(f"Por procesar tiene {cantidad_faltante} elementos.")
@@ -240,12 +245,11 @@ def descargaImagenes(sesion):
                 dataframe.loc[index, 'Download Status'] = download_status
 
                 print("Listo, imagen guardada...")
-                time.sleep(1)
                 contador += 1
 
-                #Guardaremos en excel cada 100 imagenes.
+                #Guardaremos en excel cada 50 imagenes.
                 #FUTURE: Definir la frecuencia de guardado en globales.
-                if index % 100 == 0:
+                if index % 50 == 0:
                     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
                     print("100 imágenes más guardadas.")
                     time.sleep(2)
