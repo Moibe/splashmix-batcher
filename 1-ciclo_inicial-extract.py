@@ -28,10 +28,10 @@ if configuracion.excel_list == True:
     #primero creo aquí la columna con los nombres, para que sea más fácil de ubicar al descargar imagenes y reiniciar el proceso.
     #Future: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
     
-    #Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.
-    print("A continuación crearemos el archivo de excel que contendrá los resultados...")
-    respuesta = input("Presiona cualquier tecla para continuar: ")
-    pretools.creaExcel(filename)
+    #B.- Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.
+    #print("A continuación crearemos el archivo de excel que contendrá los resultados...")
+    #respuesta = input("Presiona cualquier tecla para continuar: ")
+    #pretools.creaExcel(filename)
 
     #Descarga las imagenes source indicadas en el excel(dataframe) y las baja al directorio en disco.
     #Ya no usamos el dataframe creado arriba, descargamos el nuevo archivo que está en results.

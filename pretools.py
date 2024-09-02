@@ -191,10 +191,6 @@ def descargaImagenes(sesion):
 
         # Filtra las filas donde 'Download Status' es igual a 'Success'
         por_procesar = dataframe[dataframe['Download Status'].isna()]
-        print("Por procesar quedó así:")
-        time.sleep(1)
-        print(por_procesar)
-        time.sleep(2)
    
     else:
         #Crea el dataframe donde se registrarán los atributos y las difusiones con los campos necesarios.
@@ -251,9 +247,8 @@ def descargaImagenes(sesion):
                 #FUTURE: Definir la frecuencia de guardado en globales.
                 if index % 50 == 0:
                     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-                    print("100 imágenes más guardadas.")
-                    time.sleep(2)
-                
+                    print("50 imágenes más guardadas.")
+                                    
             else:
                 message = f"Error downloading image: {Source} (Status code: {response.status_code})"
                 contador +=  1
