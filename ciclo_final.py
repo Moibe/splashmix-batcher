@@ -1,4 +1,4 @@
-import pretools, postools, time, configuracion, globales
+import tools, postools, time, configuracion, globales
 
 #CICLO FINAL: ALTA EN SERVER
 excel = "results_excel\\" + configuracion.sesion + '.xlsx'
@@ -20,4 +20,4 @@ dataframe = postools.subirTodo(excel, sesion, directorio_remoto)
 
 #Finaliza excel después de postproducción.
 print("Si llegó al final, imprimiendo excel, donde excel es: ", configuracion.filename)
-pretools.df2Excel(dataframe, configuracion.filename)
+tools.df2Excel(dataframe, configuracion.filename)

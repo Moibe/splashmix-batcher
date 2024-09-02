@@ -124,13 +124,7 @@ def preparaColumnaImagenes(dataframe, inicial):
             print("Se interrumpió la creación de la columna")
 
 def obtenIndexRow(dataframe, deColumna, indicador):
-
-    print("Estoy en obtenIndexRow...")
-       
     index = dataframe[dataframe[deColumna] == indicador].index
-    print("Esto es index, es lo que voy a regresar: ", index)
-    print("y ésto es el tipo de index: ", type(index))
-
     return index
 
 def creaRow(dataframe, imagen, take, filename, lista): 
@@ -168,6 +162,10 @@ def df2Excel(dataframe, filename):
     #IMPORTANTE: Agrega que si el archivo está abierto, de tiempo para corregir y no mande a error.
      
     # Obtiene la ruta actual del script (directorio raíz del proyecto)
+
+    #Future, df2excel actualmente asume que el excel siempre guardará el excel del directorio de resultados, arreglar...
+    #... para que reciba la ruta completa.
+
     ruta_actual = os.path.dirname(__file__)
     print("Esto es la ruta actual: ", ruta_actual)
 

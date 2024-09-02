@@ -71,17 +71,16 @@ def creaExcel(filename):
         print("Guardando la estructura inicial del archivo de excel.")
         time.sleep(1)
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-
     
     #Y exista o se haya creado apenas, adquiriremos el dataframe de results! y hará la creación de los IDs.
     #Ésto ya tiene control para empezar desde donde ibamos.
-
+    #Future, empezar desde donde nos quedámos asume que el excel siempre estará en orden, porque solo suma...
+    #...el index adicional. Para evitar ésto, en el futuro usa index row. Aunque poría usar más procesamiento.
     dataframe = pd.read_excel(globales.excel_results_path + filename) 
 
     #CREACIÓN DE IDs DE ARCHIVOS.
     print("Estamos en la creación de los ids para cada imagen, y antes de empezar, veré como quedó el dataframe...")
-    time.sleep(1)
-    
+    time.sleep(1)    
 
     lote_total = len(dataframe)
     print("El tamaño total del lote es: ", lote_total)

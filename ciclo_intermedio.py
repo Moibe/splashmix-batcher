@@ -16,7 +16,7 @@ filename = configuracion.sesion + '.xlsx'
 #inicial indica el archivo desde donde debe empezar.
 
 #Importante: Preprocess es la que llena los ATRIBUTOS!!!!
-#inicial="primejb_23104-t2.jpg" cuando quieras empezar desde uno en particular.
+#inicial="nombre_imagen.jpg" cuando quieras empezar desde uno en particular.
 #FUTURE: Que preProcess haga su propia extracción del excel.
 postools.preProcess(sesion)
 
