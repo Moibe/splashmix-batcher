@@ -257,7 +257,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #STABLE DIFFUSION
             print("Iniciando Stable Difussion...")
             #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
-            resultado = postools.stableDiffuse(client, imagenSource, imagenPosition, prompt)
+            resultado = tools.stableDiffuse(client, imagenSource, imagenPosition, prompt)
             print("El resultado de predict fue: ", resultado)
             
             #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
@@ -294,7 +294,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                 
                 #Future: guardar Resultado ahora debe pasar el diccionario de atributos y después usarlo adentro en actualiza Row.
                 print("Vamos a guardar un resultado existoso:")
-                postools.guardarResultado(dataframe, resultado, foto_path, target_dir, 'Completed')
+                tools.guardarResultado(dataframe, resultado, foto_path, target_dir, 'Completed')
 
             #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
             #CORRIGE IMPORTANTE: QUE NO SE SALGA DEL CICLO DE ESA IMAGEN AL ENCONTRAR ERROR.
@@ -627,3 +627,65 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
         print("XXXXX")
         print("XXXXX")
         return e
+    
+def guardarResultado(dataframe, result, filename, ruta_final, message):
+    """
+    Guarda el resultado con una nomenclatura específica. Y lo guarda en disco.
+
+    Parameters:
+    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+    result
+    foto_dir
+    take
+    shot
+    estilo
+    ruta_final
+    message: el mensaje textual que irá en la columna stable diffusion: si fue error el error, si no: Image Processed.
+
+    Returns:
+    bool: True si se guardó el archivo correctamente.
+    """
+    
+    #Aquí guardará la imagen.
+    #Ésta parte solo debe hacerla si no viene de error. 
+
+    print("HOY: Estamos en guardar Resultado, y el mensaje que recibimos como parámetro es: ", message)
+    ruta_total = ""
+    ruta_absoluta = ""
+
+    if message == "Completed":
+        #ENTONCES SI HAY UNA IMAGEN QUE GUARDAR EN DISCO DURO.
+        
+        ruta_total = os.path.join(ruta_final, filename)
+        print("El resultado del SD fue exitoso, y su ruta total es/será: ", ruta_total)
+        raiz_pc = os.getcwd()
+        ruta_absoluta = os.path.join(raiz_pc, ruta_total)
+        print("Local path:", ruta_absoluta)
+                
+        ruta_imagen_local = result[0] 
+        print("La ruta de gradio en result[0] es: ", ruta_imagen_local)
+        
+        #IMPORTANTE, GUARDANDO EN DISCO DURO.
+        with open(ruta_imagen_local, "rb") as archivo_lectura:
+            contenido_imagen = archivo_lectura.read()	
+
+        with open(ruta_total, "wb") as archivo_escritura:
+            archivo_escritura.write(contenido_imagen)
+            print(f"Imagen guardada correctamente en: {ruta_total}")
+            print("Estamos por actualizar excel...")
+            
+    #FUTURE: Ésto se tiene que hacer dinámicamente.
+
+    #Después, haya o no guardado en disco duro, registrará que terminó en el excel.
+
+    #actualiza Row actualiza una sola row.
+    print("Estoy por actualizarRow y el mensaje es:", message)
+    print("y su filename (índice) es: ", filename)
+    
+    #Sin problema ya puede actualizar el respectivo DiffusionStatus porque siempre está presente.
+    #Parámetros: dataframe, index_col, indicador, receiving_col, contenido
+    tools.actualizaRow(dataframe, 'File', filename, 'Diffusion Status', message)      
+    tools.actualizaRow(dataframe, 'File', filename, 'File Path', ruta_absoluta)
+
+    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
+    tools.df2Excel(dataframe, configuracion.filename)    

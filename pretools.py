@@ -58,12 +58,14 @@ def creaExcel(filename):
         #Si no existe, entonces si hacemos toda la estructura inicial.
         #Importante: Crea las nuevas columnas que necesitará:
         #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
+        #Future Importante: Checa al crear un archivo nuevo si agregar File Path afecto en algo.
         dataframe['Source Path'] = ''
         dataframe['Source URL'] = ''
         dataframe['Name'] = ''
         dataframe['Download Status'] = ''
         dataframe['Take'] = ''
         dataframe['File'] = ''
+        dataframe['File Path'] = ''
         dataframe['Diffusion Status'] = ''
 
         #Ve si afecta actualizar el excel antes de entregar el dataframe.
@@ -391,7 +393,7 @@ def preparaSamples(filename, samples):
             if configuracion.excel_list is True:
                 #En lugar de esas comillas vas a poner el source.
                 #En excel: [Source, Source Path, Source URL, Name, Download Status, Take, File, Diffusion Status]
-                lista = [source, "", "", imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
+                lista = [source, "", "", imagen, 'Success', "take_placeholder", "filename", "", ""]  #adding a row
                 #Designación de columnas a utilizar.
                 a = 5 #Aquí sustituira el índice 3 take_placeholder
                 b = 6 
