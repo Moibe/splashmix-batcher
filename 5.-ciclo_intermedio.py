@@ -17,7 +17,7 @@ filename = configuracion.sesion + '.xlsx'
 
 #Importante: Preprocess es la que llena los ATRIBUTOS!!!!
 #inicial="nombre_imagen.jpg" cuando quieras empezar desde uno en particular.
-intertools.sampler(sesion, inicial='C4D03AQFOR1F2Z5GmeA-t1.png')
+intertools.sampler(sesion)
 
 #FULL ES LA QUE HACE EL STABLE DIFF
 #Future: Corregir para que empiece exacto.
@@ -26,7 +26,7 @@ intertools.sampler(sesion, inicial='C4D03AQFOR1F2Z5GmeA-t1.png')
 #IMPORTANTE: Una alternativa a empezar desde un archivo en particular, es correr mi función missing...
 #... que generará una columna de imagenes de todas aquellas que no han sido procesadas (dejando fuera a las complete
 #... y a las que tuvieron errores.)
-#postools.fullProcess(sesion, dataframe)
+postools.fullProcess(sesion)
 #FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
 
 #Finaliza Excel después de preproducción.

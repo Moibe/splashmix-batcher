@@ -26,9 +26,7 @@ def fullProcess(sesion, dataframe):
     Returns:
     bool: True si se guardó el archivo correctamente.
     """
-    #Future, que los dataframes sean independientes.
-    #Primero extraemos el dataframe:
-    #dataframe = pd.read_excel(filename)
+    dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
 
     #Origen
     ruta_origen = os.path.join('imagenes', 'fuentes', sesion)    

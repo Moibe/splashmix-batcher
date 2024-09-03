@@ -97,28 +97,19 @@ def sampler(sesion, inicial=None):
 
             print("Clase quedó así: ", clase)
             creacion = clase()
-            #creacion = Hotgirl(style="anime")
-            
-            #Creación será el objeto que contiene todos los atributos de lo que vamos a crear.
-            if configuracion.creacion == "Superhero":
-                #PROMPT PARA HEROE
-                print("Estoy haciendo otra pequeña prueba...")
-                time.sleep(2)
-                prompt_temporal = data.prompts.Superhero
-                print("Éste es el prompt temporal obtenido:")
-                time.sleep(1)
-                print(prompt_temporal)
-                time.sleep(3)
+            #creacion = Hotgirl(style="anime")            
 
-                prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #Future: agregar otros atributos random aquí posteriormente.
+            #Future Importante revisar si el prompt es meramente informativo, mientras lo dejaré comentado.
+            #Creación será el objeto que contiene todos los atributos de lo que vamos a crear.
+            if configuracion.creacion == "Superhero":                
+                pass
+                #prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #Future: agregar otros atributos random aquí posteriormente.
                 #Future, tener un archivo .py con prompts asociados. Sobre todo ahora que la clase entra directo.
             else:
                 #PROMPT PARA CHICA
                 prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
-          
-            print("Éstos son los atributos que estamos a punto de guardar en el excel...")
-            print(prompt)
-           
+            #print("Éstos son los atributos que estamos a punto de guardar en el excel...")
+            #print(prompt)
             #Antes de iniciar el stablediffusion vamos a guardar nuestro registro: 
             print("Entrará a guardarRegistro cada que haya un objeto nuevo...")
             print(f"Estámos entrando con el objeto {creacion}, y la shot {shot}...")
@@ -135,4 +126,4 @@ def sampler(sesion, inicial=None):
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
-        tools.df2Excel(dataframe, configuracion.filename)
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')

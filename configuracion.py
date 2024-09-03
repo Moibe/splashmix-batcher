@@ -18,3 +18,13 @@ creacion = "Superhero" #o Hotgirl.
 # wait_time = 500
 
 foto_path = 'C4D03AQFOR1F2Z5GmeA-t1.png'
+
+foto_path = 'C4D03AQFSEmDZbeG_ng-t1.png'
+
+foto_path = 'C4D03AQFiGWMwC7HeWQ-t1.png'
+
+foto_path = 'C4D03AQFihRIN_g7klA-t1.png'
+
+foto_path = 'C4D03AQFSEmDZbeG_ng-t1.png'
+
+foto_path = 'C4D03AQExFZDXyRo8PQ-t1.png'

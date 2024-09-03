@@ -362,7 +362,7 @@ def getNotLoaded(dataframe):
 
     print("Estamos en la función getNotLoaded()...")
     print("EL tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
-    time.sleep(1)  
+      
     
     df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
     print("El tamaño del dataframe df_images_ok es: ", len(df_images_ok))
@@ -370,7 +370,7 @@ def getNotLoaded(dataframe):
     print("Ahora basado en ese filtraremos de nuevo...")
     df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
     print("Y su tamaño es de df_images_toUpload es: ", len(df_images_toUpload) )
-    time.sleep(1)
+    
 
     lista_de_files = df_images_toUpload['File'].tolist()
     print("El tamaño de la lista fina a imprimir es:", len(lista_de_files))
@@ -490,6 +490,8 @@ def guardarRegistro(dataframe, foto_dir, creacion, shot):
     # nombre, extension = foto_dir.split(".")
     # filename = nombre + "-" + "t" + str(take) + "." + extension
 
+    #Future: Poner bandera para que si la celda ya tiene un valor, no lo sustituya éste proceso.
+    
     print("Ya dentro de guardar registro repasaremos cada atributo de la creación:")
     
     #Después cada atributo
@@ -534,7 +536,17 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
         print("y tipo de contenido es: ", type(contenido))
                        
         print(f"Voy a guardar en el index de éste indicador: {indicador} en ésta colúmna: {receiving_col}")
-        dataframe.loc[index, receiving_col] = contenido
+        #Future: Siempre y cuando esté vacía, si no, dejo lo que estaba.
+        print("Estoy en actualizaRow y antes de actualizar, quiero ver que contenido tiene:")
+        print(dataframe.loc[index, receiving_col])
+        valor = dataframe.loc[index[0], receiving_col]
+        print("Éste es el valor: ", valor)
+                
+        if pd.isnull(valor):
+            #Solo si el contenido es Nan escribirá, si no, lo dejará así.
+            dataframe.loc[index, receiving_col] = contenido
+        else:
+            print("Había contenido, lo deje así.")
        
     else:
         print("No se encontró la celda coincidente.")   

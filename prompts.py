@@ -1,12 +1,13 @@
 import data.data as data, data.data_girls as data_girls, data.data_heroes as data_heroes
-import time
 import random
 import tools
 
 class Prompt:
+    #Future, que el databank se defina arriba para todos.
     def __init__(self, style=None):
-
-        self.style = style or random.choice(data.lista_estilos)       
+        databank = data_heroes
+        self.style = style or random.choice(databank.lista_estilos)
+        print("El estilo será: ", self.style)       
 
 #Aplica la función randomNull para aquellos valores de una lista en donde deseas que también exista la posibilidad...
 #...de que no regrese nada.
