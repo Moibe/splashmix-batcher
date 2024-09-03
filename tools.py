@@ -209,8 +209,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             imagenSource = gradio_client.handle_file(foto)                      
             
             indice = postools.obtenIndexRow(dataframe, 'File', foto_path) 
-            print(f"El índice de foto_path: {foto_path} la row u objeto de donde sacaremos los atributos es: ", indice)
-            
+            print(f"El índice de foto_path: {foto_path} la row u objeto de donde sacaremos los atributos es: ", indice)            
                                             
             #Éste contenedor contendrá los atributos que sacó de la respectiva ROW.
             #Es solo un cascarón.
@@ -228,9 +227,8 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Mini proceso para sacar la ruta de la posición. 
             #Future: Ver si lo haces función o lo combinas con getPosition. 
             #O si haces una función creadora de rutas.
-            ruta_carpeta = os.path.join("imagenes", "positions\\posiciones")
-            #ruta_carpeta = "imagenes\\posiciones"
-
+            ruta_carpeta = os.path.join("imagenes", globales.positions_path)
+            
             lista_archivos = os.listdir(ruta_carpeta)
             
             if not lista_archivos:
@@ -377,11 +375,12 @@ def getNotLoaded(dataframe):
 
     return lista_de_files
 
-def getMissing():    
+def getMissing():
 
-    filename = configuracion.filename
+    #Obtiene todas las faltantes para el proceso de FullProcess.
+    filename = configuracion.sesion + '.xlsx'
 
-    dataframe = pd.read_excel('results_excel/' + filename)
+    dataframe = pd.read_excel(globales.excel_results_path + filename)
 
     print("Tamaño del dataframe: ", len(dataframe))
     time.sleep(1)
