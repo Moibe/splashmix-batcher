@@ -26,7 +26,7 @@ filename = configuracion.sesion + '.xlsx'
 #IMPORTANTE: Una alternativa a empezar desde un archivo en particular, es correr mi función missing...
 #... que generará una columna de imagenes de todas aquellas que no han sido procesadas (dejando fuera a las complete
 #... y a las que tuvieron errores.)
-postools.fullProcess(sesion)
+intertools.fullProcess(sesion)
 #FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
 
 #Finaliza Excel después de preproducción.

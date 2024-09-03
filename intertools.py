@@ -127,3 +127,42 @@ def sampler(sesion, inicial=None):
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+
+
+#Future, creo que Samples es irrelevante, checas.
+def fullProcess(sesion):
+    """
+    Ciclo completo de toma de imagen, llevado a HF, guardado en disco y actualización de archivo de Excel.
+
+    Parameters:
+    sesion
+    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+
+    Returns:
+    bool: True si se guardó el archivo correctamente.
+    """
+    dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
+
+    #Origen
+    ruta_origen = os.path.join('imagenes', 'fuentes', sesion)    
+
+    #Destino
+    ruta_destino = sesion + "-results"
+    target_dir = os.path.join('imagenes', 'resultados', ruta_destino)
+
+    #En caso de no existir el directorio destino, lo creará.
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+
+    # columna_imagenes = tools.preparaColumnaImagenes(dataframe, inicial)
+    # print("Ya estoy de nuevo afuera, Tengo el resultado de columna_imagenes, que es:")
+    # print(columna_imagenes)
+
+    #Count Missing también devuelve una columna de imagenes, pero basada en las que no han sido procesadas.
+    #Dejando fuera a las completadas y a las que tuvieron error. Ésto evita tener que hacer el proceso de preparar...
+    #...columnas basado en el archivo donde se quedó. Simplemente hará todas aquellas que no se han procesado!
+    columna_imagenes = tools.getMissing()    
+
+    tools.carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe)
+ 
+

@@ -354,21 +354,14 @@ def preparaSamples(filename, samples):
     #Primero extraemos el dataframe:
     dataframe = pd.read_excel(globales.excel_results_path + filename) 
     print("La cantidad de rows en el dataframe son: ", len(dataframe))  
-
-    print("Voy a imprimir el dataframe total:")
-    print(dataframe)
-    time.sleep(1) 
     
     #Filtra las filas donde 'Download Status' es igual a 'Success'
-    
     #Parámetros: dataframe, columnaAFiltrar, textoFiltro
     rowsFiltrados = tools.funcionFiltradora(dataframe, 'Download Status', 'Success') 
 
     print("Ahora voy a imprimir rowsFiltrados, que tienen el tamaño:", len(rowsFiltrados))
     time.sleep(1)
-    print(rowsFiltrados)
-    time.sleep(3)
-
+    
     #Future: Hacer una función que seleccione las columna/s a usar.
     df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source']]
     cantidad_sampleos = samples * len(df_imagenes_seleccionadas)

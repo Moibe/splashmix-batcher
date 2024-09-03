@@ -4,7 +4,7 @@ import configuracion
 import gradio_client
 import nycklar.nodes as nodes
 import os
-import pretools, postools
+import pretools, postools, tools
 import prompter
 import globales
 import random
@@ -208,7 +208,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Prepara ID la imagen para gradio.        
             imagenSource = gradio_client.handle_file(foto)                      
             
-            indice = postools.obtenIndexRow(dataframe, 'File', foto_path) 
+            indice = tools.obtenIndexRow(dataframe, 'File', foto_path) 
             print(f"El índice de foto_path: {foto_path} la row u objeto de donde sacaremos los atributos es: ", indice)            
                                             
             #Éste contenedor contendrá los atributos que sacó de la respectiva ROW.
@@ -460,9 +460,9 @@ def getPosition():
     print("Ruta Posición seleccionada: ", ruta_posicion)    
     nombre_archivo = os.path.basename(ruta_posicion)
     
-    shot, extension = nombre_archivo.split(".")
-    #Ahora NO/si necesitamos la extensión: 
-    #shot = nombre_archivo
+    #shot, extension = nombre_archivo.split(".")
+    #Ahora si necesitamos la extensión: 
+    shot = nombre_archivo
     
     print("Posición elegida: ", shot)
         
@@ -562,3 +562,68 @@ def randomNull(probabilidad, lista):
         result = random.choice(lista)
 
     return result
+
+def stableDiffuse(client, imagenSource, imagenPosition, prompt):
+    
+    #Los dos iguales.
+    #Revisar si se puede subir el hf_token.
+
+    #Hacer primer contacto con API, ésto ayudará a saber si está apagada y prenderla automáticamente.
+
+    try:
+        #Usando Moibe Splashmix
+        print("Estoy adentro, donde se usaba el cliente...")
+        #ÉSTE CLIENTE YA NO SE USA PORQUE SE CARGABA CADA VEZ Y CADA VEZ.
+        #client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
+
+
+    except Exception as e:
+        print("API apagada o pausada...", e)
+        print("Revisar si el datafame está vivo a éstas alturas...:", )
+    
+        #Analiza e para definir si está apagada o pausada, cuando está pausada, no debes esperar pq nada cambiará.
+        #Si e tiene la palabra PAUSED.
+        print("Reiniciandola, vuelve a correr el proceso en 10 minutos.")
+        print("ZZZZZZZ")
+        print("ZZZZZZZ")
+        print("ZZZZZZZ")
+        #No podemos hacer break porque no es un loop.
+        #Por eso hago un return para que se salga de stablediffuse.
+        return "api apagada" # o regresa api pausada.
+    
+    #Ahora correr el proceso central de Stable Diffusion.
+    try:
+
+        print("Ahora estoy ya en el predict...")
+        
+        result = client.predict(
+                imagenSource,
+                imagenPosition,
+                prompt=prompt,
+                negative_prompt="(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, pet collar, gun, weapon, 3d, drones, drone, buildings in background",
+                style_name="(No style)", #ver lista en styles.txt
+                num_steps=30,
+                identitynet_strength_ratio=0.8,
+                adapter_strength_ratio=0.8,
+                pose_strength=0.4,
+                canny_strength=0.4,
+                depth_strength=0.4,
+                controlnet_selection=["pose"], #pueden ser ['pose', 'canny', 'depth']
+                guidance_scale=5,
+                #seed=43,
+                seed=42, #Wow deje una seed fija desde siempre, por eso con las mismas características creará lo mismo. Está bien!
+                scheduler="EulerDiscreteScheduler",
+                enable_LCM=False,
+                enhance_face_region=True,
+                api_name="/generate_image"
+        )
+        return result
+
+    except Exception as e:
+        print("Hubo un error, recuerda éste prompt...", e)
+        print("Aquí llega cuando la imagen no existe, no cuando no se pudo procesar, revisar si eso llega al excel, la e sería: ", e)
+        #No está llegando al excel, pero no es necesario porque cuando se sale llega a la línea: 364
+        print("XXXXX")
+        print("XXXXX")
+        print("XXXXX")
+        return e
