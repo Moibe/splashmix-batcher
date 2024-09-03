@@ -356,20 +356,19 @@ def preparaSamples(filename, samples):
     print("La cantidad de rows en el dataframe son: ", len(dataframe))  
 
     print("Voy a imprimir el dataframe total:")
-    time.sleep(1)
     print(dataframe)
-    time.sleep(2) 
+    time.sleep(1) 
     
     #Filtra las filas donde 'Download Status' es igual a 'Success'
     
     #Parámetros: dataframe, columnaAFiltrar, textoFiltro
     rowsFiltrados = tools.funcionFiltradora(dataframe, 'Download Status', 'Success') 
 
-    print("Ahora voy a imprimir rowsFiltrados, que tienen el tamaño:", len(rowsFiltrados}))
-    time.sleep(2)
+    print("Ahora voy a imprimir rowsFiltrados, que tienen el tamaño:", len(rowsFiltrados))
+    time.sleep(1)
     print(rowsFiltrados)
-    time.sleep(32)
-    
+    time.sleep(3)
+
     #Future: Hacer una función que seleccione las columna/s a usar.
     df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source']]
     cantidad_sampleos = samples * len(df_imagenes_seleccionadas)
