@@ -7,6 +7,7 @@ import os
 import pretools, postools
 import prompter
 import globales
+import random
 
 def obtenerArchivoOrigen(foto_path):
     """
@@ -344,6 +345,8 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             else:
                 #Si la API no estaba apagada, éste es el camino normal.
                 contador =+ 1
+                #Future: CHecar si éste contador se usa.
+
     except KeyboardInterrupt:
         print("Me quedé en la foto_path: ", foto_path)
         
@@ -363,8 +366,7 @@ def getNotLoaded(dataframe):
     
     df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
     print("El tamaño del dataframe df_images_ok es: ", len(df_images_ok))
-    time.sleep(1)
-
+    
     print("Ahora basado en ese filtraremos de nuevo...")
     df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
     print("Y su tamaño es de df_images_toUpload es: ", len(df_images_toUpload) )
@@ -386,8 +388,7 @@ def getMissing():
     
     # Filter rows where 'Download Status' is 'Success' and 'Diffusion Status' is empty
     df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
-    #df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
-
+    
     # Print the filtered DataFrame
     print(df_images_ok)
     print(len(df_images_ok))
@@ -430,4 +431,114 @@ def funcionFiltradora(dataframe, columnaAFiltrar, textoFiltro):
     print("La cantidad de imagenes Success son: ", len(df_images_ok))
 
     return df_images_ok
+
+def getPosition():
+    """
+    Regresa una posición del cuerpo humano para ser utilizada por el proceso de Stable Diffusion.
+
+    Parameters:
+    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+
+    Returns:
+    bool: True si se guardó el archivo correctamente.
+
+    """
+    #FUTURE: Aquí se podrá poner dinámicamente el set de posiciones en el subfolder de la carpeta posiciones.
+    #Dentro de globales podemos poner subsets, después, asociarlos a determinados modelos.
+    ruta_carpeta = os.path.join("imagenes", globales.positions_path)
+    #FUTURE que también arrojé sin posición.
+
+    lista_archivos = os.listdir(ruta_carpeta)
+    
+    if not lista_archivos:
+        print("La carpeta está vacía o no existe.")
+        exit()
+
+    #Selecciona una imagen aleatoriamente.
+    posicion_aleatoria = random.choice(lista_archivos)
+    ruta_posicion = os.path.join(ruta_carpeta, posicion_aleatoria)
+
+    print("Ruta Posición seleccionada: ", ruta_posicion)    
+    nombre_archivo = os.path.basename(ruta_posicion)
+    
+    shot, extension = nombre_archivo.split(".")
+    #Ahora NO/si necesitamos la extensión: 
+    #shot = nombre_archivo
+    
+    print("Posición elegida: ", shot)
+        
+    return ruta_posicion, shot
+
+def guardarRegistro(dataframe, foto_dir, creacion, shot):
+    """
+    Guarda el registro de lo que se va a hacer en excel.
+
+    Parameters:
+    dataframe (dataframe): El dataframe en el que estuvimos trabajando.
+    result
+    foto_dir
+    take
+    shot
+    estilo
+    ruta_final
+    message: el mensaje textual que irá en la columna stable diffusion: si fue error el error, si no: Image Processed.
+
+    Returns:
+    bool: True si se guardó el archivo correctamente.
+    """
+
+    # nombre, extension = foto_dir.split(".")
+    # filename = nombre + "-" + "t" + str(take) + "." + extension
+
+    print("Ya dentro de guardar registro repasaremos cada atributo de la creación:")
+    
+    #Después cada atributo
+    for nombre_atributo in dir(creacion):
+        # Verificar si el nombre es un atributo real
+        if not nombre_atributo.startswith("__"):
+            valor_atributo = getattr(creacion, nombre_atributo)
+            print(f"Atributo: {nombre_atributo}, Valor: {valor_atributo}")
+            
+            
+            #File es la columna donde busca, filename lo que está buscando, nombre_atributo la col donde guardará y valor lo que guardará.
+            actualizaRow(dataframe, 'File', foto_dir, nombre_atributo, valor_atributo)
+
+    #Y al final el shot: 
+    actualizaRow(dataframe, 'File', foto_dir, 'Shot', shot)
+
+    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
+    pretools.df2Excel(dataframe, configuracion.filename)
+
+def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido): 
+    """
+    Función general que recibe una columna indice y una columna receptora para actualizar la información.
+
+    Parameters:
+    archivo (str): Contenido que será agregado a esa celda.
+
+    Returns:
+    dataframe:Regresa dataframe.
+    """    
+    print("Estoy en actualizarow, después de haber subido la imagen y esperando actualizar.")
+    print(f"El indicador es: {indicador}")  
+    time.sleep(1)  
+        
+    #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
+    index = obtenIndexRow(dataframe, 'File', indicador)    
+        
+    # If the value exists, get the corresponding cell value
+    if not index.empty:
+        #print("El index se encontró...")
+                
+        cell_value = dataframe.loc[index[0], index_col]  # Get the value at the first matching index
+        print(f"Valor de la celda que coincide: {cell_value}")        
+
+        print("Para la revisión de Warning, valor de contenido es: ", contenido)
+        print("y tipo de contenido es: ", type(contenido))
+                       
+        print(f"Voy a guardar en el index de éste indicador: {indicador} en ésta colúmna: {receiving_col}")
+        dataframe.loc[index, receiving_col] = contenido
+       
+    else:
+        print("No se encontró la celda coincidente.")   
 
