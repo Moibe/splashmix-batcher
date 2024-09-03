@@ -424,3 +424,8 @@ def generaIDImagen(foto_url):
 
     return image_id
 
+def funcionFiltradora(dataframe, columnaAFiltrar, textoFiltro):
+
+    df_images_ok = dataframe[dataframe[columnaAFiltrar] == textoFiltro] 
+    print("La cantidad de imagenes Success son: ", len(df_images_ok))
+

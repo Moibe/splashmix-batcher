@@ -353,15 +353,25 @@ def preparaSamples(filename, samples):
 
     #Primero extraemos el dataframe:
     dataframe = pd.read_excel(globales.excel_results_path + filename) 
-    print("La cantidad de rows en el dataframe son: ", len(dataframe))   
+    print("La cantidad de rows en el dataframe son: ", len(dataframe))  
+
+    print("Voy a imprimir el dataframe total:")
+    time.sleep(1)
+    print(dataframe)
+    time.sleep(2) 
     
     #Filtra las filas donde 'Download Status' es igual a 'Success'
-    #FUTURE: Hacer una función filtradora donde solo se reciba el nombre de la columna que quieres filtrar y el texto.
-    #Para que pueda ser reutilizada en más lugares.
-    df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
-    print("La cantidad de imagenes Success son: ", len(df_images_ok))
     
-    df_imagenes_seleccionadas = df_images_ok[['Name', 'Source']]
+    #Parámetros: dataframe, columnaAFiltrar, textoFiltro
+    rowsFiltrados = tools.funcionFiltradora(dataframe, 'Download Status', 'Success') 
+
+    print("Ahora voy a imprimir rowsFiltrados, que tienen el tamaño:", len(rowsFiltrados}))
+    time.sleep(2)
+    print(rowsFiltrados)
+    time.sleep(32)
+    
+    #Future: Hacer una función que seleccione las columna/s a usar.
+    df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source']]
     cantidad_sampleos = samples * len(df_imagenes_seleccionadas)
     print("La cantidad de imagenes a trabajar será de : ", cantidad_sampleos)
     
