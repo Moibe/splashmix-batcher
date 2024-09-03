@@ -1,4 +1,4 @@
-import pretools, postools, configuracion, time, globales
+import pretools, intertools, postools, configuracion, time, globales
 import pandas as pd
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
@@ -17,8 +17,7 @@ filename = configuracion.sesion + '.xlsx'
 
 #Importante: Preprocess es la que llena los ATRIBUTOS!!!!
 #inicial="nombre_imagen.jpg" cuando quieras empezar desde uno en particular.
-#FUTURE: Que preProcess haga su propia extracción del excel.
-postools.preProcess(sesion)
+intertools.sampler(sesion, inicial='C4D03AQFOR1F2Z5GmeA-t1.png')
 
 #FULL ES LA QUE HACE EL STABLE DIFF
 #Future: Corregir para que empiece exacto.

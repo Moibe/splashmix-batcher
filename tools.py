@@ -507,7 +507,7 @@ def guardarRegistro(dataframe, foto_dir, creacion, shot):
     actualizaRow(dataframe, 'File', foto_dir, 'Shot', shot)
 
     #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
-    pretools.df2Excel(dataframe, configuracion.filename)
+    df2Excel(dataframe, configuracion.sesion + '.xlsx')
 
 def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido): 
     """
@@ -519,10 +519,7 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     Returns:
     dataframe:Regresa dataframe.
     """    
-    print("Estoy en actualizarow, después de haber subido la imagen y esperando actualizar.")
-    print(f"El indicador es: {indicador}")  
-    time.sleep(1)  
-        
+           
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
     index = obtenIndexRow(dataframe, 'File', indicador)    
         
@@ -542,3 +539,15 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     else:
         print("No se encontró la celda coincidente.")   
 
+def randomNull(probabilidad, lista):
+
+    # Generamos un número aleatorio entre 0 y 1
+    numero_random = random.random()
+
+    # Si la probabilidad es menor a 0.2 (20%), no guardamos el color
+    if numero_random < probabilidad:
+        result = None  #No habrá heroe.
+    else:
+        result = random.choice(lista)
+
+    return result

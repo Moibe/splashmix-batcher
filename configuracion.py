@@ -16,3 +16,5 @@ creacion = "Superhero" #o Hotgirl.
 # waited = False
 # api_apagada = False
 # wait_time = 500
+
+foto_path = 'C4D03AQFOR1F2Z5GmeA-t1.png'

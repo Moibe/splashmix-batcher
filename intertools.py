@@ -8,8 +8,10 @@ from prompts import Prompt, Superhero, Hotgirl
 import tools
 import globales
 import random
+import importlib
+import data.prompts
 
-def preProcess(sesion, inicial=None):
+def sampler(sesion, inicial=None):
 
     #Útil: Auxiliar para obtener dataframe: (como cuando no quieres correr prepararDataFrame de nuevo.)
     #dataframe = pd.read_excel(filename)
@@ -44,8 +46,7 @@ def preProcess(sesion, inicial=None):
             # Ésta es la foto donde iniciará, que se pasa como parámetro a preProcess.
             texto_fila_objetivo = inicial  # Replace with your actual search text
             print("El archivo en el que iniciaremos es: ", inicial)
-            time.sleep(2)
-            
+                        
             # Create a boolean mask to identify the row matching the text
             mascara_fila_objetivo = df_images_ok['File'].str.contains(texto_fila_objetivo)
             # Get the index of the matching row
@@ -75,7 +76,7 @@ def preProcess(sesion, inicial=None):
         #Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_samples):
 
-            print("Estamos en la imagen: ", foto_path )
+            print(f"Estamos en la imagen: {foto_path}, que es la número i: {i}" )
             #Future genera su ruta con la función que harás de hacer rutas, para desplegarla en consola de manera informativa.
                                 
             #POSICIÓN (IMPORTANTE)
@@ -83,7 +84,7 @@ def preProcess(sesion, inicial=None):
             #Quiero que el 20% de las veces no use posición.
             numero_random = random.random()
             if numero_random < 0.2:
-                ruta_posicion, shot = ""
+                ruta_posicion, shot = "", ""
                 print("Random dice que sin posición.")
                 print("Ruta posición guardo: ", ruta_posicion)
             else:
@@ -91,16 +92,28 @@ def preProcess(sesion, inicial=None):
             #Future: Checar si en realidad se usa ruta_posicion, si no, quitarlo de la función getPosition()
             
             print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
+
+            clase = getattr(importlib.import_module("prompts"), configuracion.creacion)
+
+            print("Clase quedó así: ", clase)
+            creacion = clase()
+            #creacion = Hotgirl(style="anime")
             
             #Creación será el objeto que contiene todos los atributos de lo que vamos a crear.
             if configuracion.creacion == "Superhero":
                 #PROMPT PARA HEROE
-                creacion = Superhero()
-                prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #agregar otros atributos random aquí posteriormente.
+                print("Estoy haciendo otra pequeña prueba...")
+                time.sleep(2)
+                prompt_temporal = data.prompts.Superhero
+                print("Éste es el prompt temporal obtenido:")
+                time.sleep(1)
+                print(prompt_temporal)
+                time.sleep(3)
 
+                prompt = f"A {creacion.style} of a superhero like {creacion.subject} " #Future: agregar otros atributos random aquí posteriormente.
+                #Future, tener un archivo .py con prompts asociados. Sobre todo ahora que la clase entra directo.
             else:
                 #PROMPT PARA CHICA
-                creacion = Hotgirl(style="anime")
                 prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
           
             print("Éstos son los atributos que estamos a punto de guardar en el excel...")
@@ -122,4 +135,4 @@ def preProcess(sesion, inicial=None):
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
-        pretools.df2Excel(dataframe, configuracion.filename)
+        tools.df2Excel(dataframe, configuracion.filename)

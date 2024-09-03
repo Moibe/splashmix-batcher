@@ -1,13 +1,15 @@
 import data.data as data, data.data_girls as data_girls, data.data_heroes as data_heroes
 import time
 import random
+import tools
 
 class Prompt:
     def __init__(self, style=None):
 
-        self.style = style or random.choice(data.lista_estilos)
-        
-        
+        self.style = style or random.choice(data.lista_estilos)       
+
+#Aplica la función randomNull para aquellos valores de una lista en donde deseas que también exista la posibilidad...
+#...de que no regrese nada.
 
 class Superhero(Prompt):
     def __init__(self,
@@ -16,7 +18,9 @@ class Superhero(Prompt):
         super().__init__()  # Call the parent class constructor
         #Se especifica cuál es su databank:
         databank = data_heroes
-        self.subject = subject or random.choice(databank.lista_subjects)
+        #Random null es una función que regresa al sujeto pero también puede no regresar nada, añadir q probabilidades...
+        #de que eso suceda se desean.
+        self.subject = subject or tools.randomNull(0.2, databank.lista_subjects)
         print("El heroe será: ", self.subject)
                 
 class Hotgirl(Prompt):

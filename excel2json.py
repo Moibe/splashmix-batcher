@@ -30,7 +30,7 @@ with open("data.py", "w") as archivo:
     for nombre_columna, lista_valores in lista_columnas_individuales.items():
         # Crear una cadena con la definición de la variable
         definicion_variable = f"lista_{nombre_columna} = {str(lista_valores)}\n"
-
+        
         # Escribir la definición de la variable en el archivo
         archivo.write(definicion_variable)
 
