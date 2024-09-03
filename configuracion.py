@@ -11,10 +11,13 @@ excel_list = True
 
 creacion = "Superhero" #o Hotgirl.
 
+#Importante, aunque no se usa, debes indicar que no está apagada para que no éntre a ese checador.
+api_apagada = False
+
 # #FUTURE: Features Futuros
 # wait_awake = False #Lo dejaré en false pq en realidad, esperando o no, termina Full Process y hay que correr de nuevo.
 # waited = False
-# api_apagada = False
+
 # wait_time = 500
 
 foto_path = 'C4D03AQFOR1F2Z5GmeA-t1.png'

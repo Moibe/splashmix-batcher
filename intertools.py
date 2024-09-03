@@ -161,7 +161,7 @@ def fullProcess(sesion):
     #Count Missing también devuelve una columna de imagenes, pero basada en las que no han sido procesadas.
     #Dejando fuera a las completadas y a las que tuvieron error. Ésto evita tener que hacer el proceso de preparar...
     #...columnas basado en el archivo donde se quedó. Simplemente hará todas aquellas que no se han procesado!
-    columna_imagenes = tools.getMissing()    
+    columna_imagenes = tools.getMissing() 
 
     tools.carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe)
  

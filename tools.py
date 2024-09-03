@@ -130,8 +130,7 @@ def obtenIndexRow(dataframe, deColumna, indicador):
 
 def creaRow(dataframe, imagen, take, filename, lista): 
 
-    #Importante, verifica si creaRow solo participa en la creación de samples.   
-    
+    #Importante, verifica si creaRow solo participa en la creación de samples.
     #Para imagenes de Sourcelist
     #Future, ver si corriges que borra la URL de orígen de los takes 2,3 y 4. Listo OK!!!!
     #Future, haz prueba con más samples.
@@ -688,4 +687,4 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
     tools.actualizaRow(dataframe, 'File', filename, 'File Path', ruta_absoluta)
 
     #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
-    tools.df2Excel(dataframe, configuracion.filename)    
+    tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')    
