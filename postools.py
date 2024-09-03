@@ -11,6 +11,7 @@ import configuracion
 from prompts import Prompt, Superhero, Hotgirl
 import prompter
 import tools
+import globales
 
 def preProcess(sesion, inicial=None):
 
@@ -18,7 +19,7 @@ def preProcess(sesion, inicial=None):
     #dataframe = pd.read_excel(filename)
     #Auxiliar para archivo excel de resultados.
     #La ruta sirve con diagonal normal / o con doble diagonal \\
-    dataframe = pd.read_excel('results_excel/' + sesion + '.xlsx')
+    dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
 
     #IMPORTANTE, Asigna los atributos a cada sample.
     
@@ -26,35 +27,34 @@ def preProcess(sesion, inicial=None):
     ruta_destino = sesion + "-results"
     target_dir = os.path.join('imagenes', 'resultados', ruta_destino)
 
-    #En caso de no existir el directorio destino, lo creará.
+    #En caso de no existir el directorio donde se recibirán las imagenes destino, lo creará.
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
 
     #Va todo en un try para que podamos guardar el dataframe en un excel en caso de interrupción del ciclo:
-    #FUTURE, manda el proceso de creación de columna a la fución obtenColumnaSamples o una parecida.
-    try: 
+    try:
 
-        # Filtra las filas donde 'Download Status' es igual a 'Success'
-        df_images_ok = dataframe[dataframe['Download Status'] == 'Success']
+        #Filtra las filas donde 'Download Status' es igual a 'Success'
+        df_images_ok = tools.funcionFiltradora(dataframe, 'Download Status', 'Success')
 
+        #Future haz una función creadora de Columnas.
         # Crea un dataset 'columna_imagenes' a partir de la columna 'Nombre'
         columna_samples = df_images_ok['File']
         
         #Si se le pasó el valor como parámetro entonces hace la búsqueda desde donde empezará.
         if inicial is not None: 
-            #PROCESO PARA INICIAR DONDE NOS QUEDAMOS
             
-            # Ésta es la foto donde iniciará, que se pasa como parámetro a full Process.
+            #PROCESO PARA INICIAR DONDE NOS QUEDAMOS            
+            # Ésta es la foto donde iniciará, que se pasa como parámetro a preProcess.
             texto_fila_objetivo = inicial  # Replace with your actual search text
             print("El archivo en el que iniciaremos es: ", inicial)
-            
+            time.sleep(2)
             
             # Create a boolean mask to identify the row matching the text
             mascara_fila_objetivo = df_images_ok['File'].str.contains(texto_fila_objetivo)
             # Get the index of the matching row
             indice_fila_objetivo = mascara_fila_objetivo.idxmax()  # Assumes only one match
-            print("Su índice idmax es: ", indice_fila_objetivo)
-            
+            print("Su índice idmax es: ", indice_fila_objetivo)            
             
             # If the text is found, get the names from that row onward
             if indice_fila_objetivo is not None:
@@ -70,18 +70,19 @@ def preProcess(sesion, inicial=None):
                 #Finalmente vacia las series.
                 nombres_a_partir_fila_objetivo = pd.Series([])  # Empty Series
 
+        #Future: Checar si éste contador está siendo usado.
         contador = 0
         cuantos = len(columna_samples)
         print("La cantidad de resultados son: ", cuantos)
         print("Y ésta es la lista total...", columna_samples)
-        
-        # Recorre cada URL de foto en la columna
+                
+        #Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_samples):
 
             print("Estamos en la imagen: ", foto_path )
             #Future genera su ruta con la función que harás de hacer rutas, para desplegarla en consola de manera informativa.
                                 
-            #POSICIÓN
+            #POSICIÓN (IMPORTANTE)
             print("Obteniendo la posición...")
             ruta_posicion, shot = getPosition()
             print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
@@ -170,8 +171,8 @@ def getPosition():
 
     """
     #FUTURE: Aquí se podrá poner dinámicamente el set de posiciones en el subfolder de la carpeta posiciones.
-    ruta_carpeta = os.path.join("imagenes", "positions\\posiciones")
-    #ruta_carpeta = "imagenes\\posiciones"
+    #Dentro de globales podemos poner subsets, después, asociarlos a determinados modelos.
+    ruta_carpeta = os.path.join("imagenes", globales.positions_path)
     #FUTURE que también arrojé sin posición.
 
     lista_archivos = os.listdir(ruta_carpeta)
@@ -181,20 +182,19 @@ def getPosition():
         exit()
 
     #Selecciona una imagen aleatoriamente.
-    imagen_aleatoria = random.choice(lista_archivos)
-    posicion_actual = os.path.join(ruta_carpeta, imagen_aleatoria)
+    posicion_aleatoria = random.choice(lista_archivos)
+    ruta_posicion = os.path.join(ruta_carpeta, posicion_aleatoria)
 
-    print("Ruta Posicion o posicion_actual: ", posicion_actual)
+    print("Ruta Posición seleccionada: ", ruta_posicion)    
+    nombre_archivo = os.path.basename(ruta_posicion)
     
-    nombre_archivo = os.path.basename(posicion_actual)
-    
-    #shot, extension = nombre_archivo.split(".")
-    #Ahora si necesitamos la extensión: 
-    shot = nombre_archivo
+    shot, extension = nombre_archivo.split(".")
+    #Ahora NO/si necesitamos la extensión: 
+    #shot = nombre_archivo
     
     print("Posición elegida: ", shot)
         
-    return posicion_actual, shot
+    return ruta_posicion, shot
 
 def stableDiffuse(client, imagenSource, imagenPosition, prompt):
     
