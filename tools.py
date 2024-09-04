@@ -242,6 +242,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             except:                
                 print("No hay imagen de posición, continua así...")
                 ruta_posicion = ""
+                imagenPosition = ""
                 #IMPORTANTE, Ya no se para pero no guarda registro, ni siquiera hace el SD, revisa por qué.
             #Si la row viniera todo vacío no podrá crear nada, revisa por que.
             #Future: es que debes ponerle una excepción a ruta_posición, puede venir vacía pero que no pase nada si no la forma.
@@ -579,8 +580,7 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
     
         #Analiza e para definir si está apagada o pausada, cuando está pausada, no debes esperar pq nada cambiará.
         #Si e tiene la palabra PAUSED.
-        print("Reiniciandola, vuelve a correr el proceso en 10 minutos.")
-        print("ZZZZZZZ")
+        print("Reiniciándola, vuelve a correr el proceso en 10 minutos.")
         print("ZZZZZZZ")
         print("ZZZZZZZ")
         #No podemos hacer break porque no es un loop.
