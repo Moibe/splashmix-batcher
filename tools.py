@@ -235,6 +235,10 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                 exit()
             
             imagen_posicion = contenedor['shot']
+
+            print("555: Imagen_posicion es: ", imagen_posicion)
+            time.sleep(20)
+
             try: 
                 ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
                 #Solo haz el gradio de posición, si hay posición:
@@ -242,7 +246,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             except:                
                 print("No hay imagen de posición, continua así...")
                 ruta_posicion = ""
-                imagenPosition = ""
+                imagenPosition = None
                 #IMPORTANTE, Ya no se para pero no guarda registro, ni siquiera hace el SD, revisa por qué.
             #Si la row viniera todo vacío no podrá crear nada, revisa por que.
             #Future: es que debes ponerle una excepción a ruta_posición, puede venir vacía pero que no pase nada si no la forma.
@@ -256,6 +260,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
             resultado = tools.stableDiffuse(client, imagenSource, imagenPosition, prompt)
             print("El resultado de predict fue: ", resultado)
+            time.sleep(3)
             
             #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
             if resultado == "api apagada":
@@ -517,10 +522,12 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     Returns:
     dataframe:Regresa dataframe.
     """    
+
+    print("Entré a actualizaRow.")
            
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
-    index = obtenIndexRow(dataframe, 'File', indicador)    
-        
+    index = obtenIndexRow(dataframe, 'File', indicador)   
+    
     # If the value exists, get the corresponding cell value
     if not index.empty:
         #print("El index se encontró...")
@@ -538,11 +545,15 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
         valor = dataframe.loc[index[0], receiving_col]
         print("Éste es el valor: ", valor)
                 
-        if pd.isnull(valor):
-            #Solo si el contenido es Nan escribirá, si no, lo dejará así.
-            dataframe.loc[index, receiving_col] = contenido
-        else:
-            print("Había contenido, lo deje así.")
+        # if pd.isnull(valor):
+        #     #Solo si el contenido es Nan escribirá, si no, lo dejará así.
+        #     dataframe.loc[index, receiving_col] = contenido
+        # else:
+        #     print("Había contenido, lo deje así.")
+
+        print("Estoy escribiendo como sucedía antes sin el pd.isnull...")
+        print("Lo que escribí fue: ", contenido)
+        dataframe.loc[index, receiving_col] = contenido  
        
     else:
         print("No se encontró la celda coincidente.")   
@@ -567,6 +578,8 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
 
     #Hacer primer contacto con API, ésto ayudará a saber si está apagada y prenderla automáticamente.
 
+    print("182: Entré a stablediff:...")
+
     try:
         #Usando Moibe Splashmix
         print("Estoy adentro, donde se usaba el cliente...")
@@ -582,7 +595,7 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
         #Si e tiene la palabra PAUSED.
         print("Reiniciándola, vuelve a correr el proceso en 10 minutos.")
         print("ZZZZZZZ")
-        print("ZZZZZZZ")
+        
         #No podemos hacer break porque no es un loop.
         #Por eso hago un return para que se salga de stablediffuse.
         return "api apagada" # o regresa api pausada.
@@ -620,8 +633,7 @@ def stableDiffuse(client, imagenSource, imagenPosition, prompt):
         print("Aquí llega cuando la imagen no existe, no cuando no se pudo procesar, revisar si eso llega al excel, la e sería: ", e)
         #No está llegando al excel, pero no es necesario porque cuando se sale llega a la línea: 364
         print("XXXXX")
-        print("XXXXX")
-        print("XXXXX")
+                
         return e
     
 def guardarResultado(dataframe, result, filename, ruta_final, message):
@@ -683,5 +695,10 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
     tools.actualizaRow(dataframe, 'File', filename, 'Diffusion Status', message)      
     tools.actualizaRow(dataframe, 'File', filename, 'File Path', ruta_absoluta)
 
-    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
-    tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')    
+    try: 
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')  
+    except Exception as e:
+                print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
+                input("Presiona cualquier tecla para continuar: ")
+                print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
+                tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')  

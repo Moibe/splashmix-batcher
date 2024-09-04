@@ -144,7 +144,6 @@ def creaExcel(filename):
                 print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
                 print("i = ", i)
                 y = i
-                time.sleep(1)
                 input("Presiona cualquier tecla para continuar: ")
                 print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
                 tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')

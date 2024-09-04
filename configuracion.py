@@ -31,3 +31,21 @@ foto_path = 'C4D03AQFihRIN_g7klA-t1.png'
 foto_path = 'C4D03AQFSEmDZbeG_ng-t1.png'
 
 foto_path = 'C4D03AQExFZDXyRo8PQ-t1.png'
+
+foto_path = 'C4D03AQGf_0Xkz9Qw-t1.png'
+
+foto_path = 'C4D03AQFXJ9GKgRNDnA-t1.png'
+
+foto_path = 'C4D03AQFpyhj2PCgSRA-t1.png'
+
+foto_path = 'C4D03AQFHRpEnL1gNw-t1.png'
+
+foto_path = 'C4D03AQGmAcaI0ddtxQ-t1.png'
+
+foto_path = 'C4D03AQEGT_ppOLjpcQ-t1.png'
+
+foto_path = 'C4D03AQFYoKNizhQ3GQ-t1.png'
+
+foto_path = 'C4D03AQE9wTjBle6Z8Q-t1.png'
+
+foto_path = 'C4D03AQEC5HLOIZESlw-t1.png'
