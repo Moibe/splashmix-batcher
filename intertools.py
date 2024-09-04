@@ -83,7 +83,8 @@ def sampler(sesion, inicial=None):
             print("Obteniendo la posición...")
             #Quiero que el 20% de las veces no use posición.
             numero_random = random.random()
-            if numero_random < 0.2:
+            probabilidad_posicion_null = 0.1
+            if numero_random < probabilidad_posicion_null:
                 ruta_posicion, shot = "", ""
                 print("Random dice que sin posición.")
                 print("Ruta posición guardo: ", ruta_posicion)

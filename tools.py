@@ -237,7 +237,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             imagen_posicion = contenedor['shot']
 
             print("555: Imagen_posicion es: ", imagen_posicion)
-            time.sleep(20)
+            time.sleep(2)
 
             try: 
                 ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
