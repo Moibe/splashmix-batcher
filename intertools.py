@@ -143,6 +143,8 @@ def fullProcess(sesion):
     """
     dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
 
+    #FUTURE: Incluir espera por excel abierto también aquí.
+
     #Origen
     ruta_origen = os.path.join('imagenes', 'fuentes', sesion)    
 

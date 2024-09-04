@@ -237,17 +237,14 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             imagen_posicion = contenedor['shot']
             try: 
                 ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
-            except:
+                #Solo haz el gradio de posición, si hay posición:
+                imagenPosition = gradio_client.handle_file(ruta_posicion)
+            except:                
                 print("No hay imagen de posición, continua así...")
                 ruta_posicion = ""
                 #IMPORTANTE, Ya no se para pero no guarda registro, ni siquiera hace el SD, revisa por qué.
             #Si la row viniera todo vacío no podrá crear nada, revisa por que.
             #Future: es que debes ponerle una excepción a ruta_posición, puede venir vacía pero que no pase nada si no la forma.
-
-            print("Ésta es la ruta_posicion que se meterá al cliente de gradio, verifica si es correcta:", ruta_posicion)
-                                                    
-            imagenPosition = gradio_client.handle_file(ruta_posicion)
-            #Poner una excepeción aquí para cuando no pudo procesar la imagen como por ejemplo por que no es una imagen.
 
             print("Ésto es el prompt obtenido de creaPrompt: ", prompt)
                             
@@ -321,7 +318,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                 #Cuando no dio un resultado, la var resultado no sirve y mejor pasamos imagenSource, si no sirviera, ve como asignar la imagen.
                 print("Vamos a guardar un resultado no exitoso:")
                 
-                postools.guardarResultado(dataframe, imagenSource, foto_path, target_dir, mensaje)
+                tools.guardarResultado(dataframe, imagenSource, foto_path, target_dir, mensaje)
                 
             print("Salí del if instance...")
 
