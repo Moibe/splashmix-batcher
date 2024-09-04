@@ -6,3 +6,4 @@ excel_source_path = 'excel_data\\source_excel\\'
 excel_results_path = 'excel_data\\results_excel\\'
 
 positions_path = "positions\\posiciones"
+prob_position = 0.1

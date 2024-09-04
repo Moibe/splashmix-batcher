@@ -53,3 +53,5 @@ foto_path = 'C4D03AQEC5HLOIZESlw-t1.png'
 foto_path = 'C4D03AQEzgfqnzoxjbw-t1.png'
 
 foto_path = 'C4D03AQFLDQEyFQLhKw-t1.png'
+
+foto_path = 'C4D03AQFXJ9GKgRNDnA-t1.png'
