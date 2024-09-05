@@ -197,13 +197,10 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Aquí debes darle la correcta original (2.jpg), y no la incorrecta (2-t1.jpg)
             #Como el archivo podría tener otros guiones, el que nos interesa a nosotros es
             source_photo = obtenerArchivoOrigen(foto_path)
-            print(f"La source_photo que obtuvimos es: {source_photo} y su tipo es: {type(source_photo)}...")
-                                         
+                                                     
             #FOTO
             foto = os.path.join(ruta_origen, source_photo)
-            print("La ruta de Foto quedó despues de obtener su original como: ", foto)
             
-        
             #Prepara ID la imagen para gradio.        
             imagenSource = gradio_client.handle_file(foto)                      
             
@@ -237,8 +234,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             imagen_posicion = contenedor['shot']
 
             print("555: Imagen_posicion es: ", imagen_posicion)
-            time.sleep(2)
-
+            
             try: 
                 ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
                 #Solo haz el gradio de posición, si hay posición:
@@ -383,17 +379,10 @@ def getMissing():
     filename = configuracion.sesion + '.xlsx'
 
     dataframe = pd.read_excel(globales.excel_results_path + filename)
-
-    print("Tamaño del dataframe: ", len(dataframe))
-    time.sleep(1)
-    
+        
     # Filter rows where 'Download Status' is 'Success' and 'Diffusion Status' is empty
     df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
     
-    # Print the filtered DataFrame
-    print(df_images_ok)
-    print(len(df_images_ok))
-
     nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
     print(f"Faltan por hacer: {len(nan_df)} imagenes...")
