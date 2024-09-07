@@ -1,4 +1,5 @@
-import pretools, intertools, postools, configuracion, time, globales
+import pretools
+import intertools, postools, configuracion, time, globales
 import pandas as pd
 
 #CICLO INTERMEDIO = STABLE DIFFUSION

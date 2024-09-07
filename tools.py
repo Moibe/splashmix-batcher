@@ -23,23 +23,12 @@ def obtenerArchivoOrigen(foto_path):
 
     segmentos_guion = foto_path.split("-")
     cuantos_segmentos = len(segmentos_guion)
-    # print(f"Hay {cuantos_segmentos} en segmentos_guion de la foto {foto_path}")
-
-    # print(f"Presentando el último segmento: {segmentos_guion[cuantos_segmentos-1]}.")
-
+    
     #Ahora divide por el punto a ese último segmento: 
-
     division_puntos = segmentos_guion[cuantos_segmentos-1].split(".")
-
-    # print(f"Al que estoy buscando es a éste, el primer segmento: {division_puntos[0]} ")
-
     quitable = "-" + division_puntos[0]
-
     resultado_final = foto_path.split(quitable)
-
     union_final = resultado_final[0] + resultado_final[1]
-
-    print(f"El resultado final es: {union_final} ")
 
     return union_final
 
@@ -182,7 +171,10 @@ def df2Excel(dataframe, filename):
     return True
 
 def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe): 
-     #Try para stablediff...
+    print("Entré a carruselStable, ")
+    print("El len de carrusel stable es: ", len(carruselStable))
+    time.sleep(3)
+
     try:    
         #ÉSTE ES EL CLIENT CORRECTO!!!!
         #Así solo entrará al cliente una vez y no cada que de vuelta el for.
@@ -191,11 +183,15 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
 
-            print(f"El valor de i es: {i} y su tipo es: {type(i)}...")  
-            print(f"VIEW: La primer foto con la que estaremos trabajando será: {foto_path} y su tipo es: {type(foto_path)}...")
-                        
-            #Aquí debes darle la correcta original (2.jpg), y no la incorrecta (2-t1.jpg)
-            #Como el archivo podría tener otros guiones, el que nos interesa a nosotros es
+            print("*****")
+            print("*****")
+            print("*****")
+            print("*****")
+            print("*****")
+            print(f"{i} de {len(columna_imagenes)}.")  
+            print(f"Imagen: {foto_path}.")
+
+            #Obtiene la foto original que transformaremos.            
             source_photo = obtenerArchivoOrigen(foto_path)
                                                      
             #FOTO
@@ -204,18 +200,23 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Prepara ID la imagen para gradio.        
             imagenSource = gradio_client.handle_file(foto)                      
             
-            indice = tools.obtenIndexRow(dataframe, 'File', foto_path) 
-            print(f"El índice de foto_path: {foto_path} la row u objeto de donde sacaremos los atributos es: ", indice)            
+            indice = tools.obtenIndexRow(dataframe, 'File', foto_path)       
                                             
-            #Éste contenedor contendrá los atributos que sacó de la respectiva ROW.
-            #Es solo un cascarón.
+            #Éste contenedor contendrá los atributos que sacó de la respectiva ROW. #Es solo un cascarón.
             contenedor = prompter.creaContenedorTemplate(dataframe, indice, configuracion.creacion) #Superhero o #Hotgirl por ahora.
 
-            print("Esto es el contenedor que me regreso...>")
+            print("---")
+            print("---")
+            print("---")
+            print("---")
+            print("---")
+            print("---")
+            print("---")
+            print("Iniciando una nueva creación...")
+            print("Esto es el contenedor con el que trabajaremos...>")
             print(contenedor)                         
 
             #AHORA CREA EL PROMPT
-            print("Creando prompt después de meterle el contenedor...")
             print("El contenedor es: ", contenedor)
             print("Configuración. creación es: ", configuracion.creacion)
             prompt = prompter.creaPrompt(contenedor, configuracion.creacion)
@@ -232,8 +233,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                 exit()
             
             imagen_posicion = contenedor['shot']
-
-            print("555: Imagen_posicion es: ", imagen_posicion)
+            print("Imagen_posicion es: ", imagen_posicion)
             
             try: 
                 ruta_posicion = os.path.join(ruta_carpeta, imagen_posicion)
@@ -249,15 +249,12 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
 
             print("Ésto es el prompt obtenido de creaPrompt: ", prompt)
                             
-            print("LISTO PARA STABLE DIFFUSION!!!!!") 
-            
             #STABLE DIFFUSION
             print("Iniciando Stable Difussion...")
             #Los valores ya estarán guardados en el excel, resultado solo reportará si hay imagen o no.
             resultado = tools.stableDiffuse(client, imagenSource, imagenPosition, prompt)
             print("El resultado de predict fue: ", resultado)
-            time.sleep(3)
-            
+                        
             #Aquí cambiaremos a que también pueda regresar PAUSED, que significa que nada adicional se puede hacer.  
             if resultado == "api apagada":
                 print("Me quedé en la foto_path: ", foto_path)
@@ -278,7 +275,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                     configuracion.waited = True
                     #break #Se va a donde acaba el for de 4.
                 else: 
-                    
                     configuracion.waited = False
                     #break                
             else: 
@@ -323,11 +319,10 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                 tools.guardarResultado(dataframe, imagenSource, foto_path, target_dir, mensaje)
                 
             print("Salí del if instance...")
-
-                #AQUÍ TERMINA EL PROCESO QUE BIEN PODRÍAMOS REPETIR 4 VECES.
+            #AQUÍ TERMINA EL PROCESO QUE BIEN PODRÍAMOS REPETIR 4 VECES.
 
             #Revisa si éste for debería tener un try-except.
-            print("Salí del for de 4....")
+            print("Salí del for de n cantidad de samples....")
             #Aquí llega el break si la API estaba apagada, habiendo esperado o no."        
             
             if configuracion.api_apagada == True:
@@ -338,10 +333,10 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                     #Si estaba apagada y no esperaste, salte totalmente con el segundo break...
                     print("Como el problema fue que la API estaba apagada, volveré a saltar hacia un break.")
                     #break
-            else:
-                #Si la API no estaba apagada, éste es el camino normal.
-                contador =+ 1
-                #Future: CHecar si éste contador se usa.
+            # else:
+            #     #Si la API no estaba apagada, éste es el camino normal.
+            #     contador =+ 1
+            #     #Future: CHecar si éste contador se usa.
 
     except KeyboardInterrupt:
         print("Me quedé en la foto_path: ", foto_path)
@@ -374,24 +369,23 @@ def getNotLoaded(dataframe):
     return lista_de_files
 
 def getMissing():
-
+    print("Estoy ejecutando getMissing...")
+    print("Para obtener los archivos que nos falta hacer.")
+    time.sleep(5)
     #Obtiene todas las faltantes para el proceso de FullProcess.
     filename = configuracion.sesion + '.xlsx'
-
     dataframe = pd.read_excel(globales.excel_results_path + filename)
         
     # Filter rows where 'Download Status' is 'Success' and 'Diffusion Status' is empty
     df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
+    #Future: ¿Agregar concurrent.base?
     
     nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
-    print(f"Faltan por hacer: {len(nan_df)} imagenes...")
+    print(f"Faltan por hacer: {len(nan_df)} imágenes...")
+    time.sleep(35)
     
     columna_imagenes = nan_df['File'].to_list()
-
-    # Print the columna_imagenes list
-    print(columna_imagenes)
-    print(len(columna_imagenes))
 
     return columna_imagenes
 
@@ -408,8 +402,7 @@ def generaIDImagen(foto_url):
     siguiente = partes[1].split('/')
     #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
     
-    nombre = siguiente[0].replace("-", "")
-    
+    nombre = siguiente[0].replace("-", "")    
     image_id = f"{nombre}.png"
     print("El nombre de la imagen es: ", image_id)
 
@@ -476,29 +469,21 @@ def guardarRegistro(dataframe, foto_dir, creacion, shot):
     Returns:
     bool: True si se guardó el archivo correctamente.
     """
-
-    # nombre, extension = foto_dir.split(".")
-    # filename = nombre + "-" + "t" + str(take) + "." + extension
-
     #Future: Poner bandera para que si la celda ya tiene un valor, no lo sustituya éste proceso.
     
-    print("Ya dentro de guardar registro repasaremos cada atributo de la creación:")
-    
+    print("Ya dentro de guardar registro repasaremos cada atributo de la creación:")    
     #Después cada atributo
     for nombre_atributo in dir(creacion):
         # Verificar si el nombre es un atributo real
         if not nombre_atributo.startswith("__"):
             valor_atributo = getattr(creacion, nombre_atributo)
-            print(f"Atributo: {nombre_atributo}, Valor: {valor_atributo}")
-            
+            print(f"Atributo: {nombre_atributo}, Valor: {valor_atributo}")            
             
             #File es la columna donde busca, filename lo que está buscando, nombre_atributo la col donde guardará y valor lo que guardará.
             actualizaRow(dataframe, 'File', foto_dir, nombre_atributo, valor_atributo)
 
     #Y al final el shot: 
     actualizaRow(dataframe, 'File', foto_dir, 'Shot', shot)
-
-    #Es esto la línea universal para guardar el excel? = Si, si lo es :) 
     df2Excel(dataframe, configuracion.sesion + '.xlsx')
 
 def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido): 
@@ -530,9 +515,12 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
         print(f"Voy a guardar en el index de éste indicador: {indicador} en ésta colúmna: {receiving_col}")
         #Future: Siempre y cuando esté vacía, si no, dejo lo que estaba.
         print("Estoy en actualizaRow y antes de actualizar, quiero ver que contenido tiene:")
+        print("Index..... ")
         print(dataframe.loc[index, receiving_col])
         valor = dataframe.loc[index[0], receiving_col]
         print("Éste es el valor: ", valor)
+
+        #En el caso de venir desde carruselStable siempre será Nan porque todas las encontradas tenían ese proposito.
                 
         # if pd.isnull(valor):
         #     #Solo si el contenido es Nan escribirá, si no, lo dejará así.
@@ -561,14 +549,8 @@ def randomNull(probabilidad, lista):
     return result
 
 def stableDiffuse(client, imagenSource, imagenPosition, prompt):
-    
-    #Los dos iguales.
-    #Revisar si se puede subir el hf_token.
-
+ 
     #Hacer primer contacto con API, ésto ayudará a saber si está apagada y prenderla automáticamente.
-
-    print("182: Entré a stablediff:...")
-
     try:
         #Usando Moibe Splashmix
         print("Estoy adentro, donde se usaba el cliente...")
@@ -651,8 +633,7 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
     ruta_absoluta = ""
 
     if message == "Completed":
-        #ENTONCES SI HAY UNA IMAGEN QUE GUARDAR EN DISCO DURO.
-        
+        #ENTONCES SI HAY UNA IMAGEN QUE GUARDAR EN DISCO DURO.        
         ruta_total = os.path.join(ruta_final, filename)
         print("El resultado del SD fue exitoso, y su ruta total es/será: ", ruta_total)
         raiz_pc = os.getcwd()
@@ -660,7 +641,7 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
         print("Local path:", ruta_absoluta)
                 
         ruta_imagen_local = result[0] 
-        print("La ruta de gradio en result[0] es: ", ruta_imagen_local)
+        #print("La ruta de gradio en result[0] es: ", ruta_imagen_local)
         
         #IMPORTANTE, GUARDANDO EN DISCO DURO.
         with open(ruta_imagen_local, "rb") as archivo_lectura:
@@ -669,8 +650,7 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
         with open(ruta_total, "wb") as archivo_escritura:
             archivo_escritura.write(contenido_imagen)
             print(f"Imagen guardada correctamente en: {ruta_total}")
-            print("Estamos por actualizar excel...")
-            
+                        
     #FUTURE: Ésto se tiene que hacer dinámicamente.
 
     #Después, haya o no guardado en disco duro, registrará que terminó en el excel.

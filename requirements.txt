@@ -1,0 +1,6 @@
+gradio_client
+requests
+pandas
+importlib
+openpyxl
+paramiko

@@ -19,41 +19,4 @@ api_apagada = False
 # waited = False
 
 # wait_time = 500
-
-foto_path = 'C4D03AQFOR1F2Z5GmeA-t1.png'
-
-foto_path = 'C4D03AQFSEmDZbeG_ng-t1.png'
-
-foto_path = 'C4D03AQFiGWMwC7HeWQ-t1.png'
-
-foto_path = 'C4D03AQFihRIN_g7klA-t1.png'
-
-foto_path = 'C4D03AQFSEmDZbeG_ng-t1.png'
-
-foto_path = 'C4D03AQExFZDXyRo8PQ-t1.png'
-
-foto_path = 'C4D03AQGf_0Xkz9Qw-t1.png'
-
-foto_path = 'C4D03AQFXJ9GKgRNDnA-t1.png'
-
-foto_path = 'C4D03AQFpyhj2PCgSRA-t1.png'
-
-foto_path = 'C4D03AQFHRpEnL1gNw-t1.png'
-
-foto_path = 'C4D03AQGmAcaI0ddtxQ-t1.png'
-
-foto_path = 'C4D03AQEGT_ppOLjpcQ-t1.png'
-
-foto_path = 'C4D03AQFYoKNizhQ3GQ-t1.png'
-
-foto_path = 'C4D03AQE9wTjBle6Z8Q-t1.png'
-
-foto_path = 'C4D03AQEC5HLOIZESlw-t1.png'
-
-foto_path = 'C4D03AQEzgfqnzoxjbw-t1.png'
-
-foto_path = 'C4D03AQFLDQEyFQLhKw-t1.png'
-
-foto_path = 'C4D03AQFXJ9GKgRNDnA-t1.png'
-
-foto_path = 'C4E03AQE2Uht1exaPxw-t1.png'
+foto_path = 'C5603AQFy6WwrtLhlhQ-t1.png'

@@ -13,7 +13,6 @@ sesion = configuracion.sesion
 #filename = configuracion.filename
 
 print("Bienvenido, iniciaremos el proceso de cargado.")
-time.sleep(1)
 print(f"La sesión es: {sesion}.")
 time.sleep(1)
 

@@ -144,12 +144,12 @@ def fullProcess(sesion):
     """
     dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
 
-    #FUTURE: Incluir espera por excel abierto también aquí.
+    #FUTURE: Incluir espera por excel abierto también aquí. OK!!!
     #Future, que el proceso detecte si no hay internet para no quedarse ciclado.
 
+    #FUTURE: Ruta origen y destino que vengan de globales.
     #Origen
-    ruta_origen = os.path.join('imagenes', 'fuentes', sesion)    
-
+    ruta_origen = os.path.join('imagenes', 'fuentes', sesion)
     #Destino
     ruta_destino = sesion + "-results"
     target_dir = os.path.join('imagenes', 'resultados', ruta_destino)
@@ -167,6 +167,5 @@ def fullProcess(sesion):
     #...columnas basado en el archivo donde se quedó. Simplemente hará todas aquellas que no se han procesado!
     columna_imagenes = tools.getMissing() 
 
+    #El carrusel ya entra con las columnas especificas con las que va a trabajar.
     tools.carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe)
- 
-

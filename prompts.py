@@ -7,7 +7,7 @@ class Prompt:
     def __init__(self, style=None):
         databank = data_heroes
         self.style = style or random.choice(databank.lista_estilos)
-        print("El estilo será: ", self.style)       
+        print("El estilo fué: ", self.style)       
 
 #Aplica la función randomNull para aquellos valores de una lista en donde deseas que también exista la posibilidad...
 #...de que no regrese nada.
@@ -22,7 +22,7 @@ class Superhero(Prompt):
         #Random null es una función que regresa al sujeto pero también puede no regresar nada, añadir q probabilidades...
         #de que eso suceda se desean.
         self.subject = subject or tools.randomNull(0.2, databank.lista_subjects)
-        print("El heroe será: ", self.subject)
+        print("El heroe fué: ", self.subject)
                 
 class Hotgirl(Prompt):
     def __init__(self,
@@ -57,19 +57,3 @@ class Hotgirl(Prompt):
         self.situacion = situacion or random.choice(databank.lista_situacion)
         self.place = place or random.choice(databank.lista_place)
         self.complemento = complemento or random.choice(databank.lista_complemento)
-
-        # print(f"**Character Description:**")
-        # print(f"- Style: {self.style}")
-        # print(f"- Adjective: {self.adjective}")
-        # print(f"- Type of girl: {self.type_girl}")
-        # print(f"- Hair style: {self.hair_style}")
-        # print(f"- Boobs: {self.boobs}")
-        # print(f"- Wardrobe top: {self.wardrobe_top}")
-        # print(f"- Wardrobe accessories: {self.wardrobe_accesories}")
-        # print(f"- Wardrobe bottom: {self.wardrobe_bottom}")
-        # print(f"- Wardrobe shoes: {self.wardrobe_shoes}")
-        # print(f"- Situation: {self.situacion}")
-        # print(f"- Place: {self.place}")
-        # print(f"- Complemento: {self.complemento}")
-
-       
