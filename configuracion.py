@@ -20,3 +20,9 @@ api_apagada = False
 
 # wait_time = 500
 foto_path = 'C5603AQFy6WwrtLhlhQ-t1.png'
+
+foto_path = 'C5603AQG8afHqUNErdw-t1.png'
+
+foto_path = 'C5603AQG9Qo3Mt8MZw-t1.png'
+
+foto_path = 'C5603AQH1xuhLf3Y74w-t1.png'

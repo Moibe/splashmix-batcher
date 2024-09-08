@@ -13,17 +13,19 @@ sesion = configuracion.sesion
 #filename = configuracion.filename
 
 print("Bienvenido, iniciaremos el proceso de cargado.")
-time.sleep(1)
 print(f"La sesión es: {sesion}.")
 time.sleep(1)
 
 #Si se usa una lista de EXCEL.
 if configuracion.excel_list == True:
     filename = sesion + '.xlsx'
+
+    #FUTURE: Separar puntos A de B.
     
     #A. Crea el directorio donde se recibirán las imagenes.
     #Si se usará un excel con urls, entonces creará un directorio para recibirlos.
     #pretools.creaDirectorioInicial(sesion)
+    #Future: Considerar si crea Directorio Inicial pudiera meterse a B (creaExcel).
     #Crea el excel con sus campos respectivos e importante, la última adición:
     #primero creo aquí la columna con los nombres, para que sea más fácil de ubicar al descargar imagenes y reiniciar el proceso.
     #Future: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
@@ -31,6 +33,7 @@ if configuracion.excel_list == True:
     #B.- Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.
     print("A continuación crearemos el archivo de excel que contendrá los resultados...")
     respuesta = input("Presiona cualquier tecla para continuar: ")
+    #FUTURE: ¿Es necesario guardarlo en respuesta?
     pretools.creaExcel(filename)
 
     #Descarga las imagenes source indicadas en el excel(dataframe) y las baja al directorio en disco.

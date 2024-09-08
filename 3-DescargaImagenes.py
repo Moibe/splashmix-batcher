@@ -13,7 +13,6 @@ sesion = configuracion.sesion
 #filename = configuracion.filename
 
 print("Bienvenido, iniciaremos el proceso de cargado.")
-time.sleep(1)
 print(f"La sesión es: {sesion}.")
 time.sleep(1)
 
@@ -47,3 +46,5 @@ else:
 
 #Finalmente crea los directorios necesarios.
 pretools.creaDirectorioResults(sesion)
+
+#Crear una función que suba las imagenes de perfil de Linkedin a un servidor propio.

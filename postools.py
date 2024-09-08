@@ -13,7 +13,9 @@ import prompter
 import tools
 import globales
 
+#Future: Quitar todos los imports innecesarios.
 def subirTodo(excel, sesion, directorio_remoto):
+    #Future: ¿Volver uno solo a subirTodo y sube? ¿o cuál es la razón para separarlo?
 
     #Primero extraemos el dataframe:
     dataframe = pd.read_excel(excel)  
@@ -29,7 +31,7 @@ def subirTodo(excel, sesion, directorio_remoto):
     print(f"El directorio receptor será entonces: {directorio_receptor} y su tipo es: {type(directorio_receptor)}")
     
     #Define ruta de la carpeta local donde se encuentran los resultados.
-    carpeta_local = 'imagenes\\resultados\\' + sesion + '-results'
+    carpeta_local = globales.imagenes_folder_resultados + sesion + '-results'
     
     #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
     servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)

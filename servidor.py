@@ -6,13 +6,14 @@ import configuracion
 import pretools, postools
 import nycklar.nodes as nodes
 
+#Future: Revisar cuanto se parece servidor a SulkuPypi para que lo conviertas en ello.
 def conecta(): 
 
     #Digital Signature.
     ssh = paramiko.SSHClient()
     ssh.load_host_keys("nycklar/itrst")
 
-    #Ahora obtendremos nuestra secret key para poder entrar a ese servidor.
+    #Ahora obtendremos nuestra sk para poder entrar a ese servidor.
     project_dir = os.getcwd()
     key_filename = os.path.join(project_dir, "nycklar", "go")
 
@@ -74,14 +75,9 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
                 
   finally:
       pass
+      #Future: Revisar si va éste finally.
   
-  # Subir los resultados al servidor remoto
-  # print("Vamos a repasar los archivos de la carpeta local que se encuentra en: ", carpeta_local)
-  # resultados = os.listdir(carpeta_local)
-  # print("Ésto es la lista de resultados como la usabamos antes:")
-  # print(resultados)
-  
-  #AHORA NECESITAMOS QUE LA LISTA SALGA DELE EXCEL..
+  #AHORA NECESITAMOS QUE LA LISTA SALGA DEL EXCEL...
   print("Ahora vamos a obtener los resultados via la nueva función getNotLoaded()...")
   resultados = tools.getNotLoaded(dataframe)
     

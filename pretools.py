@@ -50,15 +50,13 @@ def creaExcel(filename):
     if not os.path.exists(globales.excel_results_path + configuracion.sesion + '.xlsx'):
 
         print("El archivo de excel no existe, se creará en éste momento.")
-        time.sleep(2)
-
-        #Lee el archivo de excel origen...
         dataframe = pd.read_excel(globales.excel_source_path + filename)        
 
         #Si no existe, entonces si hacemos toda la estructura inicial.
         #Importante: Crea las nuevas columnas que necesitará:
         #Future, revisa si podría no crearlas, ya vez que actualizaRow las crea al vuelo.
         #Future Importante: Checa al crear un archivo nuevo si agregar File Path afecto en algo.
+        #Future: Y checa si crear URL, afecta algo.
         dataframe['Source Path'] = ''
         dataframe['Source URL'] = ''
         dataframe['Name'] = ''
@@ -67,6 +65,7 @@ def creaExcel(filename):
         dataframe['File'] = ''
         dataframe['File Path'] = ''
         dataframe['Diffusion Status'] = ''
+        dataframe['URL'] = ''
 
         #Ve si afecta actualizar el excel antes de entregar el dataframe.
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
@@ -187,8 +186,7 @@ def descargaImagenes(sesion):
         
         #Si ya existía traera Nan en los vacios.
         print("El archivo ya existía y estoy checando sus Nans en Download Status.")
-        time.sleep(3)
-
+        
         # Filtra las filas donde 'Download Status' es igual a 'Success'
         por_procesar = dataframe[dataframe['Download Status'].isna()]
    
@@ -201,9 +199,8 @@ def descargaImagenes(sesion):
         print(dataframe)
         por_procesar = dataframe[dataframe['Download Status'] == '']
         print("Por procesar quedó así:")
-        time.sleep(1)
         print(por_procesar)
-        time.sleep(2)
+        time.sleep(3)
                       
     cantidad_faltante = len(por_procesar)
     print(f"Por procesar tiene {cantidad_faltante} elementos.")

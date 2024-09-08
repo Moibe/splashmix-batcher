@@ -168,4 +168,5 @@ def fullProcess(sesion):
     columna_imagenes = tools.getMissing() 
 
     #El carrusel ya entra con las columnas especificas con las que va a trabajar.
+    #Future: Analizar los Neg Prompt del programa, si te son útiles, si son útiles y/o si se deben editar.
     tools.carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe)

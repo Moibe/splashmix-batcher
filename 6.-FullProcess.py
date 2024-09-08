@@ -29,8 +29,3 @@ filename = configuracion.sesion + '.xlsx'
 #... y a las que tuvieron errores.)
 intertools.fullProcess(sesion)
 #FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
-#Future: Analizar los Neg Prompt del programa, si te son útiles, si son útiles y/o si se deben editar.
-
-#Finaliza Excel después de preproducción.
-#print("Y aquí vamos a guardar el excel porque es lo correcto, porque YA TERMINAMOS!!!!...")
-#pretools.df2Excel(dataframe, configuracion.filename)

@@ -34,6 +34,8 @@ def obtenerArchivoOrigen(foto_path):
 
 def preparaColumnaImagenes(dataframe, inicial):
         
+        #FUTURE: Ver si ya no es necesaria ésta función.
+        
         print("Entré a prepara columna imagenes..., e inicial es: ", inicial)
     
         #Va todo en un try para que podamos guardar el dataframe en un excel en caso de interrupción del ciclo:
@@ -172,8 +174,8 @@ def df2Excel(dataframe, filename):
 
 def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe): 
     print("Entré a carruselStable, ")
-    print("El len de carrusel stable es: ", len(carruselStable))
-    time.sleep(3)
+    print("El len de carrusel stable es: ", len(columna_imagenes))
+    time.sleep(1)
 
     try:    
         #ÉSTE ES EL CLIENT CORRECTO!!!!
@@ -183,8 +185,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
 
-            print("*****")
-            print("*****")
             print("*****")
             print("*****")
             print("*****")
@@ -210,14 +210,10 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             print("---")
             print("---")
             print("---")
-            print("---")
-            print("---")
             print("Iniciando una nueva creación...")
-            print("Esto es el contenedor con el que trabajaremos...>")
             print(contenedor)                         
 
             #AHORA CREA EL PROMPT
-            print("El contenedor es: ", contenedor)
             print("Configuración. creación es: ", configuracion.creacion)
             prompt = prompter.creaPrompt(contenedor, configuracion.creacion)
             
@@ -283,7 +279,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #PROCESO DESPÚES DE QUE YA TERMINÓ EL STABLE DIFUSSE:
             #SI PROCESO CORRECTAMENTE SERÁ UNA TUPLA.        
             if isinstance(resultado, tuple):
-                print("Es una tupla: ", resultado)
+                #ES UNA TUPLA:
                 print(f"IMPORTANTE: Vamos a guardar el resultado, y la ruta_final o destino es {target_dir} y es del tipo: {type(target_dir)}...")
                 
                 #Future: guardar Resultado ahora debe pasar el diccionario de atributos y después usarlo adentro en actualiza Row.
@@ -293,13 +289,12 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #NO PROCESO CORRECTAMENTE NO GENERA UNA TUPLA.
             #CORRIGE IMPORTANTE: QUE NO SE SALGA DEL CICLO DE ESA IMAGEN AL ENCONTRAR ERROR.
             else:
-                print("No es una tupla: ", resultado)
-                print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))
-                
+                #NO ES UNA TUPLA:
+                print("El tipo del resultado cuando no fue una tupla es: ", type(resultado))                
                 texto = str(resultado)
                 segmentado = texto.split('exception:')
                 print("Segmentado es una posible causa de error, analiza segmentado es: ", segmentado)
-                ###FUTURE: Agregar que si tuvo problemas con la imagen de referencia, agregue en un 
+                #FUTURE: Agregar que si tuvo problemas con la imagen de referencia, agregue en un 
                 #Log de errores porque ya no lo hará en el excel, porque le dará la oportunidad con otra 
                 #imagen de posición.
                 try:
@@ -353,17 +348,20 @@ def getNotLoaded(dataframe):
 
     print("Estamos en la función getNotLoaded()...")
     print("EL tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
-      
+    time.sleep(8)      
     
     df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
+    #Lista de las imagenes que SI hicieron una Stable Diffusion. 
     print("El tamaño del dataframe df_images_ok es: ", len(df_images_ok))
     
     print("Ahora basado en ese filtraremos de nuevo...")
+
     df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
+    #Lista de los completados que no tienen aún una URL o sea que no es nula.
     print("Y su tamaño es de df_images_toUpload es: ", len(df_images_toUpload) )
     
-
     lista_de_files = df_images_toUpload['File'].tolist()
+    #Lista de ya los nombres de los archivos. 
     print("El tamaño de la lista fina a imprimir es:", len(lista_de_files))
 
     return lista_de_files
@@ -371,7 +369,7 @@ def getNotLoaded(dataframe):
 def getMissing():
     print("Estoy ejecutando getMissing...")
     print("Para obtener los archivos que nos falta hacer.")
-    time.sleep(5)
+    time.sleep(3)
     #Obtiene todas las faltantes para el proceso de FullProcess.
     filename = configuracion.sesion + '.xlsx'
     dataframe = pd.read_excel(globales.excel_results_path + filename)
@@ -383,7 +381,7 @@ def getMissing():
     nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
     print(f"Faltan por hacer: {len(nan_df)} imágenes...")
-    time.sleep(35)
+    time.sleep(10)
     
     columna_imagenes = nan_df['File'].to_list()
 
