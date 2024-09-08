@@ -73,9 +73,9 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
         # Mensaje de error
         print(f"Error al crear el directorio, probablemente ya existe: {e}")
                 
-  finally:
-      pass
-      #Future: Revisar si va éste finally.
+  # finally:
+  #     pass
+  #     #Future: Revisar si va éste finally.
   
   #AHORA NECESITAMOS QUE LA LISTA SALGA DEL EXCEL...
   print("Ahora vamos a obtener los resultados via la nueva función getNotLoaded()...")

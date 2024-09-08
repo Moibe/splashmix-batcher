@@ -9,8 +9,6 @@ import servidor
 import nycklar.nodes as nodes
 import configuracion
 from prompts import Prompt, Superhero, Hotgirl
-import prompter
-import tools
 import globales
 
 #Future: Quitar todos los imports innecesarios.
@@ -36,8 +34,11 @@ def subirTodo(excel, sesion, directorio_remoto):
     #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
     servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
     print("Salí de sube...")
+    time.sleep(18)
     
     #Future: que la conexión también se cierre ante interrupciones de excel.
+    print("Cerrando conexión...")
     servidor.cierraConexion(ssh, sftp)
+    time.sleep(3)
 
     return dataframe

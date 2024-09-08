@@ -1,0 +1,2 @@
+#Éste archivo deberá checar todos los archivos fisicos de la computadora vs lo que reporta el excel. 
+#Ésto debido a que al terminar el newBatch, hay una discrepancia, teniendo dos más en el excel que supuestamente no están en DD.
