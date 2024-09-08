@@ -33,7 +33,8 @@ def sampler(sesion, inicial=None):
     try:
 
         #Filtra las filas donde 'Download Status' es igual a 'Success'
-        df_images_ok = tools.funcionFiltradora(dataframe, 'Download Status', 'Success')
+        #Importante: O para ésta caso especia, solamente los 'From Archive' no todos!
+        df_images_ok = tools.funcionFiltradora(dataframe, 'Download Status', 'Success', 'From Archive')
 
         #Future haz una función creadora de Columnas.
         # Crea un dataset 'columna_imagenes' a partir de la columna 'Nombre'

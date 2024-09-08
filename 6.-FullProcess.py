@@ -4,10 +4,10 @@ import pandas as pd
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
 
+#Si varios ciclos comparten éstas variables, házlas globales.
 base_url = globales.base_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
-#Por ejemplo https://dominio.com/results/minitest
 filename = configuracion.sesion + '.xlsx'
 
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
@@ -29,3 +29,5 @@ filename = configuracion.sesion + '.xlsx'
 #... y a las que tuvieron errores.)
 intertools.fullProcess(sesion)
 #FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
+
+#Future, hace prueba de si en dos terminales distintas se puede hacer el proceso 6 (stable diffusion) y el proceso 7 upload.

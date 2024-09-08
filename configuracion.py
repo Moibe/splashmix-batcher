@@ -26,3 +26,5 @@ foto_path = 'C5603AQG8afHqUNErdw-t1.png'
 foto_path = 'C5603AQG9Qo3Mt8MZw-t1.png'
 
 foto_path = 'C5603AQH1xuhLf3Y74w-t1.png'
+
+foto_path = 'D4E03AQGEGOpnCIeRkQ-t1.png'

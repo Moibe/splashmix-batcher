@@ -68,7 +68,7 @@ lista_subjects = ["Aquaman",
                   "Flash", 
                   "Flash", 
                   "Robin",
-                  "Unmasked Robin"
+                  "Unmasked Robin",
                   "Watchmen Ozymandias",
                   "Wade Wilson Deadpool", 
                   "Unmasked Deadpool",

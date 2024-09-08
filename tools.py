@@ -189,17 +189,17 @@ def df2Excel(dataframe, filename):
 def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe): 
     print("Entré a carruselStable, ")
     print("El len de carrusel stable es: ", len(columna_imagenes))
-    time.sleep(1)
-
+    
     try:    
         #ÉSTE ES EL CLIENT CORRECTO!!!!
         #Así solo entrará al cliente una vez y no cada que de vuelta el for.
+        #FUTURE, importante, aquí es donde se arranca la API cuando está dormida.
+        #... hacer función que exclusivamente la despierte.
         client = gradio_client.Client("Moibe/splashmix", hf_token=nodes.splashmix_token)
 
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
 
-            print("*****")
             print("*****")
             print("*****")
             print(f"{i} de {len(columna_imagenes)}.")  
@@ -420,10 +420,18 @@ def generaIDImagen(foto_url):
 
     return image_id
 
-def funcionFiltradora(dataframe, columnaAFiltrar, textoFiltro):
+def funcionFiltradora(dataframe, columnaAFiltrar, textoFiltro, textoFiltro2):
 
-    df_images_ok = dataframe[dataframe[columnaAFiltrar] == textoFiltro] 
-    print("La cantidad de imagenes Success son: ", len(df_images_ok))
+    #df_images_ok = dataframe[dataframe[columnaAFiltrar] == textoFiltro] 
+
+    textoFiltro2 = None  # Inicializamos textoFiltro2 a None (opcional)
+
+    df_images_ok = dataframe[(dataframe[columnaAFiltrar] == textoFiltro) |
+                          (textoFiltro2 is not None and dataframe[columnaAFiltrar] == textoFiltro2)]
+
+
+
+    print(f"La cantidad de imagenes {textoFiltro} son: {len(df_images_ok)}")
 
     return df_images_ok
 

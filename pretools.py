@@ -354,12 +354,14 @@ def preparaSamples(filename, samples):
     dataframe = pd.read_excel(globales.excel_results_path + filename) 
     print("La cantidad de rows en el dataframe son: ", len(dataframe))  
     
-    #Filtra las filas donde 'Download Status' es igual a 'Success'
-    #Parámetros: dataframe, columnaAFiltrar, textoFiltro
-    rowsFiltrados = tools.funcionFiltradora(dataframe, 'Download Status', 'Success') 
+    #Filtra las filas donde 'Download Status' es igual a 'Success' o 'From Archive'
+    #Parámetros: dataframe, columnaAFiltrar, textoFiltro, textoFiltro2
+    #Future, agregar filtros ilimitados con *kwargs.
+    #IMPORTANTE: MUY IMPORTANTE. Si vas a llenar solo los From Archive, quite del filtro a Success.
+    #En ocasiones posteriores no deberá pasar ésto porque se harán los dos al mismo tiempo.
+    rowsFiltrados = tools.funcionFiltradora(dataframe, 'Download Status', 'Success', 'From Archive') 
 
     print("Ahora voy a imprimir rowsFiltrados, que tienen el tamaño:", len(rowsFiltrados))
-    time.sleep(1)
     
     #Future: Hacer una función que seleccione las columna/s a usar.
     df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source']]

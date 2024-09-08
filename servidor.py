@@ -117,14 +117,13 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
             print(f"La RUTA_DESTINO después del join quedó así: {ruta_destino}.")
                       
             #Sube la imagen.
-            print(f"La ruta origen es: {ruta_origen}, y su tipo es: {type(ruta_origen)}.")
-            print(f"La ruta destino es: {ruta_destino}, y su tipo es: {type(ruta_destino)}.")
+            print(f"La ruta origen es: {ruta_origen}.")
+            print(f"La ruta destino es: {ruta_destino}.")
             
             sftp.put(ruta_origen, ruta_destino)
             print(f"¡La imagen {imagen} se ha sido subido al servidor!")
             print("---")
-            print("---")
-                       
+            
             ruta_completa = directorio_remoto + '/' + imagen
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             
