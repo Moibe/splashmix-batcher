@@ -167,9 +167,23 @@ def df2Excel(dataframe, filename):
     ruta_archivo = os.path.join(ruta_excel, filename)
     print("Ésto es la ruta archivo: ", ruta_archivo)
 
-    # Guarda el DataFrame con la nueva columna en el archivo Excel
-    dataframe.to_excel(ruta_archivo, index=False)
+    try:
+        #Éste try except tiene el proposito de cachar el error de excel abierto desde dentro de df2Excel para que solo exista una vez.
 
+        # Guarda el DataFrame con la nueva columna en el archivo Excel
+        dataframe.to_excel(ruta_archivo, index=False)
+    except Exception as e:
+                #print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
+                print("Excepción 182...")
+                print(e)
+                print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
+                input("Presiona cualquier tecla para continuar: ")
+                print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
+                #FUTURE: Quitar ésto de los otros lados ya que ahora se maneja internamente.
+                #¿se podrá ésta autorecursión?
+                #Si se puede, pero para que continúe el proceso necesitarías aplicar el while.
+                #FUTURE: Poner dicho  while...
+                tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
     return True
 
 def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe): 
@@ -347,8 +361,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
 def getNotLoaded(dataframe):
 
     print("Estamos en la función getNotLoaded()...")
-    print("EL tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
-    time.sleep(8)      
+    print("El tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
     
     df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
     #Lista de las imagenes que SI hicieron una Stable Diffusion. 
@@ -363,6 +376,7 @@ def getNotLoaded(dataframe):
     lista_de_files = df_images_toUpload['File'].tolist()
     #Lista de ya los nombres de los archivos. 
     print("El tamaño de la lista fina a imprimir es:", len(lista_de_files))
+    time.sleep(6)
 
     return lista_de_files
 

@@ -37,6 +37,7 @@ def subirTodo(excel, sesion, directorio_remoto):
     servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
     print("Salí de sube...")
     
+    #Future: que la conexión también se cierre ante interrupciones de excel.
     servidor.cierraConexion(ssh, sftp)
 
     return dataframe

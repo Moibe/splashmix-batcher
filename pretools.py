@@ -145,6 +145,7 @@ def creaExcel(filename):
                 y = i
                 input("Presiona cualquier tecla para continuar: ")
                 print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
+                #FUTURE: Haz que la excepción de excel abierto viva una sola vez, dentro de la función df2Excel.
                 tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
 
         except KeyboardInterrupt:

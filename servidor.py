@@ -3,7 +3,7 @@ import time
 import tools
 import paramiko
 import configuracion 
-import pretools, postools
+import tools
 import nycklar.nodes as nodes
 
 #Future: Revisar cuanto se parece servidor a SulkuPypi para que lo conviertas en ello.
@@ -101,7 +101,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
                         
             #Origen
             ruta_origen = os.path.join(os.getcwd(), carpeta_local, imagen)
-            print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen} y su tipo es: {type(ruta_origen)}.")
+            print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen}.")
            
             #Destino
             nuevo_directorio_receptor = directorio_receptor.replace("/", "\\")
@@ -114,7 +114,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
 
             ruta_destino = ruta_destino.replace("\\", "/")
            
-            print(f"La RUTA_DESTINO después del join quedó así: {ruta_destino} y su tipo es: {type(ruta_destino)}.")
+            print(f"La RUTA_DESTINO después del join quedó así: {ruta_destino}.")
                       
             #Sube la imagen.
             print(f"La ruta origen es: {ruta_origen}, y su tipo es: {type(ruta_origen)}.")
@@ -129,7 +129,7 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             
             #dataframe, columna indexadora, index, columna_receptora, url.
-            postools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
+            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)
@@ -143,16 +143,15 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
         # Revisar y corregir en caso de ser necesario.
         mensaje = f"OJO: Error al subir un archivo: {e}"
         print(mensaje)
-        print("XXXXXXXX")
-        excepcion = "SI hubo excepción."
+        excepcion = "Si hubo excepción."
         print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
-        pretools.df2Excel(dataframe, configuracion.filename)
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
         
         #return f"OJO: Error al subir un archivo: {e}"
 
   except KeyboardInterrupt:
-      print("KEYBOARD: Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.filename)
-      pretools.df2Excel(dataframe, configuracion.filename)
+      print("KEYBOARD: Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.sesion + '.xlsx')
+      tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
       
   finally: 
       print("Entré al finally del ciclo que repasa cada imagen, solo se llega aquí si hubo excepción...", excepcion)
