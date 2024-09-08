@@ -16,10 +16,6 @@ filename = configuracion.sesion + '.xlsx'
 #Future: Las características importantes deberían pasarse desde aquí... (que objeto, etc.)
 #inicial indica el archivo desde donde debe empezar.
 
-#Importante: Preprocess es la que llena los ATRIBUTOS!!!!
-#inicial="nombre_imagen.jpg" cuando quieras empezar desde uno en particular.
-#intertools.sampler(sesion)
-
 #FULL ES LA QUE HACE EL STABLE DIFF
 #Future: Corregir para que empiece exacto.
 #Debes de poner en inicial LA ULTIMA QUE SI SE HIZO... si quieres inicial va así: inicial="IsaRomo-t1.jpg"

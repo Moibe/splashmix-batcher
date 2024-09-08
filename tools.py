@@ -383,15 +383,17 @@ def getNotLoaded(dataframe):
 def getMissing():
     print("Estoy ejecutando getMissing...")
     print("Para obtener los archivos que nos falta hacer.")
-    time.sleep(3)
     #Obtiene todas las faltantes para el proceso de FullProcess.
     filename = configuracion.sesion + '.xlsx'
     dataframe = pd.read_excel(globales.excel_results_path + filename)
         
     # Filter rows where 'Download Status' is 'Success' and 'Diffusion Status' is empty
-    df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
-    #Future: ¿Agregar concurrent.base?
+    #df_images_ok = dataframe[dataframe['Download Status'] == 'Success'] 
     
+    df_images_ok = dataframe[(dataframe['Download Status'] == 'Success') | 
+                          (dataframe['Download Status'] == 'From Archive')]
+    
+    #Future: ¿Agregar concurrent.base? OK!
     nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
     print(f"Faltan por hacer: {len(nan_df)} imágenes...")
