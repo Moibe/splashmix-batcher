@@ -155,6 +155,8 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   finally: 
       print("Entré al finally del ciclo que repasa cada imagen, solo se llega aquí si hubo excepción...", excepcion)
       contador += 1
+      #Si acabas el ciclo, también guarda el excel!!
+      tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
   
 def cierraConexion(ssh, sftp):
 

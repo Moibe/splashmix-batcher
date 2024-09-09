@@ -13,5 +13,5 @@ dataframe = postools.subirTodo(excel, sesion, directorio_remoto)
 
 #Finaliza excel después de postproducción.
 #Future: Ver si aún es necesario éste excel.
-print("Si llegó al final, imprimiendo excel, donde excel es: ", configuracion.sesion + '.xlsx')
-tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+# print("Si llegó al final, imprimiendo excel, donde excel es: ", configuracion.sesion + '.xlsx')
+# tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')

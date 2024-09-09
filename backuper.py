@@ -1,0 +1,1 @@
+#El propósito de éste archivo es hacer backups de lo qu e se pudiera perder como los archivos de excel con sampleos o con resultados.

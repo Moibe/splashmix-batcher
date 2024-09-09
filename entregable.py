@@ -1,0 +1,2 @@
+#Hacer un programa que usando el excel final, genere uno nuevo que será el entregable, ya sin los campos innecesarios.
+#También considerar en el futuro guardar todos estos datos en una base en lugar de exceles.

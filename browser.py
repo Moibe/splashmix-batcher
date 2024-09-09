@@ -1,0 +1,1 @@
+#Haz una herramienta que muestre en navegador o en opencv una serie de imagenes a revisar.

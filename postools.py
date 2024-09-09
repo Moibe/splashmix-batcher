@@ -34,11 +34,12 @@ def subirTodo(excel, sesion, directorio_remoto):
     #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
     servidor.sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
     print("Salí de sube...")
-    time.sleep(18)
-    
+    time.sleep(1)
+    #FUTURE: Poner un while para que después de fallo continue el ciclo de seguir subiendo.
+
     #Future: que la conexión también se cierre ante interrupciones de excel.
     print("Cerrando conexión...")
     servidor.cierraConexion(ssh, sftp)
-    time.sleep(3)
+    time.sleep(1)
 
     return dataframe
