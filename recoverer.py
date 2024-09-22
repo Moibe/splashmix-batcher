@@ -1,7 +1,7 @@
 import os
 import time
 import postools
-import configuracion
+import configuracion.configuracion as configuracion
 import pandas as pd
 
 #Éste archivo recupera un excel que hayas borrado sin querer.

@@ -2,7 +2,7 @@ import os
 import time
 import tools
 import paramiko
-import configuracion 
+import configuracion.configuracion as configuracion 
 import tools
 import nycklar.nodes as nodes
 

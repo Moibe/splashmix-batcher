@@ -1,4 +1,4 @@
-import tools, postools, time, configuracion, globales
+import tools, postools, time, configuracion.configuracion as configuracion, configuracion.globales as globales
 
 #CICLO FINAL: ALTA EN SERVER
 excel = globales.excel_results_path + configuracion.sesion + '.xlsx'

@@ -1,5 +1,3 @@
-import os
-import data.data_girls as data_girls
 import time
 import random
 import pretools
@@ -7,9 +5,9 @@ import pandas as pd
 import gradio_client
 import servidor
 import nycklar.nodes as nodes
-import configuracion
+import configuracion.configuracion as configuracion
 from prompts import Prompt, Superhero, Hotgirl
-import globales
+import configuracion.globales as globales
 
 #Future: Quitar todos los imports innecesarios.
 def subirTodo(excel, sesion, directorio_remoto):

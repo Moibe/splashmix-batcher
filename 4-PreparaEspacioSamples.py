@@ -1,4 +1,4 @@
-import configuracion
+import configuracion.configuracion as configuracion
 import pretools
 
 #Crea el dataframe necesario con el excel designado en configuración.

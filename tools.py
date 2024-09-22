@@ -1,12 +1,12 @@
 import pandas as pd
 import time
-import configuracion
+import configuracion.configuracion as configuracion
 import gradio_client
 import nycklar.nodes as nodes
 import os
 import pretools, postools, tools
 import prompter
-import globales
+import configuracion.globales as globales
 import random
 
 def obtenerArchivoOrigen(foto_path):

@@ -1,4 +1,4 @@
-import postools, configuracion, time
+import postools, configuracion.configuracion as configuracion, time
 import pandas as pd
 
 filename = configuracion.filename

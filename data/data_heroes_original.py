@@ -1,4 +1,3 @@
-#si "comic". "pop-art", "watercolor"
 lista_estilos = ["stan lee comic", 
                  "alphonse mucha style", 
                  "akira toriyama", 

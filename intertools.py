@@ -3,10 +3,10 @@ import time
 import pretools
 import pandas as pd
 import nycklar.nodes as nodes
-import configuracion
+import configuracion.configuracion as configuracion
 from prompts import Prompt, Superhero, Hotgirl
 import tools
-import globales
+import configuracion.globales as globales
 import random
 import importlib
 import data.prompts

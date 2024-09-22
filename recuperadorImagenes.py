@@ -1,8 +1,8 @@
-import os, tools, globales
+import os, tools, configuracion.globales as globales
 import pandas as pd
 import time
 import pretools
-import configuracion
+import configuracion.configuracion as configuracion
 
 #Es parte de las herramientas! No borrar!
 #Ésta función se corre cuando ya existe un excel y las imagenes fueron bajadas.

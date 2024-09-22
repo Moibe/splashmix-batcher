@@ -2,9 +2,9 @@ import os
 import requests
 import pandas as pd
 import time
-import configuracion
+import configuracion.configuracion as configuracion
 from openpyxl import Workbook, load_workbook
-import globales
+import configuracion.globales as globales
 import tools
 
 def creaDirectorioInicial(sesion): 

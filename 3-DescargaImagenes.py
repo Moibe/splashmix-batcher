@@ -1,6 +1,6 @@
 import time
 import pretools
-import configuracion
+import configuracion.configuracion as configuracion
 
 #FUTURE: Todos los procesos, incluído ciclo inicial, intermedio y final deberían ir en una sola hoja o api?
 
