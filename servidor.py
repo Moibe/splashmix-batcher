@@ -72,91 +72,15 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   except Exception as e:
         # Mensaje de error
         print(f"Error al crear el directorio, probablemente ya existe: {e}")
-                
-  # finally:
-  #     pass
-  #     #Future: Revisar si va éste finally.
   
   #AHORA NECESITAMOS QUE LA LISTA SALGA DEL EXCEL...
   print("Ahora vamos a obtener los resultados via la nueva función getNotLoaded()...")
-  resultados = tools.getNotLoaded(dataframe)
-    
-  #FUTURE: Hoy en día vuelve a subir todo, pero cuando hablemos de miles de imagenes por sesión, quizá si sería mejor empezar desde donde nos quedamos. 
-  #Para ello lo que tenemos que hacer es contrastar la lista de imagenes (resultados) y quitar de la lista aquellas que se encuentren en una columna obtenida con la función:
-  #preparaColumnaImagenes()
+  #Parámetros: dataframe, columna_filtro, texto_filtro, columna_destino, columna_source.
+  #IMPORTANTE: getNotLoaded ya se puede usar para la subida de imagenes source.
+  resultados = tools.getNotLoaded(dataframe, 'Diffusion Status', 'Completed', 'URL', 'File')
 
-  #Para el conteo de avance en subida.
-  contador = 0 
-  cuantos = len(resultados) #Cantidad de imagenes que hay en ésa carpeta.
-  print("La cantidad de resultados son: ", cuantos)
-
-  try:
-        print("Inicia ciclo de repaso de cada imagen...")
-        excepcion = "NO"
-        for imagen in resultados:
-            
-            print(f"Ahora estámos en la imagen número {contador} de {cuantos}.")
-                      
-            print("La imagen de ésta vuelta es: ", imagen)
-                        
-            #Origen
-            ruta_origen = os.path.join(os.getcwd(), carpeta_local, imagen)
-            print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen}.")
-           
-            #Destino
-            nuevo_directorio_receptor = directorio_receptor.replace("/", "\\")
-            print("Así quedó el nuevo directorio receptor: ", nuevo_directorio_receptor)
-                                               
-            #Crear la ruta completa del archivo remoto
-            ruta_destino = directorio_receptor + "\\" + imagen
-            #ruta_destino = os.path.join(nuevo_directorio_receptor, imagen) #Así se va a moibe pq no encuentra nada.
-            #ruta_destino = nuevo_directorio_receptor
-
-            ruta_destino = ruta_destino.replace("\\", "/")
-           
-            print(f"La RUTA_DESTINO después del join quedó así: {ruta_destino}.")
-                      
-            #Sube la imagen.
-            print(f"La ruta origen es: {ruta_origen}.")
-            print(f"La ruta destino es: {ruta_destino}.")
-            
-            sftp.put(ruta_origen, ruta_destino)
-            print(f"¡La imagen {imagen} se ha sido subido al servidor!")
-            print("---")
-            
-            ruta_completa = directorio_remoto + '/' + imagen
-            #Si se ha subído correctamente, entonces actualiza el archivo de excel.
-            
-            #dataframe, columna indexadora, index, columna_receptora, url.
-            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
-
-            contador += 1
-            print("Después de la suma el contador está en: ", contador)
-            
-        # Mensaje de confirmación
-        return f"Archivo {ruta_origen} subido correctamente a {ruta_destino}."  
-    
-  except Exception as e:
-        # Mensaje de error
-        # Creo que aquí se corre el riesgo de que si falla un archivo en subir, se corta la producción. 
-        # Revisar y corregir en caso de ser necesario.
-        mensaje = f"OJO: Error al subir un archivo: {e}"
-        print(mensaje)
-        excepcion = "Si hubo excepción."
-        print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
-        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-        
-        #return f"OJO: Error al subir un archivo: {e}"
-
-  except KeyboardInterrupt:
-      print("KEYBOARD: Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.sesion + '.xlsx')
-      tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-      
-  finally: 
-      print("Entré al finally del ciclo que repasa cada imagen, solo se llega aquí si hubo excepción...", excepcion)
-      contador += 1
-      #Si acabas el ciclo, también guarda el excel!!
-      tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+  tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)  
+  
   
 def cierraConexion(ssh, sftp):
 

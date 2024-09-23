@@ -201,7 +201,7 @@ def descargaImagenes(sesion):
         por_procesar = dataframe[dataframe['Download Status'] == '']
         print("Por procesar quedó así:")
         print(por_procesar)
-        time.sleep(3)
+        time.sleep(1)
                       
     cantidad_faltante = len(por_procesar)
     print(f"Por procesar tiene {cantidad_faltante} elementos.")
@@ -250,8 +250,7 @@ def descargaImagenes(sesion):
             else:
                 message = f"Error downloading image: {Source} (Status code: {response.status_code})"
                 contador +=  1
-                raise Exception(message)
-                
+                raise Exception(message)                
 
         except Exception as e:
             download_status = f"Error: {response.status_code}"
@@ -265,11 +264,9 @@ def descargaImagenes(sesion):
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx') 
 
 def directoriador(directorio):
-
     #FUTURE: Que los exceles iniciales residan en una carpeta exclusiva para eso.
     #FUTURE: Que el directoriador mande la carpeta hecha a un directorio específico.
     #FUTURE: Que source_excel y results_excel, estén en la misma carpeta.
-
     try:
         excel = globales.excel_results_path + directorio + ".xlsx"
         #Las imagenes tuvieron que haber sido subidas a la ruta correcta previamente.

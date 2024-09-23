@@ -355,25 +355,28 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
         
-def getNotLoaded(dataframe):
+def getNotLoaded(dataframe, columna_filtro, texto_filtro, columna_destino, columna_source):
+    #Obtiene las imagenes que no se han cargado.
+
+    #FUTURE, hacer ésta función general, para que también sea útil para subir las imagenes source a mi server.
 
     print("Estamos en la función getNotLoaded()...")
     print("El tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
     
-    df_images_ok = dataframe[(dataframe['Diffusion Status'] == 'Completed')]
-    #Lista de las imagenes que SI hicieron una Stable Diffusion. 
+    #IMPORTANTE: El dataframe lo sacará de una COLUMNA y lo filtrará con un TEXTO.
+    df_images_ok = dataframe[(dataframe[columna_filtro] == texto_filtro)]
+    
+    #Lista de las imagenes que subiremos. 
     print("El tamaño del dataframe df_images_ok es: ", len(df_images_ok))
     
     print("Ahora basado en ese filtraremos de nuevo...")
-
-    df_images_toUpload = df_images_ok[(df_images_ok['URL'].isnull())]
-    #Lista de los completados que no tienen aún una URL o sea que no es nula.
-    print("Y su tamaño es de df_images_toUpload es: ", len(df_images_toUpload) )
+    df_images_toUpload = df_images_ok[(df_images_ok[columna_destino].isnull())]
     
-    lista_de_files = df_images_toUpload['File'].tolist()
+    #Lista de los completados que no tienen aún una URL o sea que no es nula.      
+    lista_de_files = df_images_toUpload[columna_source].tolist()
     #Lista de ya los nombres de los archivos. 
     print("El tamaño de la lista fina a imprimir es:", len(lista_de_files))
-    time.sleep(6)
+    time.sleep(5)
 
     return lista_de_files
 
@@ -690,4 +693,79 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
                 print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
                 input("Presiona cualquier tecla para continuar: ")
                 print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
-                tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')  
+                tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+
+def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto):
+    #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
+
+    #Para el conteo de avance en subida.
+    contador = 0 
+    cuantos = len(resultados) #Cantidad de imagenes que hay en ésa carpeta.
+    print("La cantidad de resultados son: ", cuantos)
+
+    try:
+        print("Inicia ciclo de repaso de cada imagen...")
+        excepcion = "NO"
+        for imagen in resultados:
+            
+            print(f"Ahora estámos en la imagen número {contador} de {cuantos}.")
+                      
+            print("La imagen de ésta vuelta es: ", imagen)
+                        
+            #Origen
+            ruta_origen = os.path.join(os.getcwd(), carpeta_local, imagen)
+            print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen}.")
+           
+            #Destino
+            nuevo_directorio_receptor = directorio_receptor.replace("/", "\\")
+            print("Así quedó el nuevo directorio receptor: ", nuevo_directorio_receptor)
+                                               
+            #Crear la ruta completa del archivo remoto
+            ruta_destino = directorio_receptor + "\\" + imagen
+            #ruta_destino = os.path.join(nuevo_directorio_receptor, imagen) #Así se va a moibe pq no encuentra nada.
+            #ruta_destino = nuevo_directorio_receptor
+
+            ruta_destino = ruta_destino.replace("\\", "/")
+           
+            print(f"La RUTA_DESTINO después del join quedó así: {ruta_destino}.")
+                      
+            #Sube la imagen.
+            print(f"La ruta origen es: {ruta_origen}.")
+            print(f"La ruta destino es: {ruta_destino}.")
+            
+            sftp.put(ruta_origen, ruta_destino)
+            print(f"¡La imagen {imagen} se ha sido subido al servidor!")
+            print("---")
+            
+            ruta_completa = directorio_remoto + '/' + imagen
+            #Si se ha subído correctamente, entonces actualiza el archivo de excel.
+            
+            #dataframe, columna indexadora, index, columna_receptora, url.
+            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
+
+            contador += 1
+            print("Después de la suma el contador está en: ", contador)
+            
+        # Mensaje de confirmación
+        return f"Archivo {ruta_origen} subido correctamente a {ruta_destino}."
+    except Exception as e:
+        # Mensaje de error
+        # Creo que aquí se corre el riesgo de que si falla un archivo en subir, se corta la producción. 
+        # Revisar y corregir en caso de ser necesario.
+        mensaje = f"OJO: Error al subir un archivo: {e}"
+        print(mensaje)
+        excepcion = "Si hubo excepción."
+        print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+
+        #return f"OJO: Error al subir un archivo: {e}"
+
+    except KeyboardInterrupt:
+        print("KEYBOARD: Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.sesion + '.xlsx')
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+        
+    finally: 
+        print("Entré al finally del ciclo que repasa cada imagen, solo se llega aquí si hubo excepción...", excepcion)
+        contador += 1
+        #Si acabas el ciclo, también guarda el excel!!
+        tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
