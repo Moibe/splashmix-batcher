@@ -260,6 +260,9 @@ def subeSources():
     base_url = globales.base_url
     directorio_remoto = base_url + sesion
 
+    print("Para empezar, éste es el directorio remoto:", directorio_remoto)
+    time.sleep(5)
+
     #Conexión al servidor.
     ssh, sftp = servidor.conecta()  
     excel = globales.excel_results_path + configuracion.sesion + '.xlsx'
@@ -267,6 +270,7 @@ def subeSources():
     try:       
         #Crea directorio
         print("Creando directorio, cuyo nombre será: ", directorio_receptor)
+        time.sleep(8)
         #Si el directorio no existe, si lo está creando bien, checar después que problemas causa q ya exista.        
         sftp.mkdir(directorio_receptor)
         print("Directorio creado...")
@@ -282,11 +286,12 @@ def subeSources():
 
     carpeta_remota = nodes.remote_sources
     print(f"La carpeta remota es: {carpeta_remota}.")
+    time.sleep(18)
     directorio_receptor = carpeta_remota + configuracion.sesion
     print(f"El directorio receptor será entonces: {directorio_receptor}.")
     
     #Define ruta de la carpeta local donde se encuentran los sources.
-    carpeta_local = globales.imagenes_folder_resultados + sesion + '-sources'
+    carpeta_local = globales.imagenes_folder_fuentes + sesion
 
     tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)
 

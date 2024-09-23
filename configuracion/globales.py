@@ -9,6 +9,7 @@ positions_path = "positions\\posiciones\\posiciones - revgen"
 prob_position = 0.1
 
 imagenes_folder_resultados = 'imagenes\\resultados\\'
+imagenes_folder_fuentes = 'imagenes\\fuentes\\'
 databank_heroes = 'data_rev.py'
 databank_girls = 'data_girls.py'
 

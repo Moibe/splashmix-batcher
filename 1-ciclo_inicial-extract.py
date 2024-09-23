@@ -12,34 +12,34 @@ sesion = configuracion.sesion
 
 print("Bienvenido, iniciaremos el proceso de cargado.")
 print(f"La sesión es: {sesion}.")
-time.sleep(1)
+
+#FUTURE: Haz una función que reciba parámetros que indiquen que funciones se usarán y cuales no.
 
 #Si se usa una lista de EXCEL.
 if configuracion.excel_list == True:
     filename = sesion + '.xlsx'    
     #A. Crea el directorio donde se recibirán las imagenes.
-    pretools.creaDirectorioInicial(sesion)
+    #pretools.creaDirectorioInicial(sesion)
     #Future: Si ya se creo el directorio, no volverlo a crear.
-    print("Directorio creado...")
+    #print("Directorio creado...")
     #Crea el excel con sus campos respectivos.
     #Future: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
     #Respuesta, yo no lo sacaría porque es un proceso muy largo, se queda aquí.
     
     #B.- Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.
-    print("A continuación crearemos el archivo de excel que contendrá los resultados...")
-    respuesta = input("Presiona cualquier tecla para continuar: ")
-    pretools.creaExcel(filename)
+    # print("A continuación crearemos el archivo de excel que contendrá los resultados...")
+    # respuesta = input("Presiona cualquier tecla para continuar: ")
+    # pretools.creaExcel(filename)
 
     #Descarga las imagenes source indicadas en el excel(dataframe) y las baja al directorio en disco.
-    print("A continuación descargaremos las imagenes del lote...")
-    respuesta = input("Presiona cualquier tecla para continuar: ")
-    pretools.descargaImagenes(sesion)
+    # print("A continuación descargaremos las imagenes del lote...")
+    # respuesta = input("Presiona cualquier tecla para continuar: ")
+    # pretools.descargaImagenes(sesion)
 
     #Sube imagenes a tu servidor.
-    print("A continuación descargaremos las imagenes del lote...")
+    print("A continuación subiremos las imagenes a mi servidor...")
     respuesta = input("Presiona cualquier tecla para continuar: ")
-    pretools.subeSources()
-    
+    pretools.subeSources()    
 
 #Si se usa BULK.
 else:

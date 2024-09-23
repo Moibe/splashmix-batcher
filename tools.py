@@ -428,7 +428,8 @@ def funcionFiltradora(dataframe, columnaAFiltrar, textoFiltro, textoFiltro2):
 
     df_images_ok = dataframe[(dataframe[columnaAFiltrar] == textoFiltro) |
                           (textoFiltro2 is not None and dataframe[columnaAFiltrar] == textoFiltro2)]
-
+    
+    #FUTURE: Agregar el doble filtro a getNotLoaded()
 
 
     print(f"La cantidad de imagenes {textoFiltro} son: {len(df_images_ok)}")
@@ -697,6 +698,9 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
 
 def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto):
     #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
+
+    print("Entré al cicloSubidor....")
+    time.sleep(10)
 
     #Para el conteo de avance en subida.
     contador = 0 
