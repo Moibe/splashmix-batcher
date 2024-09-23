@@ -695,6 +695,8 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
                 print(f"Excepción: - {e}, guardaremos el excel hasta donde iba. Reinicia el proceso, continuará donde te quedaste.")
                 tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
 
+
+
 def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto):
     #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
 
@@ -748,6 +750,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             
         # Mensaje de confirmación
         return f"Archivo {ruta_origen} subido correctamente a {ruta_destino}."
+    
     except Exception as e:
         # Mensaje de error
         # Creo que aquí se corre el riesgo de que si falla un archivo en subir, se corta la producción. 
@@ -757,8 +760,6 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
         excepcion = "Si hubo excepción."
         print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
-
-        #return f"OJO: Error al subir un archivo: {e}"
 
     except KeyboardInterrupt:
         print("KEYBOARD: Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.sesion + '.xlsx')

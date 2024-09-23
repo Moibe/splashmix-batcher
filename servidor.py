@@ -1,9 +1,10 @@
 import os
-import time
+import configuracion.globales as globales
 import tools
 import paramiko
 import configuracion.configuracion as configuracion 
 import tools
+import pandas as pd
 import nycklar.nodes as nodes
 
 #Future: Revisar cuanto se parece servidor a SulkuPypi para que lo conviertas en ello.
@@ -45,22 +46,27 @@ def escribe(sftp, archivo, contenido):
 
   return "Contenido escrito"
 
-def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto):
-  """
-  Sube una carpeta local completa a una carpeta remota.
+def sube(sftp, excel):
 
-  Parameters:
-    sftp
-    dataframe
-    carpeta_local
-    directorio_receptor
-    foto_complete_url_dir: Es la ruta del directorio local donde están todos los resultados, 
-
-  Returns:
-  dataframe:Regresa dataframe.
-  """ 
+  #Primero extraemos el dataframe:
+  dataframe = pd.read_excel(excel)  
+ 
+  sesion = configuracion.sesion
+  base_url = globales.base_url
+  directorio_remoto = base_url + sesion
 
   print("Llegamos a servidor.sube y el directorio remoto o dirección donde se subirá todo es:", directorio_remoto)
+
+  #Define ruta de la carpeta remota
+  #Ésta es la carpeta fija de holocards.
+  carpeta_remota = nodes.avaimentekijä
+  print(f"La carpeta remota es: {carpeta_remota} y su tipo es: {type(carpeta_remota)}.")
+  directorio_receptor = carpeta_remota + sesion
+  print(f"El directorio receptor será entonces: {directorio_receptor} y su tipo es: {type(directorio_receptor)}")
+  
+  #Define ruta de la carpeta local donde se encuentran los resultados.
+  carpeta_local = globales.imagenes_folder_resultados + sesion + '-results'
+
 
   try:       
         #Crea directorio
@@ -83,7 +89,6 @@ def sube(sftp, dataframe, carpeta_local, directorio_receptor, directorio_remoto)
   
   
 def cierraConexion(ssh, sftp):
-
   """
   Sube una carpeta local completa a una carpeta remota.
 
@@ -93,6 +98,5 @@ def cierraConexion(ssh, sftp):
   Returns:
   dataframe:Regresa dataframe.
   """ 
-
   sftp.close()
   ssh.close()
