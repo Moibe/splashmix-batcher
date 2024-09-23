@@ -35,12 +35,17 @@ if configuracion.excel_list == True:
     respuesta = input("Presiona cualquier tecla para continuar: ")
     pretools.descargaImagenes(sesion)
 
+    #Sube imagenes a tu servidor.
+    print("A continuación descargaremos las imagenes del lote...")
+    respuesta = input("Presiona cualquier tecla para continuar: ")
+    pretools.subeSources()
     
 
 #Si se usa BULK.
 else:
     #Si se usará un bulk de subido de imagenes, el directorio ya existirá y lo que creará es el excel!
     pretools.directoriador(sesion)
+    #Subir los sources de bulk también.
 
-#Finalmente crea los directorios necesarios.
-pretools.creaDirectorioResults(sesion)
+    #Finalmente crea los directorios necesarios.
+    pretools.creaDirectorioResults(sesion)

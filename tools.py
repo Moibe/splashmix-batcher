@@ -4,10 +4,11 @@ import configuracion.configuracion as configuracion
 import gradio_client
 import nycklar.nodes as nodes
 import os
-import pretools, postools, tools
+import pretools, tools
 import prompter
 import configuracion.globales as globales
 import random
+import imagesExtractors
 
 def obtenerArchivoOrigen(foto_path):
     """
@@ -220,7 +221,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
 
             print("---")
             print("---")
-            print("---")
             print("Iniciando una nueva creación...")
             print(contenedor)                         
 
@@ -405,20 +405,18 @@ def getMissing():
 
 def generaIDImagen(foto_url):
     #Será diferente para cada source.
-    #Éste es para imagenes de linkedin obtenidas vía Clay.
+    #IMPORTANTE: Éste es para imagenes de linkedin obtenidas vía Clay.
 
     # NOMBRANDO EL ARCHIVO
     # Define un indentificador único.
     # Esto será diferente para cada tipo de URL que se te envíe. 
     # Trata de generalizar en el futuro.
-    filename = os.path.dirname(foto_url)
-    partes = filename.split('image/')
-    siguiente = partes[1].split('/')
-    #siguiente[0] contiene el nombre del archivo, pero queremos quitarle los guiones para evitar problemas más adelante.
     
-    nombre = siguiente[0].replace("-", "")    
-    image_id = f"{nombre}.png"
+    image_id = imagesExtractors.clayLinkedInV2(foto_url)
+    
+    
     print("El nombre de la imagen es: ", image_id)
+    time.sleep(1)
 
     return image_id
 

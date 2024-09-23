@@ -61,7 +61,6 @@ def creaExcel(filename):
         #Ve si afecta actualizar el excel antes de entregar el dataframe.
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
         print("Guardando la estructura inicial del archivo de excel.")
-        time.sleep(1)
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
     
     #Y exista o se haya creado apenas, adquiriremos el dataframe de results! y hará la creación de los IDs.
@@ -72,8 +71,7 @@ def creaExcel(filename):
 
     #CREACIÓN DE IDs DE ARCHIVOS.
     print("Estamos en la creación de los ids para cada imagen, y antes de empezar, veré como quedó el dataframe...")
-    time.sleep(1)    
-
+    
     lote_total = len(dataframe)
     print("El tamaño total del lote es: ", lote_total)
 
@@ -145,6 +143,7 @@ def creaExcel(filename):
             y = y + lote_procesar + 1
             print("Modifiqué y, y ahora vale: ", y)
             tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
+            #Future: Incluir que con ESC cortemos el proceso.
         
     print("Terminó el ciclo que recorre las URLs, último guardado de excel...")
     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
