@@ -28,18 +28,7 @@ def creaDirectorioInicial(sesion):
     
 
 def creaExcel(filename):
-    """
-    Lee el archivo Excel en un DataFrame (asumiendo que está en la raíz del proyecto) y
-    crea las columnas nuevas que necesitará.
-
-    Parameters:
-    archivo (str): Nombre y extensión del archivo que procesaremos.
-
-    Returns:
-    dataframe:Regresa dataframe que se usará a través de los procesos.
-
-    """
-   
+      
     #Future, poner guardado por interrupción también en creaExcel.
     
     #ESTRUCTURA INICIAL
@@ -262,6 +251,13 @@ def descargaImagenes(sesion):
             tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
         #Guarda excel de nuevo al acabar el for:
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx') 
+
+def subeSources():
+    #Sube las imagenes source recién descargadas a mi propio servidor. 
+    excel = globales.excel_results_path + configuracion.sesion + '.xlsx'
+    #Primero extraemos el dataframe:
+    dataframe = pd.read_excel(excel)  
+    tools.getNotLoaded(dataframe, 'Download Status', 'Success', 'Source URL', 'Name')
 
 def directoriador(directorio):
     #FUTURE: Que los exceles iniciales residan en una carpeta exclusiva para eso.

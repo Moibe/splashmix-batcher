@@ -4,7 +4,7 @@ import servidor
 import nycklar.nodes as nodes
 import configuracion.globales as globales
 
-def subirTodo(excel):
+def subirTodo():
     #Future: ¿Volver uno solo a subirTodo y sube? ¿o cuál es la razón para separarlo?    
     #Respuesta: Ahora que lo optimizamos podemos darnos cuenta que es para separar conexión del resto de...
     #... las actividades.
@@ -13,7 +13,7 @@ def subirTodo(excel):
     ssh, sftp = servidor.conecta()  
     
     #Subir el resultado al servidor y esperar respuesta que se guardará en la var resultado.
-    servidor.sube(sftp, excel)
+    servidor.sube(sftp)
     print("Salí de sube...")
     #FUTURE: Poner un while para que después de fallo continue el ciclo de seguir subiendo.
 

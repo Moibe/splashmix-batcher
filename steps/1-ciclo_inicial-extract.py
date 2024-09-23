@@ -22,9 +22,9 @@ if configuracion.excel_list == True:
     pretools.creaDirectorioInicial(sesion)
     #Future: Si ya se creo el directorio, no volverlo a crear.
     print("Directorio creado...")
-    time.sleep(1)
     #Crea el excel con sus campos respectivos.
     #Future: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
+    #Respuesta, yo no lo sacaría porque es un proceso muy largo, se queda aquí.
     
     #B.- Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.
     print("A continuación crearemos el archivo de excel que contendrá los resultados...")
@@ -35,6 +35,9 @@ if configuracion.excel_list == True:
     print("A continuación descargaremos las imagenes del lote...")
     respuesta = input("Presiona cualquier tecla para continuar: ")
     pretools.descargaImagenes(sesion)
+
+    #Sube imagenes a tu servidor.
+    pretools.subeSources()
 
 #Si se usa BULK.
 else:

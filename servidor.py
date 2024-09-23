@@ -46,8 +46,9 @@ def escribe(sftp, archivo, contenido):
 
   return "Contenido escrito"
 
-def sube(sftp, excel):
+def sube(sftp):
 
+  excel = globales.excel_results_path + configuracion.sesion + '.xlsx'
   #Primero extraemos el dataframe:
   dataframe = pd.read_excel(excel)  
  
