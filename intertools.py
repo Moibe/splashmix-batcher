@@ -83,15 +83,20 @@ def sampler(sesion, inicial=None):
             #POSICIÓN (IMPORTANTE)
             print("Obteniendo la posición...")
             #Quiero que el 20% de las veces no use posición.
-            numero_random = random.random()
-            #La probabilidad de que no usemos imagen de posición se designa desde globales, ahora es 0.1
-            if numero_random < globales.prob_position:
-                ruta_posicion, shot = "", ""
-                print("Random dice que sin posición.")
-                print("Ruta posición guardo: ", ruta_posicion)
-            else:
-                ruta_posicion, shot = tools.getPosition()
-            #Future: Checar si en realidad se usa ruta_posicion, si no, quitarlo de la función getPosition()
+            #IMPORTANTE: Se quitará de momento el no usar posición, porque se concluyó que siempre es necesaria.
+            #Se deja comentada, para otros casos de uso.
+            ###
+            # numero_random = random.random()
+            # #La probabilidad de que no usemos imagen de posición se designa desde globales, ahora es 0.1
+            # if numero_random < globales.prob_position:
+            #     ruta_posicion, shot = "", ""
+            #     print("Random dice que sin posición.")
+            #     print("Ruta posición guardo: ", ruta_posicion)
+            # else:
+            #     ruta_posicion, shot = tools.getPosition()
+            #Future: Checar si en realidad se usa ruta_posicion, si no, quitarlo de la función get Position()
+            
+            ruta_posicion, shot = tools.getPosition()
             
             print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
 

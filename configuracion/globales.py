@@ -5,7 +5,7 @@ base_url = "https://euroglitter.com/results/"
 excel_source_path = 'excel_data\\source_excel\\'
 excel_results_path = 'excel_data\\results_excel\\'
 
-positions_path = "positions\\posiciones"
+positions_path = "positions\\posiciones\\posiciones - revgen"
 prob_position = 0.1
 
 imagenes_folder_resultados = 'imagenes\\resultados\\'

@@ -1,6 +1,6 @@
 #IMPORTANTE, La sesión define de que excel (en el caso de source list) ...
 # ... o de que directorio en imagenes/fuentes se obtendrá el material.
-sesion = 'newBatch'
+sesion = 'groupBatch'
 
 #Source list es false porque no viene de una lista de excel si no de un directorio con fotos.
 #Future: Cambiar por un concepto más entendible como source = excel, directory.
@@ -19,12 +19,7 @@ api_apagada = False
 # waited = False
 
 # wait_time = 500
-foto_path = 'C5603AQFy6WwrtLhlhQ-t1.png'
 
-foto_path = 'C5603AQG8afHqUNErdw-t1.png'
-
-foto_path = 'C5603AQG9Qo3Mt8MZw-t1.png'
-
-foto_path = 'C5603AQH1xuhLf3Y74w-t1.png'
-
-foto_path = 'D4E03AQGEGOpnCIeRkQ-t1.png'
+#Future: Que se puedan tener varias configuraciones a la vez, porque en el futuro se trabajará con varios archivos.
+#Future: Ya no hay necesidad de que se agregue el nombre de la foto donde se cortó el proceso.
+#Future: Hacer un log de las configuraciones o batches que haz hecho.

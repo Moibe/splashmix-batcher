@@ -201,7 +201,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         for i, foto_path in enumerate(columna_imagenes):
 
             print("*****")
-            print("*****")
             print(f"{i} de {len(columna_imagenes)}.")  
             print(f"Imagen: {foto_path}.")
 
@@ -219,8 +218,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Éste contenedor contendrá los atributos que sacó de la respectiva ROW. #Es solo un cascarón.
             contenedor = prompter.creaContenedorTemplate(dataframe, indice, configuracion.creacion) #Superhero o #Hotgirl por ahora.
 
-            print("---")
-            print("---")
             print("---")
             print("---")
             print("---")
@@ -457,6 +454,7 @@ def getPosition():
     
     if not lista_archivos:
         print("La carpeta está vacía o no existe.")
+        #FUTURE: Revisa si éste éxit corta el flujo y si eso es correcto.
         exit()
 
     #Selecciona una imagen aleatoriamente.
