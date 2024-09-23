@@ -60,14 +60,13 @@ def sube(sftp):
 
   #Define ruta de la carpeta remota
   #Ésta es la carpeta fija de holocards.
-  carpeta_remota = nodes.avaimentekijä
+  carpeta_remota = nodes.remote_results
   print(f"La carpeta remota es: {carpeta_remota} y su tipo es: {type(carpeta_remota)}.")
   directorio_receptor = carpeta_remota + sesion
-  print(f"El directorio receptor será entonces: {directorio_receptor} y su tipo es: {type(directorio_receptor)}")
+  print(f"El directorio receptor será entonces: {directorio_receptor}.")
   
   #Define ruta de la carpeta local donde se encuentran los resultados.
   carpeta_local = globales.imagenes_folder_resultados + sesion + '-results'
-
 
   try:       
         #Crea directorio

@@ -2,10 +2,12 @@ import os
 import requests
 import pandas as pd
 import time
+import nycklar.nodes as nodes
 import configuracion.configuracion as configuracion
 from openpyxl import Workbook, load_workbook
 import configuracion.globales as globales
 import tools
+import servidor
 
 def creaDirectorioInicial(sesion): 
     """
@@ -253,11 +255,41 @@ def descargaImagenes(sesion):
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx') 
 
 def subeSources():
-    #Sube las imagenes source recién descargadas a mi propio servidor. 
+#Sube las imagenes source recién descargadas a mi propio servidor.
+
+    sesion = configuracion.sesion
+    base_url = globales.base_url
+    directorio_remoto = base_url + sesion
+
+    #Conexión al servidor.
+    ssh, sftp = servidor.conecta()  
     excel = globales.excel_results_path + configuracion.sesion + '.xlsx'
+
+    try:       
+        #Crea directorio
+        print("Creando directorio, cuyo nombre será: ", directorio_receptor)
+        #Si el directorio no existe, si lo está creando bien, checar después que problemas causa q ya exista.        
+        sftp.mkdir(directorio_receptor)
+        print("Directorio creado...")
+
+    except Exception as e:
+        # Mensaje de error
+        print(f"Error al crear el directorio, probablemente ya existe: {e}")
+
+
     #Primero extraemos el dataframe:
     dataframe = pd.read_excel(excel)  
-    tools.getNotLoaded(dataframe, 'Download Status', 'Success', 'Source URL', 'Name')
+    resultados = tools.getNotLoaded(dataframe, 'Download Status', 'Success', 'Source URL', 'Name')
+
+    carpeta_remota = nodes.remote_sources
+    print(f"La carpeta remota es: {carpeta_remota}.")
+    directorio_receptor = carpeta_remota + configuracion.sesion
+    print(f"El directorio receptor será entonces: {directorio_receptor}.")
+    
+    #Define ruta de la carpeta local donde se encuentran los sources.
+    carpeta_local = globales.imagenes_folder_resultados + sesion + '-sources'
+
+    tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)
 
 def directoriador(directorio):
     #FUTURE: Que los exceles iniciales residan en una carpeta exclusiva para eso.

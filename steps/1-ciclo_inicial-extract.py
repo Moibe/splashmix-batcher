@@ -16,8 +16,7 @@ time.sleep(1)
 
 #Si se usa una lista de EXCEL.
 if configuracion.excel_list == True:
-    filename = sesion + '.xlsx'
-    
+    filename = sesion + '.xlsx'    
     #A. Crea el directorio donde se recibirán las imagenes.
     pretools.creaDirectorioInicial(sesion)
     #Future: Si ya se creo el directorio, no volverlo a crear.
@@ -36,8 +35,7 @@ if configuracion.excel_list == True:
     respuesta = input("Presiona cualquier tecla para continuar: ")
     pretools.descargaImagenes(sesion)
 
-    #Sube imagenes a tu servidor.
-    pretools.subeSources()
+    
 
 #Si se usa BULK.
 else:

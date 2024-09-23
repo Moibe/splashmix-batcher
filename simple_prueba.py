@@ -2,7 +2,7 @@ import os
 import servidor 
 import nycklar.nodes as nodes
 
-remoto = nodes.avaimentekijä
+remoto = nodes.remote_results
 
 print(remoto)
 print(type(remoto))
