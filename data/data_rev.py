@@ -1,16 +1,9 @@
 lista_estilos = [                              
                  "watercolor",                  
-                 "watercolor",
-                 "watercolor",
-                 "watercolor",
-                 "watercolor",
-                 "watercolor",
-                 "watercolor",
-                 "watercolor",
-                 "watercolor",
-                 ]
+                ]
 
-lista_subjects = ["Aquaman",
+lista_subjects = [
+                  "Batman",
                   "Bruce Wayne Batman", 
                   "Unmasked Batman",
                   "Dr.Strange",
@@ -18,14 +11,12 @@ lista_subjects = ["Aquaman",
                   "Dr.Strange", 
                   "Flash Gordon",
                   "Green Lantern",
-                  "Green Lantern",
-                  "Green Lantern", 
+                  
+                   
                   "Hawkeye", 
                   "Human Torch",
-                  "Logan Wolverine",
-                  "Unmasked Wolverine",
-                  "Quicksilver",
-                  "Quicksilver",
+                  
+                  
                   "Shazam",
                   "Shazam", 
                   "StarLord",
@@ -50,13 +41,15 @@ lista_subjects = ["Aquaman",
                   "Peter Parker",
                   "Spiderman Peter Parker",
                   "Flash", 
-                  "Flash", 
+                   
                   "Robin",
                   "Unmasked Robin",
                   "Watchmen Ozymandias",
-                  "Wade Wilson Deadpool", 
-                  "Unmasked Deadpool",
+                  
                   "Unmasked Superhero",
                   "Unmasked Superhero",
                   "Unmasked Superhero"                  
                   ]
+
+#FUTURE: Crear una forma especilizada de marcar las combinaciones q no gustan para no tener que eliminar todo el 
+#bloque de esa variable y solo vetemos combinaciones.
