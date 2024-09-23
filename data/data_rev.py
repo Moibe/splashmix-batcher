@@ -11,12 +11,8 @@ lista_subjects = [
                   "Dr.Strange", 
                   "Flash Gordon",
                   "Green Lantern",
-                  
-                   
                   "Hawkeye", 
                   "Human Torch",
-                  
-                  
                   "Shazam",
                   "Shazam", 
                   "StarLord",
@@ -40,12 +36,10 @@ lista_subjects = [
                   "Peter Parker",
                   "Peter Parker",
                   "Spiderman Peter Parker",
-                  "Flash", 
-                   
+                  "Flash",                    
                   "Robin",
                   "Unmasked Robin",
-                  "Watchmen Ozymandias",
-                  
+                  "Watchmen Ozymandias",                  
                   "Unmasked Superhero",
                   "Unmasked Superhero",
                   "Unmasked Superhero"                  

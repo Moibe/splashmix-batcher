@@ -1,4 +1,4 @@
-from prompts import Prompt, Superhero, Hotgirl
+from objetosCreacion import Prompt, Superhero, Hotgirl
 
 creacion = Superhero()
 

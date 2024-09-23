@@ -4,7 +4,7 @@ import pretools
 import pandas as pd
 import nycklar.nodes as nodes
 import configuracion.configuracion as configuracion
-from prompts import Prompt, Superhero, Hotgirl
+from objetosCreacion import Prompt, Superhero, Hotgirl
 import tools
 import configuracion.globales as globales
 import random

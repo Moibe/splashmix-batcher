@@ -1,4 +1,4 @@
-from prompts import Hotgirl, Superhero
+from objetosCreacion import Hotgirl, Superhero
 import time
 
 def obten(dataframe, indice, atributo):

@@ -6,7 +6,7 @@ import gradio_client
 import servidor
 import nycklar.nodes as nodes
 import configuracion.configuracion as configuracion
-from prompts import Prompt, Superhero, Hotgirl
+from objetosCreacion import Prompt, Superhero, Hotgirl
 import configuracion.globales as globales
 
 #Future: Quitar todos los imports innecesarios.

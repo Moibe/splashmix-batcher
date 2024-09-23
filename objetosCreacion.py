@@ -1,6 +1,8 @@
-import data.data as data, data.data_girls as data_girls, data.data_heroes as data_heroes
 import random
 import tools
+import configuracion.globales as globales
+import data.data as data, data.data_girls as data_girls, data.data_heroes as data_heroes
+
 
 class Prompt:
     #Future, que el databank se defina arriba para todos.
@@ -18,7 +20,10 @@ class Superhero(Prompt):
                  ):
         super().__init__()  # Call the parent class constructor
         #Se especifica cuál es su databank:
-        databank = data_heroes
+        #IMPORTANTE: Databank son las variables que rellenan los atributos de cada objeto, al gusto de un cliente en específico.
+        #Por ejemplo, el objeto es heroes, pero el cliente en particular es RevGenLabs, que tiene su propio databank ...
+        #...crafted a su gusto.
+        databank = globales.databank_heroes
         #Random null es una función que regresa al sujeto pero también puede no regresar nada, añadir q probabilidades...
         #de que eso suceda se desean.
         self.subject = subject or tools.randomNull(0.2, databank.lista_subjects)
@@ -43,7 +48,7 @@ class Hotgirl(Prompt):
         super().__init__(style)  # Call the parent class constructor
 
         #Se especifica cuál es su databank:
-        databank = data_girls
+        databank = globales.databank_girls
         
         self.subject = subject or random.choice(databank.lista_subjects)
         self.adjective = adjective or random.choice(databank.lista_adjective)
