@@ -269,15 +269,13 @@ def subeSources():
 
     carpeta_remota = nodes.remote_sources
     #remote_sources = "/home/moibe/apps/holocards/sources/"
-    print(f"La carpeta remota es: {carpeta_remota}.")
-    time.sleep(4)
+    print(f"La carpeta remota es: {carpeta_remota}")
     directorio_receptor = carpeta_remota + configuracion.sesion
     print(f"El directorio receptor será entonces: {directorio_receptor}.")
 
     try:       
         #Crea directorio
         print("Creando directorio, cuyo nombre será: ", directorio_receptor)
-        time.sleep(2)
         #Si el directorio no existe, si lo está creando bien, checar después que problemas causa q ya exista.        
         sftp.mkdir(directorio_receptor)
         print("Directorio creado...")

@@ -376,8 +376,7 @@ def getNotLoaded(dataframe, columna_filtro, texto_filtro, columna_destino, colum
     lista_de_files = df_images_toUpload[columna_source].tolist()
     #Lista de ya los nombres de los archivos. 
     print("El tamaño de la lista fina a imprimir es:", len(lista_de_files))
-    time.sleep(5)
-
+    
     return lista_de_files
 
 def getMissing():
@@ -397,8 +396,7 @@ def getMissing():
     nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
     print(f"Faltan por hacer: {len(nan_df)} imágenes...")
-    time.sleep(10)
-    
+        
     columna_imagenes = nan_df['File'].to_list()
 
     return columna_imagenes
@@ -519,10 +517,11 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
     dataframe:Regresa dataframe.
     """    
 
-    print("Entré a actualizaRow.")
-           
+    print("Entré a actualizaRow.")           
     #Recibe el dataframe, el nombre y en que columna buscará, regresa el index.
-    index = obtenIndexRow(dataframe, 'File', indicador)   
+    #Aquí había un error! Indexrow debe recibir una variable en el segundo parámetro y no 'File'
+    #Parámetros: dataframe, deColumna, indicador
+    index = obtenIndexRow(dataframe, index_col, indicador)   
     
     # If the value exists, get the corresponding cell value
     if not index.empty:
@@ -532,7 +531,6 @@ def actualizaRow(dataframe, index_col, indicador, receiving_col, contenido):
         print(f"Valor de la celda que coincide: {cell_value}")        
 
         print("Para la revisión de Warning, valor de contenido es: ", contenido)
-        print("y tipo de contenido es: ", type(contenido))
                        
         print(f"Voy a guardar en el index de éste indicador: {indicador} en ésta colúmna: {receiving_col}")
         #Future: Siempre y cuando esté vacía, si no, dejo lo que estaba.
@@ -700,8 +698,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
     #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
 
     print("Entré al cicloSubidor....")
-    time.sleep(5)
-
+    
     #Para el conteo de avance en subida.
     contador = 0 
     cuantos = len(resultados) #Cantidad de imagenes que hay en ésa carpeta.
@@ -771,7 +768,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
         
     finally: 
-        print("Entré al finally del ciclo que repasa cada imagen, solo se llega aquí si hubo excepción...", excepcion)
+        print("Entré al finally del ciclo que repasa cada imagen. Guardaré el excel.", excepcion)
         contador += 1
         #Si acabas el ciclo, también guarda el excel!!
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')

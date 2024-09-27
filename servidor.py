@@ -61,7 +61,7 @@ def sube(sftp):
   #Define ruta de la carpeta remota
   #Ésta es la carpeta fija de holocards.
   carpeta_remota = nodes.remote_results
-  print(f"La carpeta remota es: {carpeta_remota} y su tipo es: {type(carpeta_remota)}.")
+  print(f"La carpeta remota es: {carpeta_remota}")
   directorio_receptor = carpeta_remota + sesion
   print(f"El directorio receptor será entonces: {directorio_receptor}.")
   

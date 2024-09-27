@@ -37,7 +37,7 @@ if configuracion.excel_list == True:
     # pretools.descargaImagenes(sesion)
 
     #Sube imagenes a tu servidor.
-    print("A continuación subiremos las imagenes a mi servidor...")
+    print("A continuación subiremos las imagenes SOURCES a mi servidor...")
     respuesta = input("Presiona cualquier tecla para continuar: ")
     pretools.subeSources()    
 
