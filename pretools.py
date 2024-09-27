@@ -376,7 +376,6 @@ def createColumns(dataframe, amount, diccionario_atributos):
     return dataframe
 
 def preparaSamples(filename, samples):
-
     #Ésta función prepara el espacio para la cantidad de samples que quieres crear.
     #Creará una row adicional para cada sample que desees.
 
@@ -390,13 +389,16 @@ def preparaSamples(filename, samples):
     #IMPORTANTE: MUY IMPORTANTE. Si vas a llenar solo los From Archive, quite del filtro a Success.
     #En ocasiones posteriores no deberá pasar ésto porque se harán los dos al mismo tiempo.
     rowsFiltrados = tools.funcionFiltradora(dataframe, 'Download Status', 'Success', 'From Archive') 
+    #IMPORTANTE: 'Form Archive' viene solo del hecho de haberse usado el recuperadorImagenes.py, creo que...
+    #...ya no será necesario pero mantenerlo un rato.
 
     print("Ahora voy a imprimir rowsFiltrados, que tienen el tamaño:", len(rowsFiltrados))
     
     #Future: Hacer una función que seleccione las columna/s a usar.
-    df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source']]
+    df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source', 'Source Path', 'Source URL']]
     cantidad_sampleos = samples * len(df_imagenes_seleccionadas)
     print("La cantidad de imagenes a trabajar será de : ", cantidad_sampleos)
+    time.sleep(12)
     
     contador = 0
    
@@ -405,8 +407,16 @@ def preparaSamples(filename, samples):
         #Crea las rows para sus samples
         for index, row in df_imagenes_seleccionadas.iterrows():
             imagen = row['Name']
+            print("Imagen is: ", imagen)
+            
             source = row['Source']
-            #FUTURE: Agregar a las repeticiones también la columna de Source Path.
+            print("Source is: ", source)
+            
+            source_path = row['Source Path']
+            print("Source Path is: ", source_path)
+            
+            source_url = row['Source URL']
+            #Ready!: Agregar a las repeticiones también la columna de Source Path.
 
             print(f"Procesadas {contador} de {cantidad_sampleos}.")
             
@@ -422,16 +432,16 @@ def preparaSamples(filename, samples):
             if configuracion.excel_list is True:
                 #En lugar de esas comillas vas a poner el source.
                 #En excel: [Source, Source Path, Source URL, Name, Download Status, Take, File, Diffusion Status]
-                lista = [source, "", "", imagen, 'Success', "take_placeholder", "filename", "", ""]  #adding a row
+                lista = [source, source_path, source_url, imagen, 'Success', "take_placeholder", "filename", "", "", ""]  #adding a row
                 #Designación de columnas a utilizar.
                 a = 5 #Aquí sustituira el índice 3 take_placeholder
                 b = 6 
             else:         
                 #Para imagenes de directorio.
                 #FUTURE: Definir si agregaras campos de path local y url en modo directoriador.
-                lista = [imagen, 'Success', "take_placeholder", "filename", ""]  #adding a row
+                lista = [imagen, 'Success', "take_placeholder", "filename", "", "",""]  #adding a row
                 #Designación de columnas a utilizar.
-                a = 6 #Aquí sustituira el índice 4 take_placeholder
+                a = 6 #Aquí sustituirá el índice 4 take_placeholder
                 b = 7
 
             #Y luego crea tantas rows adicionales como samples fuera a haber.
@@ -453,14 +463,14 @@ def preparaSamples(filename, samples):
             contador = contador + 4
     
     except KeyboardInterrupt:
-      print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos. Y aquí el excel es:", configuracion.filename)
+      print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos. Excel:", configuracion.filename)
       dataframe = dataframe.sort_values(['Name','Take'])
       tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')        
     
     #Reordeno alfabéticamente.
     #El ordenamiento si es necesario, así es que también incluyelo en el Keyboard Interrupt.
     dataframe = dataframe.sort_values(['Name','Take'])
-
     tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
       
-    return dataframe
+    #Future: Revisa, creo que no es necesario usar el return frame.
+    #return dataframe
