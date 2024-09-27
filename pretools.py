@@ -1,13 +1,13 @@
 import os 
-import requests
-import pandas as pd
 import time
-import nycklar.nodes as nodes
-import configuracion.configuracion as configuracion
-from openpyxl import Workbook, load_workbook
-import configuracion.globales as globales
 import tools
 import servidor
+import requests
+import pandas as pd
+import nycklar.nodes as nodes
+import configuracion.globales as globales
+from openpyxl import Workbook, load_workbook
+import configuracion.configuracion as configuracion
 
 def creaDirectorioInicial(sesion): 
     """
@@ -23,8 +23,7 @@ def creaDirectorioInicial(sesion):
 
     # Define the desired directory path
     target_dir = os.path.join('imagenes', 'fuentes', sesion)
-    print("Directorio para ésta sesión creado en: ", target_dir)
-
+    
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
     
@@ -70,7 +69,6 @@ def creaExcel(filename):
     dataframe = pd.read_excel(globales.excel_results_path + filename) 
 
     #CREACIÓN DE IDs DE ARCHIVOS.
-    print("Estamos en la creación de los ids para cada imagen, y antes de empezar, veré como quedó el dataframe...")
     
     lote_total = len(dataframe)
     print("El tamaño total del lote es: ", lote_total)
@@ -97,15 +95,12 @@ def creaExcel(filename):
 
         print(f"Por lo tanto llevamos {nu_index} imagenes nombradas.")
         
-        columna = por_procesar['Source']
-        print("El tamaño de la columna es:", len(columna))
-        
+        columna = por_procesar['Source']        
         #IMPORTANTE: Si obtiene correctamente la columna, pero la i no funcionará ahora, necesitas indexRow...
         #Considera que ese proceso podría ser más lento y que en verdad convenga más crear otra vez todos los ids.
 
         try: 
             for i, foto_url in enumerate(columna):
-
                 y = i
                 image_id = tools.generaIDImagen(foto_url)
                 print("Éste es el image id del q sacaremos el index row: ", image_id)
@@ -180,6 +175,8 @@ def descargaImagenes(sesion):
         
         # Filtra las filas donde 'Download Status' es igual a 'Success'
         por_procesar = dataframe[dataframe['Download Status'].isna()]
+
+        #Future: Que en el futuro haga un chequeo al directorio para ver si es necesario ya no bajarlas.
    
     else:
         #Crea el dataframe donde se registrarán los atributos y las difusiones con los campos necesarios.
@@ -191,8 +188,7 @@ def descargaImagenes(sesion):
         por_procesar = dataframe[dataframe['Download Status'] == '']
         print("Por procesar quedó así:")
         print(por_procesar)
-        time.sleep(1)
-                      
+                              
     cantidad_faltante = len(por_procesar)
     print(f"Por procesar tiene {cantidad_faltante} elementos.")
     
@@ -285,7 +281,8 @@ def subeSources():
         print(f"Error al crear el directorio, probablemente ya existe: {e}")
 
     #Primero extraemos el dataframe:
-    dataframe = pd.read_excel(excel)  
+    dataframe = pd.read_excel(excel) 
+    #Parámetros: dataframe, columna_filtro, texto_filtro, columna_destino, columna_source 
     resultados = tools.getNotLoaded(dataframe, 'Download Status', 'Success', 'Source URL', 'Name')
     
     #Define ruta de la carpeta local donde se encuentran los sources.
@@ -293,7 +290,6 @@ def subeSources():
     print("Ésta es la carpeta local: ", carpeta_local)
     
     print("Por entrar a cicloSubidor...")
-    time.sleep(1)
     tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)
 
 def directoriador(directorio):
@@ -398,7 +394,8 @@ def preparaSamples(filename, samples):
     df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source', 'Source Path', 'Source URL']]
     cantidad_sampleos = samples * len(df_imagenes_seleccionadas)
     print("La cantidad de imagenes a trabajar será de : ", cantidad_sampleos)
-    time.sleep(12)
+    print("Esperaremos 32 segundos...")
+    time.sleep(32)
     
     contador = 0
    
@@ -418,6 +415,7 @@ def preparaSamples(filename, samples):
             source_url = row['Source URL']
             #Ready!: Agregar a las repeticiones también la columna de Source Path.
 
+            #Future: Que haga bien el conteo, porque mara 508 de 256.
             print(f"Procesadas {contador} de {cantidad_sampleos}.")
             
             nombre, extension = imagen.split(".")       
@@ -434,7 +432,7 @@ def preparaSamples(filename, samples):
                 #En excel: [Source, Source Path, Source URL, Name, Download Status, Take, File, Diffusion Status]
                 lista = [source, source_path, source_url, imagen, 'Success', "take_placeholder", "filename", "", "", ""]  #adding a row
                 #Designación de columnas a utilizar.
-                a = 5 #Aquí sustituira el índice 3 take_placeholder
+                a = 5 #Aquí sustituirá el índice 3 take_placeholder
                 b = 6 
             else:         
                 #Para imagenes de directorio.

@@ -414,7 +414,7 @@ def generaIDImagen(foto_url):
     
     
     print("El nombre de la imagen es: ", image_id)
-    time.sleep(1)
+    
 
     return image_id
 
@@ -740,8 +740,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             ruta_completa = directorio_remoto + '/' + imagen
             print("La ruta_completa, la que escribirá en el excel es: ")
             print(ruta_completa)
-            time.sleep(2)
-            
+                        
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             
             #dataframe, columna indexadora, index, columna_receptora, url.

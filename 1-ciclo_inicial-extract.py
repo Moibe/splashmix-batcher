@@ -39,6 +39,7 @@ if configuracion.excel_list == True:
     #Sube imagenes a tu servidor.
     print("A continuación subiremos las imagenes SOURCES a mi servidor...")
     respuesta = input("Presiona cualquier tecla para continuar: ")
+    #Future: Debería tener dos procesos separados: SUBIR/REGISTRAR.
     pretools.subeSources()    
 
 #Si se usa BULK.
