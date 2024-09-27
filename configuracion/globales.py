@@ -1,5 +1,6 @@
 #El dominio donde se presentan las imagenes guardadas.
-base_url = "https://euroglitter.com/results/"
+sources_url = "https://euroglitter.com/sources/"
+results_url = "https://euroglitter.com/results/"
 
 #FUTURE aquí se guardarán las variables globales como la dirección de los archivos de excel. OK!
 excel_source_path = 'excel_data\\source_excel\\'

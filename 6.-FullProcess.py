@@ -5,7 +5,7 @@ import pandas as pd
 #CICLO INTERMEDIO = STABLE DIFFUSION
 
 #Si varios ciclos comparten éstas variables, házlas globales.
-base_url = globales.base_url
+base_url = globales.results_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
 filename = configuracion.sesion + '.xlsx'

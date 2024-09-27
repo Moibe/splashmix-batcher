@@ -2,7 +2,9 @@
 /nycklar/
 /imagenes/
 /__pycache__/
+/configuracion/__pycache__/
 *.xlsx
+*.pyc
 /results_excel/
 /source_excel/
 /excel_pruebas_previas/

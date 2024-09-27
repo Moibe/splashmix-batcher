@@ -257,20 +257,27 @@ def subeSources():
 #Sube las imagenes source recién descargadas a mi propio servidor.
 
     sesion = configuracion.sesion
-    base_url = globales.base_url
+    base_url = globales.sources_url
     directorio_remoto = base_url + sesion
 
     print("Para empezar, éste es el directorio remoto:", directorio_remoto)
-    time.sleep(5)
-
+    
     #Conexión al servidor.
     ssh, sftp = servidor.conecta()  
+    #Future: Revisar si sí es el excel de resultados con el que trabajaremos.
     excel = globales.excel_results_path + configuracion.sesion + '.xlsx'
+
+    carpeta_remota = nodes.remote_sources
+    #remote_sources = "/home/moibe/apps/holocards/sources/"
+    print(f"La carpeta remota es: {carpeta_remota}.")
+    time.sleep(4)
+    directorio_receptor = carpeta_remota + configuracion.sesion
+    print(f"El directorio receptor será entonces: {directorio_receptor}.")
 
     try:       
         #Crea directorio
         print("Creando directorio, cuyo nombre será: ", directorio_receptor)
-        time.sleep(8)
+        time.sleep(2)
         #Si el directorio no existe, si lo está creando bien, checar después que problemas causa q ya exista.        
         sftp.mkdir(directorio_receptor)
         print("Directorio creado...")
@@ -279,20 +286,16 @@ def subeSources():
         # Mensaje de error
         print(f"Error al crear el directorio, probablemente ya existe: {e}")
 
-
     #Primero extraemos el dataframe:
     dataframe = pd.read_excel(excel)  
     resultados = tools.getNotLoaded(dataframe, 'Download Status', 'Success', 'Source URL', 'Name')
-
-    carpeta_remota = nodes.remote_sources
-    print(f"La carpeta remota es: {carpeta_remota}.")
-    time.sleep(18)
-    directorio_receptor = carpeta_remota + configuracion.sesion
-    print(f"El directorio receptor será entonces: {directorio_receptor}.")
     
     #Define ruta de la carpeta local donde se encuentran los sources.
     carpeta_local = globales.imagenes_folder_fuentes + sesion
-
+    print("Ésta es la carpeta local: ", carpeta_local)
+    
+    print("Por entrar a cicloSubidor...")
+    time.sleep(1)
     tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)
 
 def directoriador(directorio):

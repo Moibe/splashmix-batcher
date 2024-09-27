@@ -700,7 +700,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
     #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
 
     print("Entré al cicloSubidor....")
-    time.sleep(10)
+    time.sleep(5)
 
     #Para el conteo de avance en subida.
     contador = 0 
@@ -718,7 +718,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
                         
             #Origen
             ruta_origen = os.path.join(os.getcwd(), carpeta_local, imagen)
-            print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen}.")
+            print(f"La RUTA_ORIGEN después del join quedó así: {ruta_origen}")
            
             #Destino
             nuevo_directorio_receptor = directorio_receptor.replace("/", "\\")
@@ -739,13 +739,16 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             
             sftp.put(ruta_origen, ruta_destino)
             print(f"¡La imagen {imagen} se ha sido subido al servidor!")
-            print("---")
-            
+                        
             ruta_completa = directorio_remoto + '/' + imagen
+            print("La ruta_completa, la que escribirá en el excel es: ")
+            print(ruta_completa)
+            time.sleep(2)
+            
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             
             #dataframe, columna indexadora, index, columna_receptora, url.
-            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
+            tools.actualizaRow(dataframe, 'Name', imagen, 'Source URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)

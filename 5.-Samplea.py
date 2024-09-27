@@ -3,7 +3,7 @@ import pandas as pd
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
 
-base_url = globales.base_url
+base_url = globales.results_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
 #Por ejemplo https://dominio.com/results/minitest
