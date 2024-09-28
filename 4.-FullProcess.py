@@ -1,5 +1,5 @@
-import pretools
-import intertools, postools, configuracion.configuracion as configuracion, time, configuracion.globales as globales
+import intertools, configuracion.configuracion as configuracion, time
+import configuracion.globales as globales
 import pandas as pd
 
 #CICLO INTERMEDIO = STABLE DIFFUSION
@@ -9,8 +9,6 @@ base_url = globales.results_url
 sesion = configuracion.sesion
 foto_complete_url = base_url + sesion
 filename = configuracion.sesion + '.xlsx'
-
-#Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
 
 #Hacer el Stable Diffusion.
 #Future: Las características importantes deberían pasarse desde aquí... (que objeto, etc.)
@@ -27,3 +25,4 @@ intertools.fullProcess(sesion)
 #FUTURE: Cuando se apaga la API, full process se queda trabado en ocasiones.
 
 #Future, hace prueba de si en dos terminales distintas se puede hacer el proceso 6 (stable diffusion) y el proceso 7 upload.
+#Future, respaldos automáticos de los exceles en cada etapa.
