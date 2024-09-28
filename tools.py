@@ -201,7 +201,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
         # Recorre cada URL de foto en la columna
         for i, foto_path in enumerate(columna_imagenes):
 
-            print("*****")
             print(f"{i} de {len(columna_imagenes)}.")  
             print(f"Imagen: {foto_path}.")
 
@@ -219,7 +218,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Éste contenedor contendrá los atributos que sacó de la respectiva ROW. #Es solo un cascarón.
             contenedor = prompter.creaContenedorTemplate(dataframe, indice, configuracion.creacion) #Superhero o #Hotgirl por ahora.
 
-            print("---")
             print("---")
             print("Iniciando una nueva creación...")
             print(contenedor)                         

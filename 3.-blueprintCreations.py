@@ -13,7 +13,6 @@ filename = configuracion.sesion + '.xlsx'
 
 #Future, que cheque si en la carpeta hay archivos nuevos y actualice el excel con sus samples.
 
-#Hacer el Stable Diffusion.
 #Future: Las características importantes deberían pasarse desde aquí... (que objeto, etc.)
 
 #Importante: Preprocess es la que llena los ATRIBUTOS!!!!

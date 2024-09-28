@@ -1,6 +1,7 @@
 import os 
 import time
 import tools
+import prompter
 import servidor
 import requests
 import pandas as pd
@@ -8,6 +9,7 @@ import nycklar.nodes as nodes
 import configuracion.globales as globales
 from openpyxl import Workbook, load_workbook
 import configuracion.configuracion as configuracion
+from objetosCreacion import Hotgirl, Superhero
 
 def creaDirectorioInicial(sesion): 
     """
@@ -56,6 +58,13 @@ def creaExcel(filename):
         dataframe['File Path'] = ''
         dataframe['Diffusion Status'] = ''
         dataframe['URL'] = ''
+
+        #Obtengo atributos del objeto para pasmarlos en el excel.
+        atributos = prompter.obtenAtributosObjeto(Superhero())
+        for atributo in atributos:
+            print("Siguiente atributo:")
+            print(atributo)
+            dataframe[atributo] = ''
 
         #Ve si afecta actualizar el excel antes de entregar el dataframe.
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
@@ -394,9 +403,7 @@ def preparaSamples(filename, samples):
     df_imagenes_seleccionadas = rowsFiltrados[['Name', 'Source', 'Source Path', 'Source URL']]
     cantidad_sampleos = samples * len(df_imagenes_seleccionadas)
     print("La cantidad de imagenes a trabajar será de : ", cantidad_sampleos)
-    print("Esperaremos 32 segundos...")
-    time.sleep(32)
-    
+        
     contador = 0
    
     try:

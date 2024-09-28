@@ -12,6 +12,7 @@ def obten(dataframe, indice, atributo):
     return valor
 
 def obtenAtributosObjeto(sample_objeto): 
+    
 
     atributos = []
 
