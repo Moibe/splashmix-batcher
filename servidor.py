@@ -55,7 +55,7 @@ def sube(sftp):
   base_url = globales.results_url
   directorio_remoto = base_url + sesion
 
-  print("Llegamos a servidor.sube y el directorio remoto o dirección donde se subirá todo es:", directorio_remoto)
+  print("El directorio remoto o dirección donde se subirá todo es:", directorio_remoto)
 
   #Define ruta de la carpeta remota
   #Ésta es la carpeta fija de holocards.
@@ -82,6 +82,7 @@ def sube(sftp):
   print("Ahora vamos a obtener los resultados via la nueva función getNotLoaded()...")
   #Parámetros: dataframe, columna_filtro, texto_filtro, columna_destino, columna_source.
   #IMPORTANTE: getNotLoaded ya se puede usar para la subida de imagenes source.
+  #Future: Aquí es donde podría haber una separeción entre getNotLoaded y algo nuevo como getNotXceled.
   resultados = tools.getNotLoaded(dataframe, 'Diffusion Status', 'Completed', 'URL', 'File')
 
   tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)  
