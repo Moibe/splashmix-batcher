@@ -53,7 +53,7 @@ def sube(sftp):
   dataframe = pd.read_excel(excel)  
  
   sesion = configuracion.sesion
-  base_url = globales.base_url
+  base_url = globales.results_url
   directorio_remoto = base_url + sesion
 
   print("Llegamos a servidor.sube y el directorio remoto o dirección donde se subirá todo es:", directorio_remoto)

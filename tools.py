@@ -695,8 +695,6 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
 def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto):
     #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
 
-    print("Entré al cicloSubidor....")
-    
     #Para el conteo de avance en subida.
     contador = 0 
     cuantos = len(resultados) #Cantidad de imagenes que hay en ésa carpeta.
