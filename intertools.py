@@ -7,21 +7,18 @@ import configuracion.configuracion as configuracion
 from objetosCreacion import Prompt, Superhero, Hotgirl
 import tools
 import configuracion.globales as globales
-import random
 import importlib
 import data.prompts
 
 def sampler(sesion, inicial=None):
 
-    #Útil: Auxiliar para obtener dataframe: (como cuando no quieres correr prepararDataFrame de nuevo.)
-    #dataframe = pd.read_excel(filename)
     #Auxiliar para archivo excel de resultados.
     #La ruta sirve con diagonal normal / o con doble diagonal \\
     dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
 
     #IMPORTANTE, Asigna los atributos a cada sample.
     
-    #Destino donde irán los resultados.
+    #Destino donde irán las imágenes resultantes.
     ruta_destino = sesion + "-results"
     target_dir = os.path.join('imagenes', 'resultados', ruta_destino)
 
@@ -33,11 +30,11 @@ def sampler(sesion, inicial=None):
     try:
 
         #Filtra las filas donde 'Download Status' es igual a 'Success'
-        #Importante: O para ésta caso especia, solamente los 'From Archive' no todos!
+        #Importante: O para ésta caso especial, solamente los 'From Archive' no todos!
         df_images_ok = tools.funcionFiltradora(dataframe, 'Download Status', 'Success', 'From Archive')
 
         #Future haz una función creadora de Columnas.
-        # Crea un dataset 'columna_imagenes' a partir de la columna 'Nombre'
+        # Crea un dataset 'columna_imagenes' a partir de la columna que contiene el nombre del archivo individual.
         columna_samples = df_images_ok['File']
         
         #Si se le pasó el valor como parámetro entonces hace la búsqueda desde donde empezará.
@@ -82,7 +79,6 @@ def sampler(sesion, inicial=None):
                                 
             #POSICIÓN (IMPORTANTE)
             print("Obteniendo la posición...")
-            #Quiero que el 20% de las veces no use posición.
             #IMPORTANTE: Se quitará de momento el no usar posición, porque se concluyó que siempre es necesaria.
             #Se deja comentada, para otros casos de uso.
             ###
@@ -114,10 +110,9 @@ def sampler(sesion, inicial=None):
                 #Future, tener un archivo .py con prompts asociados. Sobre todo ahora que la clase entra directo.
             else:
                 #PROMPT PARA CHICA
+                #Future: Creo que ya no se usará la variable prompt.
                 prompt = f"A {creacion.style} of a {creacion.adjective} {creacion.type_girl} {creacion.subject} with {creacion.boobs} and {creacion.hair_style} wearing {creacion.wardrobe_top}, {creacion.wardrobe_accesories}, {creacion.wardrobe_bottom}, {creacion.wardrobe_shoes}, {creacion.situacion} at {creacion.place} {creacion.complemento}"           
-            #print("Éstos son los atributos que estamos a punto de guardar en el excel...")
-            #print(prompt)
-            #Antes de iniciar el stablediffusion vamos a guardar nuestro registro: 
+            
             print("Entrará a guardarRegistro cada que haya un objeto nuevo...")
             print(f"Estámos entrando con el objeto {creacion}, y la shot {shot}...")
             tools.guardarRegistro(dataframe, foto_path, creacion, shot)
@@ -125,10 +120,11 @@ def sampler(sesion, inicial=None):
     except KeyboardInterrupt:
         print("Me quedé en la foto_path: ", foto_path)
         
-        # Abrir el archivo configuracion.py en modo append
-        with open("configuracion.py", "a") as archivo:
-            # Escribir los valores en el archivo
-            archivo.write(f"\nfoto_path = '{foto_path}'\n")
+        #Estoy quitando ésto porque ya no necesitamos guardar el nombre del archivo en el que vamos en config.
+        # # Abrir el archivo configuracion.py en modo append
+        # with open("configuracion.py", "a") as archivo:
+        #     # Escribir los valores en el archivo
+        #     archivo.write(f"\nfoto_path = '{foto_path}'\n")
         
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
