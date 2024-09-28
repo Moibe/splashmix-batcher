@@ -149,8 +149,6 @@ def df2Excel(dataframe, filename):
     # 1.- Está guardando el excel de resultados no el excel origen (que nunca se modificará.)
     # 2.- Ese excel siempre estará en la carpeta results_excel 
 
-    #Future que si está abierto el excel no arruine el flujo y de tiempo para cerrarlo.
-
     #IMPORTANTE: Agrega que si el archivo está abierto, de tiempo para corregir y no mande a error.
      
     # Obtiene la ruta actual del script (directorio raíz del proyecto)
@@ -174,8 +172,6 @@ def df2Excel(dataframe, filename):
         # Guarda el DataFrame con la nueva columna en el archivo Excel
         dataframe.to_excel(ruta_archivo, index=False)
     except Exception as e:
-                #print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
-                print("Excepción 182...")
                 print(e)
                 print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
                 input("Presiona cualquier tecla para continuar: ")
@@ -702,11 +698,10 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
 
     try:
         print("Inicia ciclo de repaso de cada imagen...")
-        #excepcion = "NO"
+        
         for imagen in resultados:
             
-            print(f"Ahora estámos en la imagen número {contador} de {cuantos}.")
-                      
+            print(f"Ahora estámos en la imagen número {contador} de {cuantos}.")                      
             print("La imagen de ésta vuelta es: ", imagen)
                         
             #Origen
@@ -740,7 +735,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             
             #dataframe, columna indexadora, index, columna_receptora, url.
-            tools.actualizaRow(dataframe, 'File', imagen, 'Source URL', ruta_completa)
+            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)
