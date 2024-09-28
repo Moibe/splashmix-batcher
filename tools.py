@@ -702,7 +702,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
 
     try:
         print("Inicia ciclo de repaso de cada imagen...")
-        excepcion = "NO"
+        #excepcion = "NO"
         for imagen in resultados:
             
             print(f"Ahora estámos en la imagen número {contador} de {cuantos}.")
@@ -740,7 +740,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             
             #dataframe, columna indexadora, index, columna_receptora, url.
-            tools.actualizaRow(dataframe, 'Name', imagen, 'Source URL', ruta_completa)
+            tools.actualizaRow(dataframe, 'File', imagen, 'Source URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)
@@ -763,7 +763,7 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
         
     finally: 
-        print("Entré al finally del ciclo que repasa cada imagen. Guardaré el excel.", excepcion)
+        print("Entré al finally del ciclo que repasa cada imagen. Guardaré el excel.")
         contador += 1
         #Si acabas el ciclo, también guarda el excel!!
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')

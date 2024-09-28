@@ -22,7 +22,7 @@ if configuracion.excel_list == True:
     #Future: Si ya se creo el directorio, no volverlo a crear.
     #print("Directorio creado...")
     #Crea el excel con sus campos respectivos.
-    #Future: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
+    #Ready: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
     #Respuesta, yo no lo sacaría porque es un proceso muy largo, se queda aquí.
     
     #B.- Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.

@@ -1,8 +1,4 @@
-import time
-import pandas as pd
 import servidor
-import nycklar.nodes as nodes
-import configuracion.globales as globales
 
 def subirTodo():
     #Ready: ¿Volver uno solo a subirTodo y sube? ¿o cuál es la razón para separarlo?    

@@ -1,11 +1,10 @@
 import os
-import configuracion.globales as globales
 import tools
 import paramiko
-import configuracion.configuracion as configuracion 
-import tools
 import pandas as pd
 import nycklar.nodes as nodes
+import configuracion.globales as globales
+import configuracion.configuracion as configuracion 
 
 #Future: Revisar cuanto se parece servidor a SulkuPypi para que lo conviertas en ello.
 def conecta(): 
