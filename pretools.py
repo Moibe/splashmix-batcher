@@ -59,13 +59,6 @@ def creaExcel(filename):
         dataframe['Diffusion Status'] = ''
         dataframe['URL'] = ''
 
-        #Obtengo atributos del objeto para pasmarlos en el excel.
-        atributos = prompter.obtenAtributosObjeto(Superhero())
-        for atributo in atributos:
-            print("Siguiente atributo:")
-            print(atributo)
-            dataframe[atributo] = ''
-
         #Ve si afecta actualizar el excel antes de entregar el dataframe.
         #IMPORTANTE: Quizá no se necesita hacer ésta escritura pq si hace la escritura final. Prueba.
         print("Guardando la estructura inicial del archivo de excel.")
@@ -358,6 +351,7 @@ def creaDirectorioResults(sesion):
         os.makedirs(results_dir)
 
 #Mejor le pasas el objeto completo llamado creación y que de ahí lea cada uno de sus atributos.
+#Future: Revisa si ya no se usa createColumns.
 def createColumns(dataframe, amount, diccionario_atributos):
     #Future: Revisa si ésta ya está obsoleta.
 

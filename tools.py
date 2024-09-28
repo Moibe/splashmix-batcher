@@ -495,8 +495,8 @@ def guardarRegistro(dataframe, foto_dir, creacion, shot):
         # Verificar si el nombre es un atributo real
         if not nombre_atributo.startswith("__"):
             valor_atributo = getattr(creacion, nombre_atributo)
-            print(f"Atributo: {nombre_atributo}, Valor: {valor_atributo}")            
-            
+            print(f"Atributo: {nombre_atributo}, Valor: {valor_atributo}")   
+               
             #File es la columna donde busca, filename lo que está buscando, nombre_atributo la col donde guardará y valor lo que guardará.
             actualizaRow(dataframe, 'File', foto_dir, nombre_atributo, valor_atributo)
 

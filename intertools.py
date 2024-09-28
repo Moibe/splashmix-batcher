@@ -8,6 +8,7 @@ from objetosCreacion import Prompt, Superhero, Hotgirl
 import tools
 import configuracion.globales as globales
 import importlib
+import prompter
 
 
 def blueprint(sesion, inicial=None):
@@ -16,7 +17,18 @@ def blueprint(sesion, inicial=None):
     #La ruta sirve con diagonal normal / o con doble diagonal \\
     dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
 
+    #Lo primero que debes hacer es agregarle las colunmnas faltantes al archivo: 
+
     #IMPORTANTE, Asigna los atributos a cada sample.
+    #Obtengo atributos del objeto para pasmarlos en el excel.
+    atributos = prompter.obtenAtributosObjeto(Superhero())
+    for atributo in atributos:
+        print("Siguiente atributo:")
+        print(atributo)
+        dataframe[atributo] = ''
+
+    #Y al final agrega shot, que siempre lo lleva: 
+    dataframe['Shot'] = ''
     
     #Destino donde irán las imágenes resultantes.
     ruta_destino = sesion + "-results"
