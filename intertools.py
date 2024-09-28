@@ -8,9 +8,9 @@ from objetosCreacion import Prompt, Superhero, Hotgirl
 import tools
 import configuracion.globales as globales
 import importlib
-import data.prompts
 
-def sampler(sesion, inicial=None):
+
+def blueprint(sesion, inicial=None):
 
     #Auxiliar para archivo excel de resultados.
     #La ruta sirve con diagonal normal / o con doble diagonal \\
@@ -96,9 +96,11 @@ def sampler(sesion, inicial=None):
             
             print(f"Ruta_posicion: {ruta_posicion} y shot: {shot}...")
 
-            clase = getattr(importlib.import_module("prompts"), configuracion.creacion)
-
+            print("La configuración.creacion es: ", configuracion.creacion)
+            
+            clase = getattr(importlib.import_module("objetosCreacion"), configuracion.creacion)
             print("Clase quedó así: ", clase)
+
             creacion = clase()
             #creacion = Hotgirl(style="anime")            
 

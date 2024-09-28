@@ -7,7 +7,7 @@ import data.data as data, data.data_girls as data_girls, data.data_heroes as dat
 class Prompt:
     #Future, que el databank se defina arriba para todos.
     def __init__(self, style=None):
-        databank = data_heroes
+        databank = globales.databank_heroes
         self.style = style or random.choice(databank.lista_estilos)
         print("El estilo fué: ", self.style)       
 

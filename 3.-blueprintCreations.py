@@ -18,5 +18,5 @@ filename = configuracion.sesion + '.xlsx'
 
 #Importante: Preprocess es la que llena los ATRIBUTOS!!!!
 #inicial="nombre_imagen.jpg" cuando quieras empezar desde uno en particular.
-intertools.sampler(sesion)
+intertools.blueprint(sesion)
 
