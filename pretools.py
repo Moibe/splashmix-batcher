@@ -22,12 +22,16 @@ def creaDirectorioInicial(sesion):
     dataframe:Regresa dataframe que se usará a través de los procesos.
 
     """
+      
 
     # Define the desired directory path
     target_dir = os.path.join('imagenes', 'fuentes', sesion)
     
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
+        print("Directorio creado...")
+
+    print("Directorio existe")
     
 
 def creaExcel(filename):

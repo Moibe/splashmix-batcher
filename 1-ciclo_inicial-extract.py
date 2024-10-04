@@ -18,13 +18,11 @@ print(f"La sesión es: {sesion}.")
 if configuracion.excel_list == True:
     filename = sesion + '.xlsx'    
     #A. Crea el directorio donde se recibirán las imagenes.
-    #pretools.creaDirectorioInicial(sesion)
-    #Future: Si ya se creo el directorio, no volverlo a crear.
-    #print("Directorio creado...")
+    pretools.creaDirectorioInicial(sesion)
+    
     #Crea el excel con sus campos respectivos.
     #Ready: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
     #Respuesta, yo no lo sacaría porque es un proceso muy largo, se queda aquí.
-    
     #B.- Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.
     # print("A continuación crearemos el archivo de excel que contendrá los resultados...")
     # respuesta = input("Presiona cualquier tecla para continuar: ")
@@ -36,10 +34,10 @@ if configuracion.excel_list == True:
     # pretools.descargaImagenes(sesion)
 
     #Sube imagenes a tu servidor.
-    print("A continuación subiremos las imagenes SOURCES a mi servidor...")
-    respuesta = input("Presiona cualquier tecla para continuar: ")
-    #Future: Debería tener dos procesos separados: SUBIR/REGISTRAR.
-    pretools.subeSources()    
+    #print("A continuación subiremos las imagenes SOURCES a mi servidor...")
+    # respuesta = input("Presiona cualquier tecla para continuar: ")
+    # #Future: Debería tener dos procesos separados: SUBIR/REGISTRAR.
+    # pretools.subeSources()    
 
 #Si se usa BULK.
 else:
