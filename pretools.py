@@ -87,6 +87,8 @@ def creaExcel(filename):
         print("Entrando al while...")
         
         por_procesar = dataframe[dataframe['Name'].isna()]
+        print("Ésta es el dataframe 'por procesar'...")
+        print(por_procesar)
         lote_procesar = len(por_procesar)
         
         print("Nos faltan por nombrar: ", lote_procesar)
@@ -100,17 +102,24 @@ def creaExcel(filename):
 
         print(f"Por lo tanto llevamos {nu_index} imagenes nombradas.")
         
-        columna = por_procesar['Source']        
+        columna = por_procesar['Source']   
+        print("El resultado de columna es....")
+        print(columna)     
+        
         #IMPORTANTE: Si obtiene correctamente la columna, pero la i no funcionará ahora, necesitas indexRow...
         #Considera que ese proceso podría ser más lento y que en verdad convenga más crear otra vez todos los ids.
 
+        #Importante: Ésta es la parte que hace el ciclo que genera las imagenes a partir de la URL dada en el excel...
         try: 
             for i, foto_url in enumerate(columna):
+                print("Entré al for..")
+                print("y la i es: ", i)
+                
                 y = i
                 image_id = tools.generaIDImagen(foto_url)
                 print("Éste es el image id del q sacaremos el index row: ", image_id)
                
-                #Nótese que index e i son distintos, donde index será la posición en done debe ubicar la imagen.
+                #Nótese que index e i son distintos, donde index será la posición en donde debe ubicar la imagen.
                 #Future: checar si por ende i quedó irrelevante.  
 
                 #Actualiza la columna 'Name' con el nombre del archivo.
@@ -129,6 +138,7 @@ def creaExcel(filename):
                     print("Se guardará el excel cada 200 imagenes.")
                     
         except Exception as e:
+                print(f"Excepción: - {e}.")
                 print("Es probable que el archivo de excel esté abierto, ciérralo antes de proceder y oprime una tecla.")
                 print("i = ", i)
                 y = i

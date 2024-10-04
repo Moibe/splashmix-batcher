@@ -403,8 +403,11 @@ def generaIDImagen(foto_url):
     # Define un indentificador único.
     # Esto será diferente para cada tipo de URL que se te envíe. 
     # Trata de generalizar en el futuro.
-    
-    image_id = imagesExtractors.clayLinkedInV2(foto_url)
+
+    print("Entré a genera id imagen...")
+        
+    #image_id = imagesExtractors.clayLinkedInV2(foto_url)
+    image_id = imagesExtractors.clayLinkedIn(foto_url)
     
     
     print("El nombre de la imagen es: ", image_id)

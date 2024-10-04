@@ -8,8 +8,11 @@ filename = sesion + '.xlsx'
 #Future: ¿Debería ir en éste orden? 
 #pretools.creaDirectorioInicial(sesion)
 
-print("Creación de excel que contendrá los resultados.")
-respuesta = input("Presiona cualquier tecla para continuar: ")
-pretools.creaExcel(filename)
+# print("Creación de excel que contendrá los resultados.")
+# respuesta = input("Presiona cualquier tecla para continuar: ")
+# pretools.creaExcel(filename)
 
+print("A continuación descargaremos las imagenes del lote...")
+respuesta = input("Presiona cualquier tecla para continuar: ")
+pretools.descargaImagenes(sesion)
     
