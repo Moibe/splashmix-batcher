@@ -14,19 +14,21 @@ print(f"La sesión es: {sesion}.")
 
 #FUTURE: Haz una función que reciba parámetros que indiquen que funciones se usarán y cuales no.
 
+#FUTURE: Mejor hacer una py para el caminito del excel, y otro para el caminito de no-excel.
+
 #Si se usa una lista de EXCEL.
 if configuracion.excel_list == True:
     filename = sesion + '.xlsx'    
     #A. Crea el directorio donde se recibirán las imagenes.
-    pretools.creaDirectorioInicial(sesion)
+    #pretools.creaDirectorioInicial(sesion)
     
     #Crea el excel con sus campos respectivos.
     #Ready: Considerar si ejecutamos aquí creaExcel o siempre lo hacemos desde descargaImagenes si se requiere.
     #Respuesta, yo no lo sacaría porque es un proceso muy largo, se queda aquí.
     #B.- Éste proceso creará el archivo de excel con los Ids necesarios para cada imagen que procesaremos.
-    # print("A continuación crearemos el archivo de excel que contendrá los resultados...")
-    # respuesta = input("Presiona cualquier tecla para continuar: ")
-    # pretools.creaExcel(filename)
+    print("A continuación crearemos el archivo de excel que contendrá los resultados...")
+    respuesta = input("Presiona cualquier tecla para continuar: ")
+    pretools.creaExcel(filename)
 
     #Descarga las imagenes source indicadas en el excel(dataframe) y las baja al directorio en disco.
     # print("A continuación descargaremos las imagenes del lote...")

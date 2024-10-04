@@ -1,7 +1,6 @@
 import os 
 import time
 import tools
-import prompter
 import servidor
 import requests
 import pandas as pd
