@@ -14,8 +14,6 @@ print(f"La sesión es: {sesion}.")
 
 #FUTURE: Haz una función que reciba parámetros que indiquen que funciones se usarán y cuales no.
 
-#FUTURE: Mejor hacer una py para el caminito del excel, y otro para el caminito de no-excel.
-
 #Si se usa una lista de EXCEL.
 if configuracion.excel_list == True:
     filename = sesion + '.xlsx'    

@@ -352,12 +352,11 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
 def getNotLoaded(dataframe, columna_filtro, texto_filtro, columna_destino, columna_source):
     #Obtiene las imagenes que no se han cargado.
 
-    #FUTURE, hacer ésta función general, para que también sea útil para subir las imagenes source a mi server.
-
     print("Estamos en la función getNotLoaded()...")
     print("El tamaño del dataframe total con el que vamos a trabajar es: ", len(dataframe))
     
     #IMPORTANTE: El dataframe lo sacará de una COLUMNA y lo filtrará con un TEXTO.
+    print(f"El dataframe lo sacará de la columna: {columna_filtro} y lo filtrará con el texto: {texto_filtro}.")
     df_images_ok = dataframe[(dataframe[columna_filtro] == texto_filtro)]
     
     #Lista de las imagenes que subiremos. 
@@ -738,7 +737,10 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
             
             #dataframe, columna indexadora, index, columna_receptora, url.
-            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
+            #If subiendo sources.
+            tools.actualizaRow(dataframe, 'Name', imagen, 'Source URL', ruta_completa)
+             #IF subiendo resultados. Aquí no debería usarse en el cicloSubidor. ¿?
+            #tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)
@@ -752,7 +754,6 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
         # Revisar y corregir en caso de ser necesario.
         mensaje = f"OJO: Error al subir un archivo: {e}"
         print(mensaje)
-        excepcion = "Si hubo excepción."
         print("Interrumpiste el proceso de subida, guardaré el dataframe en el excel, hasta donde ibamos.")
         tools.df2Excel(dataframe, configuracion.sesion + '.xlsx')
 

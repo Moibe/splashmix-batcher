@@ -267,6 +267,8 @@ def descargaImagenes(sesion):
 def subeSources():
 #Sube las imagenes source recién descargadas a mi propio servidor.
 
+#Future: Importante...Agrega interrupción de teclado y guardados periódicos.
+
     sesion = configuracion.sesion
     base_url = globales.sources_url
     directorio_remoto = base_url + sesion
@@ -472,7 +474,7 @@ def preparaSamples(filename, samples):
                 
                 tools.creaRow(dataframe, imagen, i + 2, filename, lista)
 
-            contador = contador + 4
+            contador = contador + 1
     
     except KeyboardInterrupt:
       print("KEYBOARD: Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos. Excel:", configuracion.filename)

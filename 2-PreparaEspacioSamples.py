@@ -5,4 +5,4 @@ import configuracion.configuracion as configuracion
 #ÉSTA ES LA que crea los espacios para los samples.
 
 #parámetros: Archivo de excel a editar, cantidad de samples.
-pretools.preparaSamples(configuracion.sesion + '.xlsx', 2)
+pretools.preparaSamples(configuracion.sesion + '.xlsx', 1)
