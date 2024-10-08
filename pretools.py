@@ -307,7 +307,7 @@ def subeSources():
     print("Ésta es la carpeta local: ", carpeta_local)
     
     print("Por entrar a cicloSubidor...")
-    tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto, "sube_sources")
+    tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)
 
 def directoriador(directorio):
     #FUTURE: Que los exceles iniciales residan en una carpeta exclusiva para eso.

@@ -88,7 +88,7 @@ def sube(sftp):
   print("Estamos a punto de entrar al ciclosubidor y estos son los parámetros que pondremos.")
   print(f"resultados: {resultados}, ")
 
-  tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto, "sube_resultados")  
+  tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)  
   
   
 def cierraConexion(ssh, sftp):

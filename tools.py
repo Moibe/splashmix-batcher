@@ -691,12 +691,8 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
 
 
 
-def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto, tipo):
+def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto):
     #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
-
-    print("Esto es una inspección que estamos haciendo...")
-    print(f"Estoy dentro de la función: {inspect.stack()[1].function}")
-    time.sleep(32)
 
     #Para el conteo de avance en subida.
     contador = 0 
@@ -740,12 +736,18 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             print(ruta_completa)
                         
             #Si se ha subído correctamente, entonces actualiza el archivo de excel.
-            
-            #dataframe, columna indexadora, index, columna_receptora, url.
-            #If subiendo sources.
-            #tools.actualizaRow(dataframe, 'Name', imagen, 'Source URL', ruta_completa)
-            #IF subiendo resultados. Aquí no debería usarse en el cicloSubidor. ¿?
-            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
+
+            funcion = inspect.stack()[1].function
+            print(f"Estoy dentro de la función: {funcion}")
+            time.sleep(3)
+
+            #Aquí se verifica si estamos subiendo sources o resultados y en consecuencia se actúa.            
+            if funcion == "subeSources":
+                #dataframe, columna indexadora, index, columna_receptora, url.
+                tools.actualizaRow(dataframe, 'Name', imagen, 'Source URL', ruta_completa)
+            else:
+                #dataframe, columna indexadora, index, columna_receptora, url.
+                tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)
