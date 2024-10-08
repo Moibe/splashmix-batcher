@@ -9,6 +9,7 @@ import prompter
 import configuracion.globales as globales
 import random
 import imagesExtractors
+import inspect
 
 def obtenerArchivoOrigen(foto_path):
     """
@@ -690,8 +691,12 @@ def guardarResultado(dataframe, result, filename, ruta_final, message):
 
 
 
-def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto):
+def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto, tipo):
     #Sube todas las imagenes que se le indican después de hacer un getNotLoaded().
+
+    print("Esto es una inspección que estamos haciendo...")
+    print(f"Estoy dentro de la función: {inspect.stack()[1].function}")
+    time.sleep(32)
 
     #Para el conteo de avance en subida.
     contador = 0 
@@ -738,9 +743,9 @@ def cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor
             
             #dataframe, columna indexadora, index, columna_receptora, url.
             #If subiendo sources.
-            tools.actualizaRow(dataframe, 'Name', imagen, 'Source URL', ruta_completa)
-             #IF subiendo resultados. Aquí no debería usarse en el cicloSubidor. ¿?
-            #tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
+            #tools.actualizaRow(dataframe, 'Name', imagen, 'Source URL', ruta_completa)
+            #IF subiendo resultados. Aquí no debería usarse en el cicloSubidor. ¿?
+            tools.actualizaRow(dataframe, 'File', imagen, 'URL', ruta_completa)
 
             contador += 1
             print("Después de la suma el contador está en: ", contador)

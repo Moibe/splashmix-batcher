@@ -85,7 +85,10 @@ def sube(sftp):
   #Future: Aquí es donde podría haber una separeción entre getNotLoaded y algo nuevo como getNotXceled.
   resultados = tools.getNotLoaded(dataframe, 'Diffusion Status', 'Completed', 'URL', 'File')
 
-  tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto)  
+  print("Estamos a punto de entrar al ciclosubidor y estos son los parámetros que pondremos.")
+  print(f"resultados: {resultados}, ")
+
+  tools.cicloSubidor(sftp, dataframe, resultados, carpeta_local, directorio_receptor, directorio_remoto, "sube_resultados")  
   
   
 def cierraConexion(ssh, sftp):
