@@ -154,9 +154,6 @@ def df2Excel(dataframe, filename):
      
     # Obtiene la ruta actual del script (directorio raíz del proyecto)
 
-    #Future, df2excel actualmente asume que el excel siempre guardará el excel del directorio de resultados, arreglar...
-    #... para que reciba la ruta completa.
-
     ruta_actual = os.path.dirname(__file__)
     print("Esto es la ruta actual: ", ruta_actual)
 
