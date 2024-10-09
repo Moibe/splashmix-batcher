@@ -212,7 +212,6 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #Éste contenedor contendrá los atributos que sacó de la respectiva ROW. #Es solo un cascarón.
             contenedor = prompter.creaContenedorTemplate(dataframe, indice, configuracion.creacion) #Superhero o #Hotgirl por ahora.
 
-            print("---")
             print("Iniciando una nueva creación...")
             print(contenedor)                         
 
@@ -265,7 +264,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                 print("La api está apagada, esperando a que reinicie.")
                 print("Aquí vamos a guardar el excel, porque se apago la API...")
                 
-                pretools.df2Excel(dataframe, configuracion.filename)
+                tools.df2Excel(dataframe, configuracion.filename)
                 configuracion.api_apagada = True
                 #Se definirá si esperar a que reinicie o no.
                 if configuracion.wait_awake == True: 
@@ -307,6 +306,7 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
                 except Exception as e:
                     print("Error en el segmentado: ", e)
                     mensaje = "concurrent.futures._base.CancelledError"
+                    concurrents = concurrents + 1
                 finally: 
                     pass
                 
@@ -321,7 +321,9 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
 
             #Revisa si éste for debería tener un try-except.
             print("Salí del for de n cantidad de samples....")
-            #Aquí llega el break si la API estaba apagada, habiendo esperado o no."        
+            #Aquí llega el break si la API estaba apagada, habiendo esperado o no."   
+            # 
+            print(f"Hubo {concurrents} concurrents, favor de revisar para volver a correr.")     
             
             if configuracion.api_apagada == True:
                 if configuracion.waited == True: 
@@ -337,15 +339,15 @@ def carruselStable(columna_imagenes, ruta_origen, target_dir, dataframe):
             #     #Future: CHecar si éste contador se usa.
 
     except KeyboardInterrupt:
+
+        print(f"Hubo {concurrents} concurrents, favor de revisar para volver a correr.")
+
         print("Me quedé en la foto_path: ", foto_path)
-        
-        # Abrir el archivo configuracion.py en modo append
-        with open("configuracion.py", "a") as archivo:
-            # Escribir los valores en el archivo
-            archivo.write(f"\nfoto_path = '{foto_path}'\n")           
         
         print("Interrumpiste el proceso, guardaré el dataframe en el excel, hasta donde ibamos.")
         print("Aquí vamos a guardar el excel porque interrumpí el proceso...")
+        
+        tools.df2Excel(dataframe, configuracion.filename)
         
 def getNotLoaded(dataframe, columna_filtro, texto_filtro, columna_destino, columna_source):
     #Obtiene las imagenes que no se han cargado.
@@ -383,10 +385,11 @@ def getMissing():
     df_images_ok = dataframe[(dataframe['Download Status'] == 'Success') | 
                           (dataframe['Download Status'] == 'From Archive')]
     
-    #Future: ¿Agregar concurrent.base? OK!
+    #También se incluye:                                                                                    concurrent.futures._base.CancelledError
     nan_df = df_images_ok[(df_images_ok['Diffusion Status'].isna()) | (df_images_ok['Diffusion Status'] == 'concurrent.futures._base.CancelledError')]
     print(nan_df)
     print(f"Faltan por hacer: {len(nan_df)} imágenes...")
+    time.sleep(3)
         
     columna_imagenes = nan_df['File'].to_list()
 

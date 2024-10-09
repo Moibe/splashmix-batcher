@@ -1,6 +1,8 @@
 import postools, configuracion.configuracion as configuracion, time
 import pandas as pd
 
+#Al parecer count_missing no se usa en el flujo normal.
+
 filename = configuracion.filename
 
 dataframe = pd.read_excel('results_excel/' + 'girlsPositions.xlsx')

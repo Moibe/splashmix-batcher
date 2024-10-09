@@ -160,7 +160,6 @@ def fullProcess(sesion):
     """
     dataframe = pd.read_excel(globales.excel_results_path + sesion + '.xlsx')
 
-    #FUTURE: Incluir espera por excel abierto también aquí. OK!!!
     #Future, que el proceso detecte si no hay internet para no quedarse ciclado.
 
     #FUTURE: Ruta origen y destino que vengan de globales.
@@ -173,10 +172,6 @@ def fullProcess(sesion):
     #En caso de no existir el directorio destino, lo creará.
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
-
-    # columna_imagenes = tools.preparaColumnaImagenes(dataframe, inicial)
-    # print("Ya estoy de nuevo afuera, Tengo el resultado de columna_imagenes, que es:")
-    # print(columna_imagenes)
 
     #Count Missing también devuelve una columna de imagenes, pero basada en las que no han sido procesadas.
     #Dejando fuera a las completadas y a las que tuvieron error. Ésto evita tener que hacer el proceso de preparar...
